@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F08F482B1F1A85BE0041E4A8 /* MemoryHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08F482A1F1A85BE0041E4A8 /* MemoryHelpers.swift */; };
 		F0CB963F1F18F3F700291BAE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB963E1F18F3F700291BAE /* AppDelegate.swift */; };
 		F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96401F18F3F700291BAE /* GameViewController.swift */; };
 		F0CB96431F18F3F700291BAE /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96421F18F3F700291BAE /* Shaders.metal */; };
@@ -14,6 +15,10 @@
 		F0CB96481F18F3F700291BAE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F0CB96461F18F3F700291BAE /* MainMenu.xib */; };
 		F0CB96531F18F3F700291BAE /* GameBoyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96521F18F3F700291BAE /* GameBoyTests.swift */; };
 		F0CB965E1F18F3F700291BAE /* GameBoyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB965D1F18F3F700291BAE /* GameBoyUITests.swift */; };
+		F0CB966C1F18F68C00291BAE /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966B1F18F68C00291BAE /* Memory.swift */; };
+		F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966D1F1916CC00291BAE /* CPU.swift */; };
+		F0CB96701F191D3A00291BAE /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966F1F191D3A00291BAE /* Ops.swift */; };
+		F0CB96721F191F5E00291BAE /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96711F191F5E00291BAE /* Flags.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F08F482A1F1A85BE0041E4A8 /* MemoryHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryHelpers.swift; sourceTree = "<group>"; };
 		F0CB963B1F18F3F700291BAE /* GameBoy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBoy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0CB963E1F18F3F700291BAE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F0CB96401F18F3F700291BAE /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +53,10 @@
 		F0CB96591F18F3F700291BAE /* GameBoyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameBoyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0CB965D1F18F3F700291BAE /* GameBoyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyUITests.swift; sourceTree = "<group>"; };
 		F0CB965F1F18F3F700291BAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F0CB966B1F18F68C00291BAE /* Memory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
+		F0CB966D1F1916CC00291BAE /* CPU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
+		F0CB966F1F191D3A00291BAE /* Ops.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ops.swift; sourceTree = "<group>"; };
+		F0CB96711F191F5E00291BAE /* Flags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Flags.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +113,11 @@
 				F0CB96441F18F3F700291BAE /* Assets.xcassets */,
 				F0CB96461F18F3F700291BAE /* MainMenu.xib */,
 				F0CB96491F18F3F700291BAE /* Info.plist */,
+				F0CB966B1F18F68C00291BAE /* Memory.swift */,
+				F08F482A1F1A85BE0041E4A8 /* MemoryHelpers.swift */,
+				F0CB96711F191F5E00291BAE /* Flags.swift */,
+				F0CB966D1F1916CC00291BAE /* CPU.swift */,
+				F0CB966F1F191D3A00291BAE /* Ops.swift */,
 			);
 			path = GameBoy;
 			sourceTree = "<group>";
@@ -260,7 +275,12 @@
 			files = (
 				F0CB96431F18F3F700291BAE /* Shaders.metal in Sources */,
 				F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */,
+				F08F482B1F1A85BE0041E4A8 /* MemoryHelpers.swift in Sources */,
+				F0CB96701F191D3A00291BAE /* Ops.swift in Sources */,
+				F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */,
+				F0CB966C1F18F68C00291BAE /* Memory.swift in Sources */,
 				F0CB963F1F18F3F700291BAE /* AppDelegate.swift in Sources */,
+				F0CB96721F191F5E00291BAE /* Flags.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,6 +522,7 @@
 				F0CB96641F18F3F700291BAE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F0CB96651F18F3F700291BAE /* Build configuration list for PBXNativeTarget "GameBoyTests" */ = {
 			isa = XCConfigurationList;
@@ -510,6 +531,7 @@
 				F0CB96671F18F3F700291BAE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F0CB96681F18F3F700291BAE /* Build configuration list for PBXNativeTarget "GameBoyUITests" */ = {
 			isa = XCConfigurationList;
@@ -518,6 +540,7 @@
 				F0CB966A1F18F3F700291BAE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
