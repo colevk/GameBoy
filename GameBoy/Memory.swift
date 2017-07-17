@@ -141,6 +141,18 @@ public class Memory {
     public var pc: UInt16
     public var sp: UInt16
     
+    public func pcByte() -> UInt8 {
+        let value = bytes[pc]
+        pc &+= 1
+        return value
+    }
+    
+    public func pcWord() -> UInt16 {
+        let value = words[pc]
+        pc &+= 2
+        return value
+    }
+    
     public var bc: UInt16 {
         get {
             return UInt16(b) << 8 + UInt16(c)
