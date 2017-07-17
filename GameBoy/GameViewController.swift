@@ -43,6 +43,7 @@ let vertexColorData:[Float] =
 ]
 
 class GameViewController: NSViewController, MTKViewDelegate {
+    var cpu: CPU! = nil
     
     var device: MTLDevice! = nil
     
@@ -76,6 +77,9 @@ class GameViewController: NSViewController, MTKViewDelegate {
         view.delegate = self
         view.device = device
         view.sampleCount = 4
+        view.preferredFramesPerSecond = 60
+        
+        cpu = CPU()
         
         loadAssets()
     }
@@ -113,6 +117,11 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
     
     func update() {
+        let startTimer = cpu.timer - (cpu.timer % 17556)
+        while (cpu.timer - startTimer < 17556) {
+            print(cpu.nextInstruction())
+            cpu.step()
+        }
         
         // vData is pointer to the MTLBuffer's Float data contents
         let pData = vertexBuffer.contents()

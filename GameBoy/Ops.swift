@@ -44,6 +44,13 @@ public struct Ops {
         flags.c = (register & 0x01) != 0
     }
     
+    public func rl(register: inout UInt8) {
+        (flags.c, register) = (register & 0x80 == 0x80, register << 1 + (flags.c ? 1 : 0))
+        flags.z = register == 0
+        flags.n = false
+        flags.h = false
+    }
+    
     public func rrc(register: inout UInt8) {
         flags.c = (register & 0x01) != 0
         register = register >> 1 + register << 7
@@ -65,7 +72,7 @@ public struct Ops {
     }
     
     public func bit(_ offset: UInt8, register: UInt8) {
-        flags.z = register & (0x01 << offset) != 0
+        flags.z = register & (0x01 << offset) == 0
         flags.n = false
         flags.h = true
     }

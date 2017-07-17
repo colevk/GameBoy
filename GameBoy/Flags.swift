@@ -19,7 +19,7 @@ public class Flags {
         if newValue {
             uint8 |= mask
         } else {
-            uint8 &= mask
+            uint8 &= ~mask
         }
     }
     
