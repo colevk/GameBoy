@@ -9,12 +9,13 @@
 import Foundation
 
 public class Memory {
-    public var booting = true
+    private var booting = true
     
     public private(set) var bytes: ByteAddress! = nil
     public private(set) var words: WordAddress! = nil
     public private(set) var registers8: Registers8Bit! = nil
     public private(set) var registers16: Registers16Bit! = nil
+    public private(set) var conditions: Conditions! = nil
     
     public init() {
         memory = [UInt8](repeating: 0, count: Int(UInt16.max))
@@ -33,6 +34,7 @@ public class Memory {
         words = WordAddress(onMemory: self)
         registers8 = Registers8Bit(onMemory: self)
         registers16 = Registers16Bit(onMemory: self)
+        conditions = Conditions(onMemory: self)
     }
     
     

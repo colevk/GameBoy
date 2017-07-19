@@ -118,8 +118,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
     
     func update() {
         let startTimer = cpu.timer - (cpu.timer % 17556)
-        while (cpu.timer - startTimer < 17556) {
-            print(cpu.nextInstruction())
+        while cpu.timer - startTimer < 17556 {
             cpu.step()
         }
         

@@ -60,14 +60,19 @@ public struct Ops {
     }
 
     public func add(to: inout UInt8, from: UInt8) {
-        flags.h = (((to & 0xF) + (from & 0xF)) & 0x10) == 0x10
-        (to, flags.c) = UInt8.addWithOverflow(to, from)
+        (to, flags.h, flags.c) = UInt8.addWithFlags(to, from)
         flags.n = false
     }
     
+    public func cp(to: UInt8, from: UInt8) {
+        let result: UInt8
+        (result, flags.h, flags.c) = UInt8.subtractWithFlags(to, from)
+        flags.n = true
+        flags.z = result == 0
+    }
+    
     public func add(to: inout UInt16, from: UInt16) {
-        flags.h = (((to & 0xFFF) + (from & 0xFFF)) & 0x1000) == 0x1000
-        (to, flags.c) = UInt16.addWithOverflow(to, from)
+        (to, flags.h, flags.c) = UInt16.addWithFlags(to, from)
         flags.n = false
     }
     
@@ -86,6 +91,38 @@ public struct Ops {
     }
 }
 
+extension UInt8 {
+    public static func addWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
+        let halfCarry = (((lhs & 0xF) + (rhs & 0xF)) & 0x10) == 0x10
+        let (result, carry) = UInt8.addWithOverflow(lhs, rhs)
+        return (result, halfCarry, carry)
+    }
+    
+    public static func subtractWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
+        let halfCarry = (lhs & 0xF) < (rhs & 0xF)
+        let (result, carry) = UInt8.subtractWithOverflow(lhs, rhs)
+        return (result, halfCarry, carry)
+    }
+}
+
+extension UInt16 {
+    public static func addWithFlags(_ lhs: UInt16, _ rhs: UInt16) -> (UInt16, Bool, Bool) {
+        let halfCarry = ((lhs & 0xFFF) + (rhs & 0xFFF)) & 0x1000 == 0x1000
+        let (result, carry) = UInt16.addWithOverflow(lhs, rhs)
+        return (result, halfCarry, carry)
+    }
+    
+    public static func subtractWithFlags(_ lhs: UInt16, _ rhs: UInt16) -> (UInt16, Bool, Bool) {
+        let halfCarry = (lhs & 0xFFF) < (rhs & 0xFFF)
+        let (result, carry) = UInt16.subtractWithOverflow(lhs, rhs)
+        return (result, halfCarry, carry)
+    }
+    
+    public static func addRelativeWithFlags(_ lhs: UInt16, _ rhs: UInt8) -> (UInt16, Bool, Bool) {
+        let rhsExtended = UInt16(rhs) + ((rhs & 0xF0 == 0xF0) ? 0xFF00 : 0)
+        return UInt16.addWithFlags(lhs, rhsExtended)
+    }
+}
 
 infix operator &+=
 infix operator &-=

@@ -39,52 +39,28 @@ public class CPU {
             timer += 5
 
         case 0x10: // STOP 0
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
 
         case 0x18: // JR n
-            let e = mem.pcByte()
-            mem.pc &+= ((e & 0xF0 == 0xF0) ? 0xFF00 + UInt16(e) : UInt16(e))
+            (mem.pc, mem.flags.h, mem.flags.c) = UInt16.addRelativeWithFlags(mem.pc, mem.pcByte())
             timer += 3
-        case 0x20: // JR NZ,n
+        case 0x20, 0x28, 0x30, 0x38: // JR cc,n
+            let offset = (opcode - 0x20) / 8
             let e = mem.pcByte()
-            if (!mem.flags.z) {
-                mem.pc &+= ((e & 0xF0 == 0xF0) ? 0xFF00 + UInt16(e) : UInt16(e))
+            if mem.conditions[offset] {
+                (mem.pc, mem.flags.h, mem.flags.c) = UInt16.addRelativeWithFlags(mem.pc, e)
                 timer += 3
             } else {
                 timer += 2
             }
-        case 0x28: // JR Z,n
-            let e = mem.pcByte()
-            if (mem.flags.z) {
-                mem.pc &+= ((e & 0xF0 == 0xF0) ? 0xFF00 + UInt16(e) : UInt16(e))
-                timer += 3
-            } else {
-                timer += 2
-            }
-        case 0x30: // JR NC,n
-            let e = mem.pcByte()
-            if (!mem.flags.c) {
-                mem.pc &+= ((e & 0xF0 == 0xF0) ? 0xFF00 + UInt16(e) : UInt16(e))
-                timer += 3
-            } else {
-                timer += 2
-            }
-        case 0x38: // JR C,n
-            let e = mem.pcByte()
-            if (mem.flags.c) {
-                mem.pc &+= ((e & 0xF0 == 0xF0) ? 0xFF00 + UInt16(e) : UInt16(e))
-                timer += 3
-            } else {
-                timer += 2
-            }
-
+            
         case 0x01, 0x11, 0x21, 0x31: // LD rr,nn
             let offset = (opcode - 0x01) / 16
             mem.registers16[offset] = mem.pcWord()
             timer += 3
             
         case 0x09, 0x19, 0x29, 0x39: // ADD HL,rr
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0x02: // LD (BC),A
             mem.bytes[mem.bc] = mem.a
@@ -150,10 +126,10 @@ public class CPU {
             mem.flags.z = false
             timer += 1
         case 0x1F: // RRA
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
 
         case 0x27: // DAA
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0x2F: // CPL
             mem.a = ~mem.a
             mem.flags.n = true
@@ -177,22 +153,22 @@ public class CPU {
             timer += (srcOffset != 6 && dstOffset != 6) ? 1 : 2
             
         case 0x76: // HALT
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0x80...0x87: // ADD A,r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0x88...0x8F: // ADC A,r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0x90...0x97: // SUB r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0x98...0x9F: // SBC A,r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0xA0...0xA7: // AND r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0xA8...0xAF: // XOR r
             let offset = opcode % 8
@@ -204,42 +180,47 @@ public class CPU {
             timer += offset != 6 ? 1 : 2
             
         case 0xB0...0xB7: // OR r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0xB8...0xBF: // CP r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            let offset = opcode % 8
+            ops.cp(to: mem.a, from: mem.registers8[offset])
+            timer += offset != 6 ? 1 : 2
             
         case 0xC6: // ADD A,n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xCE: // ADC A,n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xD6: // SUB n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xDE: // SBC A,n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xE6: // AND n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xEE: // XOR n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xF6: // OR n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xFE: // CP n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            ops.cp(to: mem.a, from: mem.pcByte())
+            timer += 2
             
         case 0xC9: // RET
             mem.pc = mem.words[mem.sp]
             mem.sp += 2
             timer += 4
-        case 0xC0: // RET NZ
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
-        case 0xC8: // RET Z
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
-        case 0xD0: // RET NC
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
-        case 0xD8: // RET C
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+        case 0xC0, 0xC8, 0xD0, 0xD8: // RET NZ
+            let offset = (opcode - 0xC0) / 8
+            if mem.conditions[offset] {
+                mem.pc = mem.words[mem.sp]
+                mem.sp += 2
+                timer += 5
+            } else {
+                timer += 2
+            }
+
         case 0xD9: // RETI
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0xC1, 0xD1, 0xE1: // POP rr
             let offset = (opcode - 0xC1) / 16
@@ -262,17 +243,20 @@ public class CPU {
             timer += 4
             
         case 0xC3: // JP nn
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
-        case 0xC2: // JP NZ,nn
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
-        case 0xCA: // JP Z,nn
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
-        case 0xD2: // JP NC,nn
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
-        case 0xDA: // JP C,nn
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            mem.pc = mem.pcWord()
+            timer += 4
+        case 0xC2, 0xCA, 0xD2, 0xDA: // JP cc,nn
+            let offset = (opcode - 0xC2) / 8
+            let addr = mem.pcWord()
+            if mem.conditions[offset] {
+                mem.pc = addr
+                timer += 4
+            } else {
+                timer += 3
+            }
         case 0xE9: // JP (HL)
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            mem.pc = mem.hl
+            timer += 1
             
         case 0xCD: // CALL nn
             let addr = mem.pcWord()
@@ -280,39 +264,10 @@ public class CPU {
             mem.words[mem.sp] = mem.pc
             mem.pc = addr
             timer += 6
-        case 0xC4: // CALL NZ,nn
+        case 0xC4, 0xCC, 0xD4, 0xDC: // CALL cc,nn
+            let offset = (opcode - 0xC4) / 8
             let addr = mem.pcWord()
-            if (!mem.flags.z) {
-                mem.sp -= 2
-                mem.words[mem.sp] = mem.pc
-                mem.pc = addr
-                timer += 6
-            } else {
-                timer += 3
-            }
-        case 0xCC: // CALL Z,nn
-            let addr = mem.pcWord()
-            if (mem.flags.z) {
-                mem.sp -= 2
-                mem.words[mem.sp] = mem.pc
-                mem.pc = addr
-                timer += 6
-            } else {
-                timer += 3
-            }
-        case 0xD4: // CALL NC,nn
-            let addr = mem.pcWord()
-            if (!mem.flags.c) {
-                mem.sp -= 2
-                mem.words[mem.sp] = mem.pc
-                mem.pc = addr
-                timer += 6
-            } else {
-                timer += 3
-            }
-        case 0xDC: // CALL C,nn
-            let addr = mem.pcWord()
-            if (mem.flags.c) {
+            if mem.conditions[offset] {
                 mem.sp -= 2
                 mem.words[mem.sp] = mem.pc
                 mem.pc = addr
@@ -322,10 +277,10 @@ public class CPU {
             }
             
         case 0xE8: // ADD SP,n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0xF8: // LD HL,SP+n
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xF9: // LD SP,HL
             mem.sp = mem.hl
             timer += 2
@@ -352,12 +307,12 @@ public class CPU {
             timer += 4
             
         case 0xF3: // DI
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xFB: // EI
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF: // RST
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
             
         case 0xCB:
             runOpcodeCB(mem.pcByte())
@@ -388,19 +343,19 @@ public class CPU {
             timer += (offset != 6) ? 2 : 4
             
         case 0x18...0x1F: // RR r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
             
         case 0x20...0x27: // SLA r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
             
         case 0x28...0x2F: // SRA r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
             
         case 0x30...0x3F: // SWAP r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
             
         case 0x38...0x3F: // SRL r
-            fatalError("Unimplemented instruction: \(nextInstruction())\n")
+            fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
             
         case 0x40...0x7F: // BIT d,r
             let bitOffset = (opcode - 0x40) / 8
@@ -425,23 +380,25 @@ public class CPU {
     }
     
     public func nextInstruction() -> String {
-        let opcode = Int(mem.bytes[mem.pc])
-        let nextByte = String(format: "$%02X", mem.bytes[mem.pc + 1])
-        let nextWord = String(format: "$%04X", mem.words[mem.pc + 1])
-        let r8names = ["B", "C", "D", "E", "H", "L", "(HL)", "A"]
-        let r16names = ["BC", "DE", "HL", "SP"]
+        return nextInstruction(0)
+    }
+    
+    public func nextInstruction(_ byteOffset: UInt16) -> String {
+        let opcode = Int(mem.bytes[mem.pc - byteOffset])
+        let nextByte = String(format: "$%02X", mem.bytes[mem.pc + 1 - byteOffset])
+        let nextWord = String(format: "$%04X", mem.words[mem.pc + 1 - byteOffset])
+        let r8Names = ["B", "C", "D", "E", "H", "L", "(HL)", "A"]
+        let r16Names = ["BC", "DE", "HL", "SP"]
+        let ccNames = ["NZ", "Z", "NC", "C"]
         
         switch opcode {
         case 0x00: return "NOP"
         case 0x08: return "LD (\(nextWord)),SP"
         case 0x10: return "STOP 0"
         case 0x18: return "JR \(nextByte)"
-        case 0x20: return "JR NZ,\(nextByte)"
-        case 0x28: return "JR Z,\(nextByte)"
-        case 0x30: return "JR NC,\(nextByte)"
-        case 0x38: return "JR C,\(nextByte)"
-        case 0x01, 0x11, 0x21, 0x31: return "LD \(r16names[(opcode - 0x01) / 16]),\(nextWord)"
-        case 0x09, 0x19, 0x29, 0x39: return "ADD HL,\(r16names[(opcode - 0x09) / 16])"
+        case 0x20, 0x28, 0x30, 0x38: return "JR \(ccNames[(opcode - 0x20) / 8]),\(nextByte)"
+        case 0x01, 0x11, 0x21, 0x31: return "LD \(r16Names[(opcode - 0x01) / 16]),\(nextWord)"
+        case 0x09, 0x19, 0x29, 0x39: return "ADD HL,\(r16Names[(opcode - 0x09) / 16])"
         case 0x02: return "LD (BC),A"
         case 0x12: return "LD (DE),A"
         case 0x22: return "LDI (HL),A"
@@ -450,11 +407,11 @@ public class CPU {
         case 0x1A: return "LD A,(DE)"
         case 0x2A: return "LDI A,(HL)"
         case 0x3A: return "LDD A,(HL)"
-        case 0x03, 0x13, 0x23, 0x33: return "INC \(r16names[(opcode - 0x03) / 16])"
-        case 0x0B, 0x1B, 0x2B, 0x3B: return "DEC \(r16names[(opcode - 0x0B) / 16])"
-        case 0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x34, 0x3C: return "INC \(r8names[(opcode - 0x04) / 8])"
-        case 0x05, 0x0D, 0x15, 0x1D, 0x25, 0x2D, 0x35, 0x3D: return "DEC \(r8names[(opcode - 0x04) / 8])"
-        case 0x06, 0x0E, 0x16, 0x1E, 0x26, 0x2E, 0x36, 0x3E: return "LD \(r8names[(opcode - 0x06) / 8]),\(nextByte)"
+        case 0x03, 0x13, 0x23, 0x33: return "INC \(r16Names[(opcode - 0x03) / 16])"
+        case 0x0B, 0x1B, 0x2B, 0x3B: return "DEC \(r16Names[(opcode - 0x0B) / 16])"
+        case 0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x34, 0x3C: return "INC \(r8Names[(opcode - 0x04) / 8])"
+        case 0x05, 0x0D, 0x15, 0x1D, 0x25, 0x2D, 0x35, 0x3D: return "DEC \(r8Names[(opcode - 0x04) / 8])"
+        case 0x06, 0x0E, 0x16, 0x1E, 0x26, 0x2E, 0x36, 0x3E: return "LD \(r8Names[(opcode - 0x06) / 8]),\(nextByte)"
         case 0x07: return "RLCA"
         case 0x0F: return "RRCA"
         case 0x17: return "RLA"
@@ -463,16 +420,16 @@ public class CPU {
         case 0x2F: return "CPL"
         case 0x37: return "SCF"
         case 0x3F: return "CCF"
-        case 0x40...0x75, 0x77...0x7F: return "LD \(r8names[(opcode - 0x40) / 8]),\(r8names[opcode % 8])"
+        case 0x40...0x75, 0x77...0x7F: return "LD \(r8Names[(opcode - 0x40) / 8]),\(r8Names[opcode % 8])"
         case 0x76: return "HALT"
-        case 0x80...0x87: return "ADD A,\(r8names[opcode % 8])"
-        case 0x88...0x8F: return "ADC A,\(r8names[opcode % 8])"
-        case 0x90...0x97: return "SUB \(r8names[opcode % 8])"
-        case 0x98...0x9F: return "SBC A,\(r8names[opcode % 8])"
-        case 0xA0...0xA7: return "AND \(r8names[opcode % 8])"
-        case 0xA8...0xAF: return "XOR \(r8names[opcode % 8])"
-        case 0xB0...0xB7: return "OR \(r8names[opcode % 8])"
-        case 0xB8...0xBF: return "CP \(r8names[opcode % 8])"
+        case 0x80...0x87: return "ADD A,\(r8Names[opcode % 8])"
+        case 0x88...0x8F: return "ADC A,\(r8Names[opcode % 8])"
+        case 0x90...0x97: return "SUB \(r8Names[opcode % 8])"
+        case 0x98...0x9F: return "SBC A,\(r8Names[opcode % 8])"
+        case 0xA0...0xA7: return "AND \(r8Names[opcode % 8])"
+        case 0xA8...0xAF: return "XOR \(r8Names[opcode % 8])"
+        case 0xB0...0xB7: return "OR \(r8Names[opcode % 8])"
+        case 0xB8...0xBF: return "CP \(r8Names[opcode % 8])"
         case 0xC6: return "ADD A,\(nextByte)"
         case 0xCE: return "ADC A,\(nextByte)"
         case 0xD6: return "SUB \(nextByte)"
@@ -482,26 +439,17 @@ public class CPU {
         case 0xF6: return "OR \(nextByte)"
         case 0xFE: return "CP \(nextByte)"
         case 0xC9: return "RET"
-        case 0xC0: return "RET NZ"
-        case 0xC8: return "RET Z"
-        case 0xD0: return "RET NC"
-        case 0xD8: return "RET C"
+        case 0xC0, 0xC8, 0xD0, 0xD8: return "RET \(ccNames[(opcode - 0xC0) / 8])"
         case 0xD9: return "RETI"
-        case 0xC1, 0xD1, 0xE1: return "POP \(r16names[(opcode - 0xC1) / 16])"
+        case 0xC1, 0xD1, 0xE1: return "POP \(r16Names[(opcode - 0xC1) / 16])"
         case 0xF1: return "POP AF"
-        case 0xC5, 0xD5, 0xE5: return "PUSH \(r16names[(opcode - 0xC5) / 16])"
+        case 0xC5, 0xD5, 0xE5: return "PUSH \(r16Names[(opcode - 0xC5) / 16])"
         case 0xF5: return "PUSH AF"
         case 0xC3: return "JP \(nextWord)"
-        case 0xC2: return "JP NZ,\(nextWord)"
-        case 0xCA: return "JP Z,\(nextWord)"
-        case 0xD2: return "JP NC,\(nextWord)"
-        case 0xDA: return "JP C,\(nextWord)"
+        case 0xC2, 0xCA, 0xD2, 0xDA: return "JP \(ccNames[(opcode - 0xC2) / 8]),\(nextWord)"
         case 0xE9: return "JP (HL)"
         case 0xCD: return "CALL \(nextWord)"
-        case 0xC4: return "CALL NZ,\(nextWord)"
-        case 0xCC: return "CALL Z,\(nextWord)"
-        case 0xD4: return "CALL NC,\(nextWord)"
-        case 0xDC: return "CALL C,\(nextWord)"
+        case 0xC4, 0xCC, 0xD4, 0xDC: return "CALL \(ccNames[(opcode - 0xC4) / 8]),\(nextWord)"
         case 0xE8: return "ADD SP,\(nextByte)"
         case 0xF8: return "LD HL,SP+\(nextByte)"
         case 0xF9: return "LD SP,HL"
@@ -519,17 +467,17 @@ public class CPU {
         case 0xCB:
             let opcodeCB = Int(mem.bytes[mem.pc + 1])
             switch opcodeCB {
-            case 0x00...0x07: return "RLC \(r8names[opcodeCB % 8])"
-            case 0x08...0x0F: return "RRC \(r8names[opcodeCB % 8])"
-            case 0x10...0x17: return "RL \(r8names[opcodeCB % 8])"
-            case 0x18...0x1F: return "RR \(r8names[opcodeCB % 8])"
-            case 0x20...0x27: return "SLA \(r8names[opcodeCB % 8])"
-            case 0x28...0x2F: return "SRA \(r8names[opcodeCB % 8])"
-            case 0x30...0x3F: return "SWAP \(r8names[opcodeCB % 8])"
-            case 0x38...0x3F: return "SRL \(r8names[opcodeCB % 8])"
-            case 0x40...0x7F: return "BIT \((opcodeCB - 0x40) / 8),\(r8names[opcodeCB % 8])"
-            case 0x80...0xBF: return "RES \((opcodeCB - 0x80) / 8),\(r8names[opcodeCB % 8])"
-            case 0xC0...0xFF: return "SET \((opcodeCB - 0xC0) / 8),\(r8names[opcodeCB % 8])"
+            case 0x00...0x07: return "RLC \(r8Names[opcodeCB % 8])"
+            case 0x08...0x0F: return "RRC \(r8Names[opcodeCB % 8])"
+            case 0x10...0x17: return "RL \(r8Names[opcodeCB % 8])"
+            case 0x18...0x1F: return "RR \(r8Names[opcodeCB % 8])"
+            case 0x20...0x27: return "SLA \(r8Names[opcodeCB % 8])"
+            case 0x28...0x2F: return "SRA \(r8Names[opcodeCB % 8])"
+            case 0x30...0x3F: return "SWAP \(r8Names[opcodeCB % 8])"
+            case 0x38...0x3F: return "SRL \(r8Names[opcodeCB % 8])"
+            case 0x40...0x7F: return "BIT \((opcodeCB - 0x40) / 8),\(r8Names[opcodeCB % 8])"
+            case 0x80...0xBF: return "RES \((opcodeCB - 0x80) / 8),\(r8Names[opcodeCB % 8])"
+            case 0xC0...0xFF: return "SET \((opcodeCB - 0xC0) / 8),\(r8Names[opcodeCB % 8])"
             default: break
             }
         default: break

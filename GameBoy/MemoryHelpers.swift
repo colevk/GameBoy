@@ -91,3 +91,17 @@ public class Registers16Bit: MemoryHelper {
         }
     }
 }
+
+public class Conditions: MemoryHelper {
+    public subscript(index: UInt8) -> Bool {
+        get {
+            switch index {
+            case 0: return !memory.flags.z
+            case 1: return memory.flags.z
+            case 2: return !memory.flags.c
+            case 3: return memory.flags.c
+            default: fatalError("Index out of range")
+            }
+        }
+    }
+}
