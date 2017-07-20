@@ -10,25 +10,29 @@
 
 using namespace metal;
 
-struct VertexInOut
+struct Vertex
 {
-    float4  position [[position]];
-    float4  color;
+    float4 position [[position]];
 };
 
-vertex VertexInOut passThroughVertex(uint vid [[ vertex_id ]],
-                                     constant packed_float4* position  [[ buffer(0) ]],
-                                     constant packed_float4* color    [[ buffer(1) ]])
+vertex Vertex passThroughVertex(uint vid [[ vertex_id ]],
+                                constant packed_float4* position  [[ buffer(0) ]])
 {
-    VertexInOut outVertex;
-    
+    Vertex outVertex;
     outVertex.position = position[vid];
-    outVertex.color    = color[vid];
-    
     return outVertex;
 };
 
-fragment half4 passThroughFragment(VertexInOut inFrag [[stage_in]])
-{
-    return half4(inFrag.color);
+fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
+                                   constant uchar* pixels [[ buffer(0) ]]) {
+    uchar color = pixels[int(inFrag.position.x / 6) + int(inFrag.position.y / 6) * 160];
+    if (color == 0) {
+        return half4(0.0 , 0.0 , 0.0, 1.0);
+    } else if (color == 1) {
+        return half4(0.33 , 0.33 , 0.33, 1.0);
+    } else if (color == 2) {
+        return half4(0.66 , 0.66 , 0.66, 1.0);
+    } else {
+        return half4(1.0 , 1.0 , 1.0, 1.0);
+    }
 };

@@ -10,12 +10,12 @@ import Foundation
 
 public class CPU {
     
-    let mem: Memory
+    unowned let mem: Memory
     let ops: Ops
     var timer: Int = 0
     
-    public init() {
-        mem = Memory()
+    public init(withMemory memory: Memory) {
+        mem = memory
         ops = Ops(withFlags: mem.flags)
     }
     

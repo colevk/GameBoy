@@ -17,7 +17,9 @@ public struct Ops {
     
     public func inc(register: inout UInt8) {
         flags.h = register & 0xF == 0xF
-        (register, flags.z) = UInt8.addWithOverflow(register, 1)
+        let overflow: ArithmeticOverflow
+        (register, overflow) = register.addingReportingOverflow(1)
+        flags.z = overflow == .overflow
         flags.n = false
     }
     
@@ -91,51 +93,65 @@ public struct Ops {
     }
 }
 
+
+infix operator &+=
+infix operator &-=
+infix operator &*=
+
 extension UInt8 {
-    public static func addWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
+    static func addWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
         let halfCarry = (((lhs & 0xF) + (rhs & 0xF)) & 0x10) == 0x10
-        let (result, carry) = UInt8.addWithOverflow(lhs, rhs)
-        return (result, halfCarry, carry)
+        let (result, carry) = lhs.addingReportingOverflow(rhs)
+        return (result, halfCarry, carry == .overflow)
     }
     
-    public static func subtractWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
+    static func subtractWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
         let halfCarry = (lhs & 0xF) < (rhs & 0xF)
-        let (result, carry) = UInt8.subtractWithOverflow(lhs, rhs)
-        return (result, halfCarry, carry)
+        let (result, carry) = lhs.subtractingReportingOverflow(rhs)
+        return (result, halfCarry, carry == .overflow)
+    }
+    
+    static func &+= (_ left: inout UInt8, _ right: UInt8) {
+        left = left &+ right
+    }
+    
+    static func &-= (_ left: inout UInt8, _ right: UInt8) {
+        left = left &- right
+    }
+    
+    static func &*= (_ left: inout UInt8, _ right: UInt8) {
+        left = left &* right
     }
 }
 
 extension UInt16 {
     public static func addWithFlags(_ lhs: UInt16, _ rhs: UInt16) -> (UInt16, Bool, Bool) {
         let halfCarry = ((lhs & 0xFFF) + (rhs & 0xFFF)) & 0x1000 == 0x1000
-        let (result, carry) = UInt16.addWithOverflow(lhs, rhs)
-        return (result, halfCarry, carry)
+        let (result, carry) = lhs.addingReportingOverflow(rhs)
+        return (result, halfCarry, carry == .overflow)
     }
     
     public static func subtractWithFlags(_ lhs: UInt16, _ rhs: UInt16) -> (UInt16, Bool, Bool) {
         let halfCarry = (lhs & 0xFFF) < (rhs & 0xFFF)
-        let (result, carry) = UInt16.subtractWithOverflow(lhs, rhs)
-        return (result, halfCarry, carry)
+        let (result, carry) = lhs.subtractingReportingOverflow(rhs)
+        return (result, halfCarry, carry == .overflow)
     }
     
     public static func addRelativeWithFlags(_ lhs: UInt16, _ rhs: UInt8) -> (UInt16, Bool, Bool) {
         let rhsExtended = UInt16(rhs) + ((rhs & 0xF0 == 0xF0) ? 0xFF00 : 0)
         return UInt16.addWithFlags(lhs, rhsExtended)
     }
+    
+    static func &+= (_ left: inout UInt16, _ right: UInt16) {
+        left = left &+ right
+    }
+    
+    static func &-= (_ left: inout UInt16, _ right: UInt16) {
+        left = left &- right
+    }
+    
+    static func &*= (_ left: inout UInt16, _ right: UInt16) {
+        left = left &* right
+    }
 }
 
-infix operator &+=
-infix operator &-=
-infix operator &*=
-
-func &+=<T: Integer>(_ left: inout T, _ right: T) {
-    left = left &+ right
-}
-
-func &-=<T: Integer>(_ left: inout T, _ right: T) {
-    left = left &- right
-}
-
-func &*=<T: Integer>(_ left: inout T, _ right: T) {
-    left = left &* right
-}
