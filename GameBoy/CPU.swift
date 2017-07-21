@@ -19,12 +19,6 @@ public class CPU {
         ops = Ops(withFlags: mem.flags)
     }
     
-    func loadGame(fromFile file: String) {
-        if let data = NSData(contentsOfFile: file) {
-            data.getBytes(&mem.memory, range: NSRange(location: 256, length: 0x3FFF))
-        }
-    }
-    
     public func step() {
         runOpcode(mem.pcByte())
     }

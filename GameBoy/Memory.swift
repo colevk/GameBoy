@@ -9,6 +9,9 @@
 import Foundation
 
 public class Memory {
+    weak var cpu: CPU!
+    weak var gpu: GPU!
+    
     private var booting = true
     
     public private(set) var bytes: ByteAddress! = nil
@@ -18,7 +21,12 @@ public class Memory {
     public private(set) var conditions: Conditions! = nil
     
     public init() {
-        memory = [UInt8](repeating: 0, count: Int(UInt16.max))
+        gRAM = [UInt8](repeating: 0, count: 0x2000)
+        eRAM = [UInt8](repeating: 0, count: 0x2000)
+        wRAM = [UInt8](repeating: 0, count: 0x2000)
+        oam = [UInt8](repeating: 0, count: 0xA0)
+        zRAM = [UInt8](repeating: 0, count: 0x80)
+        
         a = 0
         b = 0
         c = 0
@@ -40,35 +48,108 @@ public class Memory {
     
     // Memory
     
-    public var memory: [UInt8]
+    private var cartridge: [UInt8]?
+    private var gRAM: [UInt8]
+    private var eRAM: [UInt8]
+    private var wRAM: [UInt8]
+    private var oam: [UInt8]
+    private var zRAM: [UInt8]
     
     public func readByte(fromAddress addr: UInt16) -> UInt8 {
         switch addr {
+        // BIOS address space and cartrige bank 0
         case 0x0000...0x00FF:
             if booting {
                 return bios[Int(addr)]
+            } else if let cart = cartridge {
+                return cart[Int(addr)]
             } else {
-                return memory[Int(addr)]
+                return 0
             }
-        case 0x0100...0xFFFF:
-            return memory[Int(addr)]
+        case 0x0100...0x3FFF:
+            if let cart = cartridge {
+                return cart[Int(addr)]
+            } else {
+                return 0
+            }
+        // Cartridge banks 1+
+        case 0x4000...0x7FFF:
+            if let cart = cartridge {
+                return cart[Int(addr)]
+            } else {
+                return 0
+            }
+        // Graphics RAM
+        case 0x8000...0x9FFF:
+            return gRAM[Int(addr - 0x8000)]
+        // Cartridge RAM
+        case 0xA000...0xBFFF:
+            return eRAM[Int(addr - 0xA000)]
+        // Working RAM
+        case 0xC000...0xDFFF:
+            return wRAM[Int(addr - 0xA000)]
+        // Copy of working RAM
+        case 0xE000...0xFDFF:
+            return wRAM[Int(addr - 0xE000)]
+        // Object Attribute Memory
+        case 0xFE00...0xFE9F:
+            return oam[Int(addr - 0xFE00)]
+        // Zero-page RAM, for fast interactions with RAM
+        case 0xFF80...0xFFFF:
+            return zRAM[Int(addr - 0xFF80)]
+        
+        // 0xFF00 - 0xFF7F: I/O addresses
+        case 0xFF40:
+            return gpu.controlBits
+        case 0xFF42:
+            return gpu.scy
+        case 0xFF43:
+            return gpu.scx
+        case 0xFF44:
+            return UInt8((cpu.timer / 114) % 154)
+        case 0xFF47:
+            return gpu.controlBits
         default:
-            return 0x00
+            return 0
         }
     }
     
     public func writeByte(_ newValue: UInt8, toAddress addr: UInt16) {
         switch addr {
-        case 0x0000...0x7FFF: // ROM
+        case 0x0000...0x7FFF: // Read-only
             break
-        case 0x8000...0xFF4F: // RAM
-            memory[Int(addr)] = newValue
+        // Graphics RAM
+        case 0x8000...0x9FFF:
+            gRAM[Int(addr - 0x8000)] = newValue
+        // Cartridge RAM
+        case 0xA000...0xBFFF:
+            eRAM[Int(addr - 0xA000)] = newValue
+        // Working RAM
+        case 0xC000...0xDFFF:
+            wRAM[Int(addr - 0xA000)] = newValue
+        // Copy of working RAM
+        case 0xE000...0xFDFF:
+            wRAM[Int(addr - 0xE000)] = newValue
+        // Object Attribute Memory
+        case 0xFE00...0xFE9F:
+            oam[Int(addr - 0xFE00)] = newValue
+        // Zero-page RAM, for fast interactions with RAM
+        case 0xFF80...0xFFFF:
+            zRAM[Int(addr - 0xFF80)] = newValue
+        
+        // 0xFF00 - 0xFF7F: I/O addresses
+        case 0xFF40:
+            gpu.controlBits = newValue
+        case 0xFF42:
+            gpu.scy = newValue
+        case 0xFF43:
+            gpu.scx = newValue
+        case 0xFF47:
+            gpu.controlBits = newValue
         case 0xFF50:
             if newValue == 1 {
                 booting = false
             }
-        case 0xFF51...0xFFFF:
-            memory[Int(addr)] = newValue
         default:
             break
         }

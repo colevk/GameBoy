@@ -11,14 +11,40 @@ import Foundation
 public class GPU {
     
     unowned let mem: Memory
-    public var screen: [UInt8]
+    public private(set)var screen: Screen
+    
+    public struct Screen {
+        public let pointer: UnsafeMutableRawPointer
+        
+        public let width: Int
+        public let height: Int
+        public let count: Int
+        
+        public init(width: Int, height: Int) {
+            self.width = width
+            self.height = height
+            
+            // Pointer must be aligned with and a multiple of 0x1000 if we want to share it with metalkit
+            let alignment = 0x1000
+            count = (width * height) - (width * height % alignment) + alignment
+            var ptr: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(bytes: count, alignedTo: alignment)
+            posix_memalign(&ptr, alignment, count)
+            pointer = ptr!
+        }
+    
+        public subscript(index: Int) -> UInt8 {
+            get {
+                return pointer.load(fromByteOffset: index, as: UInt8.self)
+            }
+            set {
+                pointer.storeBytes(of: newValue, toByteOffset: index, as: UInt8.self)
+            }
+        }
+    }
     
     public init(withMemory memory: Memory) {
         mem = memory
-        screen = [UInt8](repeating: 0, count: 160 * 144)
-        for x in 0..<screen.count {
-            screen[x] = UInt8(x % 4)
-        }
+        screen = Screen(width: 160, height: 144)
     }
     
     let controlBitsAddr: UInt16 = 0xFF40
@@ -27,9 +53,11 @@ public class GPU {
     let scanlineAddr: UInt16 = 0xFF44
     let paletteAddr: UInt16 = 0xFF47
     
-    private var scx: UInt8 = 0
-    private var scy: UInt8 = 0
-    private var line: UInt8 = 0
+    public var controlBits: UInt8 = 0
+    public var scx: UInt8 = 0
+    public var scy: UInt8 = 0
+    public var line: UInt8 = 0
+    public var palette: UInt8 = 0
     
     private var background: Bool = false
     private var sprites: Bool = false
@@ -40,7 +68,7 @@ public class GPU {
     private var windowTileMap: UInt8 = 0
     private var display: Bool = false
     
-    private var palette: [UInt8] = [0, 1, 2, 3]
+    private var paletteArr: [UInt8] = [0, 1, 2, 3]
     
     private enum SpriteSize {
         case eightByEight
@@ -63,7 +91,7 @@ public class GPU {
         display = (controlBits >> 7) & 0x01 == 0x01
         
         let paletteBits = mem.bytes[paletteAddr]
-        palette = [
+        paletteArr = [
             ((paletteBits >> 0) & 0x03),
             ((paletteBits >> 2) & 0x03),
             ((paletteBits >> 4) & 0x03),
@@ -72,9 +100,13 @@ public class GPU {
     }
     
     public func renderLine() {
-        for _ in 0..<144 {
-//            let pixel = getPixel(x: UInt8(x), y: line)
-//            screen[x + Int(160 * line)] = pixel
+        if line >= 144 {
+            return
+        }
+        updateRegisters()
+        for x in 0..<160 {
+            let pixel = getPixel(x: UInt8(x), y: line)
+            screen[x + 160 * Int(line)] = pixel
         }
     }
     
@@ -98,6 +130,6 @@ public class GPU {
         
         let tileRow = mem.words[tileStartAddr + UInt16((y + scy) % 8)]
         
-        return palette[Int((tileRow >> ((x + scx) % 8)) & 0x02 + (tileRow >> (((x + scx) % 8) + 8)) & 0x01)]
+        return paletteArr[Int((tileRow >> ((x + scx) % 8)) & 0x02 + (tileRow >> (((x + scx) % 8) + 8)) & 0x01)]
     }
 }
