@@ -10,7 +10,7 @@ import Foundation
 
 public class MemoryHelper {
     fileprivate unowned let memory: Memory
-    
+
     public init(onMemory memory: Memory) {
         self.memory = memory
     }

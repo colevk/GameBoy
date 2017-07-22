@@ -10,7 +10,7 @@ import Foundation
 
 public class Flags {
     public var uint8: UInt8 = 0
-    
+
     private func getFlag(withMask mask: UInt8) -> Bool {
         return (uint8 & mask) != 0
     }

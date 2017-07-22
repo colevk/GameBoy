@@ -11,20 +11,20 @@ import Foundation
 public class Memory {
     weak var cpu: CPU!
     weak var gpu: GPU!
-    
+
     private var booting = true
-    
+
     public private(set) var bytes: ByteAddress! = nil
     public private(set) var words: WordAddress! = nil
     public private(set) var registers8: Registers8Bit! = nil
     public private(set) var registers16: Registers16Bit! = nil
     public private(set) var conditions: Conditions! = nil
-    
+
     public init() {
         eRAM = [UInt8](repeating: 0, count: 0x2000)
         wRAM = [UInt8](repeating: 0, count: 0x2000)
         zRAM = [UInt8](repeating: 0, count: 0x80)
-        
+
         a = 0
         b = 0
         c = 0
@@ -35,22 +35,22 @@ public class Memory {
         flags = Flags()
         pc = 0
         sp = 0
-        
+
         bytes = ByteAddress(onMemory: self)
         words = WordAddress(onMemory: self)
         registers8 = Registers8Bit(onMemory: self)
         registers16 = Registers16Bit(onMemory: self)
         conditions = Conditions(onMemory: self)
     }
-    
-    
+
+
     // Memory
-    
+
     private var cartridge: [UInt8]?
     private var eRAM: [UInt8]
     private var wRAM: [UInt8]
     private var zRAM: [UInt8]
-    
+
     public func readByte(fromAddress addr: Int) -> UInt8 {
         switch addr {
         // BIOS address space and cartrige bank 0
@@ -109,7 +109,7 @@ public class Memory {
             return 0
         }
     }
-    
+
     public func writeByte(_ newValue: UInt8, toAddress addr: Int) {
         switch addr {
         case 0x0000...0x7FFF: // Read-only
@@ -134,7 +134,7 @@ public class Memory {
         // Zero-page RAM, for fast interactions with RAM
         case 0xFF80...0xFFFF:
             zRAM[addr - 0xFF80] = newValue
-        
+
         // 0xFF00 - 0xFF7F: I/O addresses
         case 0xFF40:
             gpu.controlBits = newValue
@@ -152,19 +152,19 @@ public class Memory {
             break
         }
     }
-    
+
     public func readWord(fromAddress addr: Int) -> UInt16 {
         return UInt16(readByte(fromAddress: addr)) + UInt16(readByte(fromAddress: addr + 1)) << 8
     }
-    
+
     public func writeWord(_ newValue: UInt16, toAddress addr: Int) {
         writeByte(UInt8(newValue & 0xFF), toAddress: addr)
         writeByte(UInt8(newValue >> 8), toAddress: addr + 1)
     }
 
-    
+
     // 8-bit registers and flags
-    
+
     public var a: UInt8
     public var b: UInt8
     public var c: UInt8
@@ -172,7 +172,7 @@ public class Memory {
     public var e: UInt8
     public var h: UInt8
     public var l: UInt8
-    
+
     public var flags: Flags
     public var f: UInt8 {
         get {
@@ -182,7 +182,7 @@ public class Memory {
             flags.uint8 = newValue & 0xF0
         }
     }
-    
+
     public var addrHL: UInt8 {
         get {
             return readByte(fromAddress: Int(hl))
@@ -191,7 +191,7 @@ public class Memory {
             writeByte(newValue, toAddress: Int(hl))
         }
     }
-    
+
     public var addrHLI: UInt8 {
         get {
             let value = addrHL
@@ -203,7 +203,7 @@ public class Memory {
             hl += 1
         }
     }
-    
+
     public var addrHLD: UInt8 {
         get {
             let value = addrHL
@@ -216,24 +216,24 @@ public class Memory {
         }
     }
 
-    
+
     // 16-bit registers
-    
+
     public var pc: UInt16
     public var sp: UInt16
-    
+
     public func pcByte() -> UInt8 {
         let value = bytes[Int(pc)]
         pc &+= 1
         return value
     }
-    
+
     public func pcWord() -> UInt16 {
         let value = words[pc]
         pc &+= 2
         return value
     }
-    
+
     public var bc: UInt16 {
         get {
             return UInt16(b) << 8 + UInt16(c)
@@ -243,7 +243,7 @@ public class Memory {
             c = UInt8(newValue & 0xFF)
         }
     }
-    
+
     public var de: UInt16 {
         get {
             return UInt16(d) << 8 + UInt16(e)
@@ -253,7 +253,7 @@ public class Memory {
             e = UInt8(newValue & 0xFF)
         }
     }
-    
+
     public var hl: UInt16 {
         get {
             return UInt16(h) << 8 + UInt16(l)
@@ -263,7 +263,7 @@ public class Memory {
             l = UInt8(newValue & 0xFF)
         }
     }
-    
+
     public var af: UInt16 {
         get {
             return UInt16(a) << 8 + UInt16(f)

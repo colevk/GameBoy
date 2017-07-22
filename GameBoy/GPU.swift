@@ -15,7 +15,7 @@ public class GPU {
     public var lineAttributes: AlignedArray<UInt8>
 
     private let numAttributes: Int = 4
-    
+
     public init() {
         ram = AlignedArray<UInt8>(withCapacity: 0x2000, alignedTo: 0x1000)
         oam = AlignedArray<UInt8>(withCapacity: 0xA0, alignedTo: 0x1000)
@@ -26,7 +26,7 @@ public class GPU {
     public var scy: UInt8 = 0
     public var scx: UInt8 = 0
     public var palette: UInt8 = 0
-    
+
     public func storeLineAttributes(line: Int) {
         if line >= 144 { return }
         lineAttributes[line * numAttributes] = controlBits

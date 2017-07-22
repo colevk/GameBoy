@@ -9,25 +9,25 @@
 import Foundation
 
 public class CPU {
-    
+
     unowned let mem: Memory
     let ops: Ops
     var timer: Int = 0
-    
+
     public init(withMemory memory: Memory) {
         mem = memory
         ops = Ops(withFlags: mem.flags)
     }
-    
+
     public func step() {
         runOpcode(mem.pcByte())
     }
-    
+
     public func runOpcode(_ opcode: UInt8) {
         switch opcode {
         case 0x00: // NOP
             timer += 1
-            
+
         case 0x08: // LD (nn),SP
             mem.words[mem.pcWord()] = mem.sp
             timer += 5
@@ -47,15 +47,15 @@ public class CPU {
             } else {
                 timer += 2
             }
-            
+
         case 0x01, 0x11, 0x21, 0x31: // LD rr,nn
             let offset = (opcode - 0x01) / 16
             mem.registers16[offset] = mem.pcWord()
             timer += 3
-            
+
         case 0x09, 0x19, 0x29, 0x39: // ADD HL,rr
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0x02: // LD (BC),A
             mem.bytes[mem.bc] = mem.a
             timer += 2
@@ -68,7 +68,7 @@ public class CPU {
         case 0x32: // LDD (HL),A
             mem.addrHLD = mem.a
             timer += 2
-            
+
         case 0x0A: // LD A,(BC)
             mem.a = mem.bytes[mem.bc]
             timer += 2
@@ -81,12 +81,12 @@ public class CPU {
         case 0x3A: // LDD A,(HL)
             mem.a = mem.addrHLD
             timer += 2
-            
+
         case 0x03, 0x13, 0x23, 0x33: // INC rr
             let offset = (opcode - 0x03) / 16
             ops.inc(register: &mem.registers16[offset])
             timer += 2
-            
+
         case 0x0B, 0x1B, 0x2B, 0x3B: // DEC rr
             let offset = (opcode - 0x0B) / 16
             ops.dec(register: &mem.registers16[offset])
@@ -106,7 +106,7 @@ public class CPU {
             let offset = (opcode - 0x06) / 8
             mem.registers8[offset] = mem.pcByte()
             timer += (offset != 6) ? 2 : 3
-        
+
         case 0x07: // RLCA
             ops.rlc(register: &mem.a)
             mem.flags.z = false
@@ -139,31 +139,31 @@ public class CPU {
             mem.flags.h = false
             mem.flags.c = !mem.flags.c
             timer += 1
-            
+
         case 0x40...0x75, 0x77...0x7F: // LD r,r
             let srcOffset = opcode % 8
             let dstOffset = (opcode - 0x40) / 8
             mem.registers8[dstOffset] = mem.registers8[srcOffset]
             timer += (srcOffset != 6 && dstOffset != 6) ? 1 : 2
-            
+
         case 0x76: // HALT
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0x80...0x87: // ADD A,r
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0x88...0x8F: // ADC A,r
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0x90...0x97: // SUB r
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0x98...0x9F: // SBC A,r
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0xA0...0xA7: // AND r
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0xA8...0xAF: // XOR r
             let offset = opcode % 8
             mem.a = mem.a ^ mem.registers8[offset]
@@ -172,15 +172,15 @@ public class CPU {
             mem.flags.h = false
             mem.flags.c = false
             timer += offset != 6 ? 1 : 2
-            
+
         case 0xB0...0xB7: // OR r
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0xB8...0xBF: // CP r
             let offset = opcode % 8
             ops.cp(to: mem.a, from: mem.registers8[offset])
             timer += offset != 6 ? 1 : 2
-            
+
         case 0xC6: // ADD A,n
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xCE: // ADC A,n
@@ -198,7 +198,7 @@ public class CPU {
         case 0xFE: // CP n
             ops.cp(to: mem.a, from: mem.pcByte())
             timer += 2
-            
+
         case 0xC9: // RET
             mem.pc = mem.words[mem.sp]
             mem.sp += 2
@@ -215,7 +215,7 @@ public class CPU {
 
         case 0xD9: // RETI
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0xC1, 0xD1, 0xE1: // POP rr
             let offset = (opcode - 0xC1) / 16
             mem.registers16[offset] = mem.words[mem.sp]
@@ -225,7 +225,7 @@ public class CPU {
             mem.af = mem.words[mem.sp]
             mem.sp += 2
             timer += 3
-            
+
         case 0xC5, 0xD5, 0xE5: // PUSH rr
             let offset = (opcode - 0xC5) / 16
             mem.sp -= 2
@@ -235,7 +235,7 @@ public class CPU {
             mem.sp -= 2
             mem.words[mem.sp] = mem.af
             timer += 4
-            
+
         case 0xC3: // JP nn
             mem.pc = mem.pcWord()
             timer += 4
@@ -251,7 +251,7 @@ public class CPU {
         case 0xE9: // JP (HL)
             mem.pc = mem.hl
             timer += 1
-            
+
         case 0xCD: // CALL nn
             let addr = mem.pcWord()
             mem.sp -= 2
@@ -269,45 +269,45 @@ public class CPU {
             } else {
                 timer += 3
             }
-            
+
         case 0xE8: // ADD SP,n
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0xF8: // LD HL,SP+n
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xF9: // LD SP,HL
             mem.sp = mem.hl
             timer += 2
-            
+
         case 0xE0: // LDH (n),A
             mem.bytes[0xFF00 + UInt16(mem.pcByte())] = mem.a
             timer += 3
         case 0xF0: // LDH A,(n)
             mem.a = mem.bytes[0xFF00 + UInt16(mem.pcByte())]
             timer += 3
-            
+
         case 0xE2: // LD (C),A
             mem.bytes[0xFF00 + UInt16(mem.c)] = mem.a
             timer += 2
         case 0xF2: // LD A,(C)
             mem.a = mem.bytes[0xFF00 + UInt16(mem.c)]
             timer += 2
-            
+
         case 0xEA: // LD (nn),A
             mem.bytes[mem.pcWord()] = mem.a
             timer += 4
         case 0xFA: // LD A,(nn)
             mem.a = mem.bytes[mem.pcWord()]
             timer += 4
-            
+
         case 0xF3: // DI
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
         case 0xFB: // EI
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF: // RST
             fatalError("Unimplemented instruction: \(nextInstruction(1))\n")
-            
+
         case 0xCB:
             runOpcodeCB(mem.pcByte())
 
@@ -318,7 +318,7 @@ public class CPU {
             fatalError("Unimplemented instruction")
         }
     }
-    
+
     public func runOpcodeCB(_ opcode: UInt8) {
         switch opcode {
         case 0x00...0x07: // RLC r
@@ -330,39 +330,39 @@ public class CPU {
             let offset = opcode % 8
             ops.rrc(register: &mem.registers8[offset])
             timer += (offset != 6) ? 2 : 4
-            
+
         case 0x10...0x17: // RL r
             let offset = opcode % 8
             ops.rl(register: &mem.registers8[offset])
             timer += (offset != 6) ? 2 : 4
-            
+
         case 0x18...0x1F: // RR r
             fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
-            
+
         case 0x20...0x27: // SLA r
             fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
-            
+
         case 0x28...0x2F: // SRA r
             fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
-            
+
         case 0x30...0x3F: // SWAP r
             fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
-            
+
         case 0x38...0x3F: // SRL r
             fatalError("Unimplemented instruction: \(nextInstruction(2))\n")
-            
+
         case 0x40...0x7F: // BIT d,r
             let bitOffset = (opcode - 0x40) / 8
             let registerOffset = opcode % 8
             ops.bit(bitOffset, register: mem.registers8[registerOffset])
             timer += (registerOffset != 6) ? 2 : 4
-            
+
         case 0x80...0xBF: // RES d,r
             let bitOffset = (opcode - 0x80) / 8
             let registerOffset = opcode % 8
             ops.reset(bitOffset, register: &mem.registers8[registerOffset])
             timer += (registerOffset != 6) ? 2 : 4
-            
+
         case 0xC0...0xFF: // SET d,r
             let bitOffset = (opcode - 0xC0) / 8
             let registerOffset = opcode % 8
@@ -372,11 +372,11 @@ public class CPU {
         default: break
         }
     }
-    
+
     public func nextInstruction() -> String {
         return nextInstruction(0)
     }
-    
+
     public func nextInstruction(_ byteOffset: UInt16) -> String {
         let opcode = Int(mem.bytes[mem.pc - byteOffset])
         let nextByte = String(format: "$%02X", mem.bytes[mem.pc + 1 - byteOffset])
@@ -384,7 +384,7 @@ public class CPU {
         let r8Names = ["B", "C", "D", "E", "H", "L", "(HL)", "A"]
         let r16Names = ["BC", "DE", "HL", "SP"]
         let ccNames = ["NZ", "Z", "NC", "C"]
-        
+
         switch opcode {
         case 0x00: return "NOP"
         case 0x08: return "LD (\(nextWord)),SP"
@@ -457,7 +457,7 @@ public class CPU {
         case 0xFB: return "EI"
         case 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF: return "RST $\(String(opcode - 0xC7, radix: 16))"
         case 0xD3, 0xDB, 0xDD, 0xE3, 0xE4, 0xEB...0xED, 0xF4, 0xFC, 0xFD: return "Unused instruction"
-            
+
         case 0xCB:
             let opcodeCB = Int(mem.bytes[mem.pc + 1])
             switch opcodeCB {
@@ -476,7 +476,7 @@ public class CPU {
             }
         default: break
         }
-        
+
         return "Missing case statement"
     }
 
