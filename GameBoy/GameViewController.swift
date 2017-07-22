@@ -19,7 +19,9 @@ class GameViewController: NSViewController, MTKViewDelegate {
     var commandQueue: MTLCommandQueue! = nil
     var pipelineState: MTLRenderPipelineState! = nil
     var vertexBuffer: MTLBuffer! = nil
-    var pixelBuffer: MTLBuffer! = nil
+    var graphicsRAMBuffer: MTLBuffer! = nil
+    var graphicsOAMBuffer: MTLBuffer! = nil
+    var graphicsAttributesBuffer: MTLBuffer! = nil
 
     override func viewDidLoad() {
         
@@ -42,7 +44,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
         memory = Memory()
         cpu = CPU(withMemory: memory)
         memory.cpu = cpu
-        gpu = GPU(withMemory: memory)
+        gpu = GPU()
         memory.gpu = gpu
         
         loadAssets()
@@ -77,12 +79,18 @@ class GameViewController: NSViewController, MTKViewDelegate {
         vertexBuffer.label = "vertices"
         
         // All work is done in fragment shader based on screen position
-        pixelBuffer = device.makeBuffer(bytesNoCopy: gpu.screen.pointer, length: gpu.screen.count, options: [], deallocator: nil)
-        pixelBuffer.label = "pixels"
+        graphicsRAMBuffer = device.makeBuffer(bytesNoCopy: gpu.ram.pointer, length: gpu.ram.bytes, options: [], deallocator: nil)
+        graphicsRAMBuffer.label = "graphics ram"
+
+        graphicsOAMBuffer = device.makeBuffer(bytesNoCopy: gpu.oam.pointer, length: gpu.oam.bytes, options: [], deallocator: nil)
+        graphicsOAMBuffer.label = "graphics oam"
+
+        graphicsAttributesBuffer = device.makeBuffer(bytesNoCopy: gpu.lineAttributes.pointer, length: gpu.lineAttributes.bytes, options: [], deallocator: nil)
+        graphicsAttributesBuffer.label = "graphics line attributes"
     }
     
     func update() {
-        for _ in 0..<154 {
+        for line in 0..<154 {
             let startTimer = cpu.timer - (cpu.timer % 114)
             while cpu.timer - startTimer < 20 {
                 cpu.step()
@@ -90,12 +98,12 @@ class GameViewController: NSViewController, MTKViewDelegate {
             while cpu.timer - startTimer < 63 {
                 cpu.step()
             }
-            gpu.renderLine()
+            gpu.storeLineAttributes(line: line)
             while cpu.timer - startTimer < 114 {
                 cpu.step()
             }
         }
-}
+    }
     
     func draw(in view: MTKView) {
         self.update()
@@ -110,7 +118,10 @@ class GameViewController: NSViewController, MTKViewDelegate {
             renderEncoder?.label = "render encoder"
 
             renderEncoder?.setRenderPipelineState(pipelineState)
-            renderEncoder?.setFragmentBuffer(pixelBuffer, offset: 0, index: 0)
+
+            renderEncoder?.setFragmentBuffer(graphicsRAMBuffer, offset: 0, index: 0)
+            renderEncoder?.setFragmentBuffer(graphicsOAMBuffer, offset: 0, index: 1)
+            renderEncoder?.setFragmentBuffer(graphicsAttributesBuffer, offset: 0, index: 2)
             
             renderEncoder?.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
             renderEncoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)

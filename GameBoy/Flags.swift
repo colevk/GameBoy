@@ -14,7 +14,7 @@ public class Flags {
     private func getFlag(withMask mask: UInt8) -> Bool {
         return (uint8 & mask) != 0
     }
-    
+
     private func setFlag(_ newValue: Bool, withMask mask: UInt8) {
         if newValue {
             uint8 |= mask
@@ -22,7 +22,7 @@ public class Flags {
             uint8 &= ~mask
         }
     }
-    
+
     public var z: Bool {
         get {
             return getFlag(withMask: 0x80)
@@ -31,7 +31,7 @@ public class Flags {
             setFlag(newValue, withMask: 0x80)
         }
     }
-    
+
     public var n: Bool {
         get {
             return getFlag(withMask: 0x40)
@@ -40,7 +40,7 @@ public class Flags {
             setFlag(newValue, withMask: 0x40)
         }
     }
-    
+
     public var h: Bool {
         get {
             return getFlag(withMask: 0x20)
@@ -49,7 +49,7 @@ public class Flags {
             setFlag(newValue, withMask: 0x20)
         }
     }
-    
+
     public var c: Bool {
         get {
             return getFlag(withMask: 0x10)

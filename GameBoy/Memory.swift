@@ -21,10 +21,8 @@ public class Memory {
     public private(set) var conditions: Conditions! = nil
     
     public init() {
-        gRAM = [UInt8](repeating: 0, count: 0x2000)
         eRAM = [UInt8](repeating: 0, count: 0x2000)
         wRAM = [UInt8](repeating: 0, count: 0x2000)
-        oam = [UInt8](repeating: 0, count: 0xA0)
         zRAM = [UInt8](repeating: 0, count: 0x80)
         
         a = 0
@@ -49,55 +47,53 @@ public class Memory {
     // Memory
     
     private var cartridge: [UInt8]?
-    private var gRAM: [UInt8]
     private var eRAM: [UInt8]
     private var wRAM: [UInt8]
-    private var oam: [UInt8]
     private var zRAM: [UInt8]
     
-    public func readByte(fromAddress addr: UInt16) -> UInt8 {
+    public func readByte(fromAddress addr: Int) -> UInt8 {
         switch addr {
         // BIOS address space and cartrige bank 0
         case 0x0000...0x00FF:
             if booting {
-                return bios[Int(addr)]
+                return bios[addr]
             } else if let cart = cartridge {
-                return cart[Int(addr)]
+                return cart[addr]
             } else {
                 return 0
             }
         case 0x0100...0x3FFF:
             if let cart = cartridge {
-                return cart[Int(addr)]
+                return cart[addr]
             } else {
                 return 0
             }
         // Cartridge banks 1+
         case 0x4000...0x7FFF:
             if let cart = cartridge {
-                return cart[Int(addr)]
+                return cart[addr]
             } else {
                 return 0
             }
         // Graphics RAM
         case 0x8000...0x9FFF:
-            return gRAM[Int(addr - 0x8000)]
+            return gpu.ram[addr - 0x8000]
         // Cartridge RAM
         case 0xA000...0xBFFF:
-            return eRAM[Int(addr - 0xA000)]
+            return eRAM[addr - 0xA000]
         // Working RAM
         case 0xC000...0xDFFF:
-            return wRAM[Int(addr - 0xA000)]
+            return wRAM[addr - 0xA000]
         // Copy of working RAM
         case 0xE000...0xFDFF:
-            return wRAM[Int(addr - 0xE000)]
+            return wRAM[addr - 0xE000]
         // Object Attribute Memory
         case 0xFE00...0xFE9F:
-            return oam[Int(addr - 0xFE00)]
+            return gpu.oam[addr - 0xFE00]
         // Zero-page RAM, for fast interactions with RAM
         case 0xFF80...0xFFFF:
-            return zRAM[Int(addr - 0xFF80)]
-        
+            return zRAM[addr - 0xFF80]
+
         // 0xFF00 - 0xFF7F: I/O addresses
         case 0xFF40:
             return gpu.controlBits
@@ -114,28 +110,30 @@ public class Memory {
         }
     }
     
-    public func writeByte(_ newValue: UInt8, toAddress addr: UInt16) {
+    public func writeByte(_ newValue: UInt8, toAddress addr: Int) {
         switch addr {
         case 0x0000...0x7FFF: // Read-only
             break
         // Graphics RAM
-        case 0x8000...0x9FFF:
-            gRAM[Int(addr - 0x8000)] = newValue
+        case 0x8000...0x97FF:
+            gpu.ram[addr - 0x8000] = newValue
+        case 0x9800...0x9FFF:
+            gpu.ram[addr - 0x8000] = newValue
         // Cartridge RAM
         case 0xA000...0xBFFF:
-            eRAM[Int(addr - 0xA000)] = newValue
+            eRAM[addr - 0xA000] = newValue
         // Working RAM
         case 0xC000...0xDFFF:
-            wRAM[Int(addr - 0xA000)] = newValue
+            wRAM[addr - 0xA000] = newValue
         // Copy of working RAM
         case 0xE000...0xFDFF:
-            wRAM[Int(addr - 0xE000)] = newValue
+            wRAM[addr - 0xE000] = newValue
         // Object Attribute Memory
         case 0xFE00...0xFE9F:
-            oam[Int(addr - 0xFE00)] = newValue
+            gpu.oam[addr - 0xFE00] = newValue
         // Zero-page RAM, for fast interactions with RAM
         case 0xFF80...0xFFFF:
-            zRAM[Int(addr - 0xFF80)] = newValue
+            zRAM[addr - 0xFF80] = newValue
         
         // 0xFF00 - 0xFF7F: I/O addresses
         case 0xFF40:
@@ -155,11 +153,11 @@ public class Memory {
         }
     }
     
-    public func readWord(fromAddress addr: UInt16) -> UInt16 {
+    public func readWord(fromAddress addr: Int) -> UInt16 {
         return UInt16(readByte(fromAddress: addr)) + UInt16(readByte(fromAddress: addr + 1)) << 8
     }
     
-    public func writeWord(_ newValue: UInt16, toAddress addr: UInt16) {
+    public func writeWord(_ newValue: UInt16, toAddress addr: Int) {
         writeByte(UInt8(newValue & 0xFF), toAddress: addr)
         writeByte(UInt8(newValue >> 8), toAddress: addr + 1)
     }
@@ -187,10 +185,10 @@ public class Memory {
     
     public var addrHL: UInt8 {
         get {
-            return readByte(fromAddress: hl)
+            return readByte(fromAddress: Int(hl))
         }
         set {
-            writeByte(newValue, toAddress: hl)
+            writeByte(newValue, toAddress: Int(hl))
         }
     }
     
@@ -225,7 +223,7 @@ public class Memory {
     public var sp: UInt16
     
     public func pcByte() -> UInt8 {
-        let value = bytes[pc]
+        let value = bytes[Int(pc)]
         pc &+= 1
         return value
     }

@@ -17,7 +17,7 @@ public class MemoryHelper {
 }
 
 public class ByteAddress: MemoryHelper {
-    public subscript(index: UInt16) -> UInt8 {
+    public subscript(index: Int) -> UInt8 {
         get {
             return memory.readByte(fromAddress: index)
         }
@@ -25,15 +25,33 @@ public class ByteAddress: MemoryHelper {
             memory.writeByte(newValue, toAddress: index)
         }
     }
+
+    public subscript(index: UInt16) -> UInt8 {
+        get {
+            return self[Int(index)]
+        }
+        set {
+            self[Int(index)] = newValue
+        }
+    }
 }
 
 public class WordAddress: MemoryHelper {
-    public subscript(index: UInt16) -> UInt16 {
+    public subscript(index: Int) -> UInt16 {
         get {
             return memory.readWord(fromAddress: index)
         }
         set {
             memory.writeWord(newValue, toAddress: index)
+        }
+    }
+
+    public subscript(index: UInt16) -> UInt16 {
+        get {
+            return self[Int(index)]
+        }
+        set {
+            self[Int(index)] = newValue
         }
     }
 }

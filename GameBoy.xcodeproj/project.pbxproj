@@ -20,6 +20,7 @@
 		F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966D1F1916CC00291BAE /* CPU.swift */; };
 		F0CB96701F191D3A00291BAE /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966F1F191D3A00291BAE /* Ops.swift */; };
 		F0CB96721F191F5E00291BAE /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96711F191F5E00291BAE /* Flags.swift */; };
+		F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5087B1F237BD100833E53 /* AlignedArray.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		F0CB966D1F1916CC00291BAE /* CPU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
 		F0CB966F1F191D3A00291BAE /* Ops.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ops.swift; sourceTree = "<group>"; };
 		F0CB96711F191F5E00291BAE /* Flags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Flags.swift; sourceTree = "<group>"; };
+		F0D5087B1F237BD100833E53 /* AlignedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedArray.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 				F0CB96711F191F5E00291BAE /* Flags.swift */,
 				F0CB966D1F1916CC00291BAE /* CPU.swift */,
 				F0B9EADF1F20F4B0008426CF /* GPU.swift */,
+				F0D5087B1F237BD100833E53 /* AlignedArray.swift */,
 				F0CB966F1F191D3A00291BAE /* Ops.swift */,
 			);
 			path = GameBoy;
@@ -281,6 +284,7 @@
 			files = (
 				F0CB96431F18F3F700291BAE /* Shaders.metal in Sources */,
 				F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */,
+				F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */,
 				F08F482B1F1A85BE0041E4A8 /* MemoryHelpers.swift in Sources */,
 				F0CB96701F191D3A00291BAE /* Ops.swift in Sources */,
 				F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */,
