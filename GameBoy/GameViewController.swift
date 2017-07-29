@@ -10,6 +10,8 @@ import Cocoa
 import MetalKit
 
 class GameViewController: NSViewController, MTKViewDelegate {
+    var running: Bool = true
+
     var memory: Memory! = nil
     var cpu: CPU! = nil
     var gpu: GPU! = nil
@@ -51,6 +53,11 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
 
     func loadAssets() {
+//        if let data = NSData(contentsOfFile: "/Users/colevankrieken/Downloads/tetris.gb") {
+        if let data = NSData(contentsOfFile: "/Users/colevankrieken/Downloads/cpu_instrs/individual/09-op r,r.gb") {
+            memory.cartridge = [UInt8].init(repeating: 0, count: data.length)
+            data.getBytes(&memory.cartridge!, range: NSRange(location: 0, length: data.length))
+        }
 
         // load any resources required for rendering
         let view = self.view as! MTKView
@@ -106,7 +113,9 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
 
     func draw(in view: MTKView) {
-        self.update()
+        if running {
+            self.update()
+        }
 
         let commandBuffer = commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Frame command buffer"
@@ -132,6 +141,14 @@ class GameViewController: NSViewController, MTKViewDelegate {
         }
 
         commandBuffer?.commit()
+    }
+
+    @IBAction func pause(_ sender: NSMenuItem) {
+        running = !running
+    }
+
+    @IBAction func restart(_ sender: NSMenuItem) {
+        cpu.reset()
     }
 
 

@@ -43,10 +43,15 @@ public class Memory {
         conditions = Conditions(onMemory: self)
     }
 
+    public func reset() {
+        booting = true
+        pc = 0
+    }
+
 
     // Memory
 
-    private var cartridge: [UInt8]?
+    public var cartridge: [UInt8]?
     private var eRAM: [UInt8]
     private var wRAM: [UInt8]
     private var zRAM: [UInt8]
@@ -60,20 +65,20 @@ public class Memory {
             } else if let cart = cartridge {
                 return cart[addr]
             } else {
-                return 0
+                return 0xFF
             }
         case 0x0100...0x3FFF:
             if let cart = cartridge {
                 return cart[addr]
             } else {
-                return 0
+                return 0xFF
             }
         // Cartridge banks 1+
         case 0x4000...0x7FFF:
             if let cart = cartridge {
                 return cart[addr]
             } else {
-                return 0
+                return 0xFF
             }
         // Graphics RAM
         case 0x8000...0x9FFF:
@@ -83,7 +88,7 @@ public class Memory {
             return eRAM[addr - 0xA000]
         // Working RAM
         case 0xC000...0xDFFF:
-            return wRAM[addr - 0xA000]
+            return wRAM[addr - 0xC000]
         // Copy of working RAM
         case 0xE000...0xFDFF:
             return wRAM[addr - 0xE000]
@@ -91,7 +96,7 @@ public class Memory {
         case 0xFE00...0xFE9F:
             return gpu.oam[addr - 0xFE00]
         // Zero-page RAM, for fast interactions with RAM
-        case 0xFF80...0xFFFF:
+        case 0xFF80...0xFFFE:
             return zRAM[addr - 0xFF80]
 
         // 0xFF00 - 0xFF7F: I/O addresses
@@ -105,6 +110,9 @@ public class Memory {
             return UInt8((cpu.timer / 114) % 154)
         case 0xFF47:
             return gpu.controlBits
+        case 0xFF00...0xFF7F,0xFFFF:
+            print("Unsupported read from \(String(format: "0x%4X", addr))")
+            return 0
         default:
             return 0
         }
@@ -115,16 +123,14 @@ public class Memory {
         case 0x0000...0x7FFF: // Read-only
             break
         // Graphics RAM
-        case 0x8000...0x97FF:
-            gpu.ram[addr - 0x8000] = newValue
-        case 0x9800...0x9FFF:
+        case 0x8000...0x9FFF:
             gpu.ram[addr - 0x8000] = newValue
         // Cartridge RAM
         case 0xA000...0xBFFF:
             eRAM[addr - 0xA000] = newValue
         // Working RAM
         case 0xC000...0xDFFF:
-            wRAM[addr - 0xA000] = newValue
+            wRAM[addr - 0xC000] = newValue
         // Copy of working RAM
         case 0xE000...0xFDFF:
             wRAM[addr - 0xE000] = newValue
@@ -132,10 +138,12 @@ public class Memory {
         case 0xFE00...0xFE9F:
             gpu.oam[addr - 0xFE00] = newValue
         // Zero-page RAM, for fast interactions with RAM
-        case 0xFF80...0xFFFF:
+        case 0xFF80...0xFFFE:
             zRAM[addr - 0xFF80] = newValue
 
         // 0xFF00 - 0xFF7F: I/O addresses
+        case 0xFF01:
+            print(Character(UnicodeScalar(newValue)), terminator:"")
         case 0xFF40:
             gpu.controlBits = newValue
         case 0xFF42:
@@ -143,11 +151,14 @@ public class Memory {
         case 0xFF43:
             gpu.scx = newValue
         case 0xFF47:
-            gpu.controlBits = newValue
+            gpu.palette = newValue
         case 0xFF50:
             if newValue == 1 {
                 booting = false
             }
+        case 0xFF00...0xFF7F,0xFFFF:
+//            print("Unsupported write to \(String(format: "0x%04X", addr)): \(String(format: "0x%02X", newValue))")
+            break
         default:
             break
         }

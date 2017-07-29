@@ -17,9 +17,8 @@ public struct Ops {
 
     public func inc(register: inout UInt8) {
         flags.h = register & 0xF == 0xF
-        let overflow: ArithmeticOverflow
-        (register, overflow) = register.addingReportingOverflow(1)
-        flags.z = overflow == .overflow
+        register &+= 1
+        flags.z = register == 0
         flags.n = false
     }
 
@@ -61,9 +60,75 @@ public struct Ops {
         flags.h = false
     }
 
+    public func rr(register: inout UInt8) {
+        (flags.c, register) = (register & 0x01 == 0x01, register >> 1 + (flags.c ? 0x80 : 0))
+        flags.z = register == 0
+        flags.n = false
+        flags.h = false
+    }
+
     public func add(to: inout UInt8, from: UInt8) {
         (to, flags.h, flags.c) = UInt8.addWithFlags(to, from)
         flags.n = false
+        flags.z = to == 0
+    }
+
+    public func adc(to: inout UInt8, from: UInt8) {
+        if (flags.c) {
+            let (temp, h1, c1) = UInt8.addWithFlags(to, from)
+            let (res, h2, c2) = UInt8.addWithFlags(temp, 1)
+            to = res
+            flags.z = to == 0
+            flags.n = false
+            flags.h = h1 || h2
+            flags.c = c1 || c2
+        } else {
+            add(to: &to, from: from)
+        }
+    }
+
+    public func sub(to: inout UInt8, from: UInt8) {
+        (to, flags.h, flags.c) = UInt8.subtractWithFlags(to, from)
+        flags.n = true
+        flags.z = to == 0
+    }
+
+    public func sbc(to: inout UInt8, from: UInt8) {
+        if (flags.c) {
+            let (temp, h1, c1) = UInt8.subtractWithFlags(to, from)
+            let (res, h2, c2) = UInt8.subtractWithFlags(temp, 1)
+            to = res
+            flags.z = to == 0
+            flags.n = true
+            flags.h = h1 || h2
+            flags.c = c1 || c2
+        } else {
+            sub(to: &to, from: from)
+        }
+    }
+
+    public func and(to: inout UInt8, from: UInt8) {
+        to = to & from
+        flags.z = to == 0
+        flags.n = false
+        flags.h = true
+        flags.c = false
+    }
+
+    public func or(to: inout UInt8, from: UInt8) {
+        to = to | from
+        flags.z = to == 0
+        flags.n = false
+        flags.h = false
+        flags.c = false
+    }
+
+    public func xor(to: inout UInt8, from: UInt8) {
+        to = to ^ from
+        flags.z = to == 0
+        flags.n = false
+        flags.h = false
+        flags.c = false
     }
 
     public func cp(to: UInt8, from: UInt8) {
@@ -138,7 +203,7 @@ extension UInt16 {
     }
 
     public static func addRelativeWithFlags(_ lhs: UInt16, _ rhs: UInt8) -> (UInt16, Bool, Bool) {
-        let rhsExtended = UInt16(rhs) + ((rhs & 0xF0 == 0xF0) ? 0xFF00 : 0)
+        let rhsExtended = UInt16(rhs) + ((rhs & 0x80 == 0x80) ? 0xFF00 : 0)
         return UInt16.addWithFlags(lhs, rhsExtended)
     }
 

@@ -51,13 +51,13 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
 
     // if background on
     if (attr & BACKGROUND_ON) {
-        uchar bgy = y + scy;
-        uchar bgx = x + scx;
-        uchar tiley = bgy / 8 % 32;
-        uchar tilex = bgx / 8 % 32;
+        uchar bgy = (y + scy) % 256;
+        uchar bgx = (x + scx) % 256;
+        int tiley = bgy / 8;
+        int tilex = bgx / 8;
         int tilenum = tilex + tiley * 32;
 
-        uchar tileaddr = 0;
+        int tileaddr = 0;
         // check which tile map to use
         if (attr & BG_TILE_MAP) {
             // tile map 1 starts at 0x1C00
@@ -78,8 +78,8 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
         uchar pixely = bgy % 8;
         uchar pixelx = bgx % 8;
         uchar paletteidx =
-            ((ram[tilestart + pixely * 2] & (0b10000000 >> pixelx)) >> (7 - pixelx)) +
-            ((ram[tilestart + pixely * 2 + 1] & (0b10000000 >> pixelx)) >> (7 - pixelx) << 1);
+            ((ram[tilestart + pixely * 2] & (0x80 >> pixelx)) >> (7 - pixelx)) +
+            ((ram[tilestart + pixely * 2 + 1] & (0x80 >> pixelx)) >> (7 - pixelx) << 1);
 
         uchar color = (palette >> (paletteidx * 2)) & 0b00000011;
 
