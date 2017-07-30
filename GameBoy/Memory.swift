@@ -157,8 +157,7 @@ public class Memory {
                 booting = false
             }
         case 0xFF00...0xFF7F,0xFFFF:
-//            print("Unsupported write to \(String(format: "0x%04X", addr)): \(String(format: "0x%02X", newValue))")
-            break
+            print("Unsupported write to \(String(format: "0x%04X", addr)): \(String(format: "0x%02X", newValue))")
         default:
             break
         }

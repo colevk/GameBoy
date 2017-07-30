@@ -54,10 +54,10 @@ class GameViewController: NSViewController, MTKViewDelegate {
 
     func loadAssets() {
 //        if let data = NSData(contentsOfFile: "/Users/colevankrieken/Downloads/tetris.gb") {
-        if let data = NSData(contentsOfFile: "/Users/colevankrieken/Downloads/cpu_instrs/individual/09-op r,r.gb") {
-            memory.cartridge = [UInt8].init(repeating: 0, count: data.length)
-            data.getBytes(&memory.cartridge!, range: NSRange(location: 0, length: data.length))
-        }
+//        if let data = NSData(contentsOfFile: "/Users/colevankrieken/Downloads/cpu_instrs/individual/09-op r,r.gb") {
+//            memory.cartridge = [UInt8].init(repeating: 0, count: data.length)
+//            data.getBytes(&memory.cartridge!, range: NSRange(location: 0, length: data.length))
+//        }
 
         // load any resources required for rendering
         let view = self.view as! MTKView
@@ -149,6 +149,29 @@ class GameViewController: NSViewController, MTKViewDelegate {
 
     @IBAction func restart(_ sender: NSMenuItem) {
         cpu.reset()
+        running = true
+    }
+
+    @IBAction func openDocument(_ sender: AnyObject) {
+        running = false
+
+        let panel = NSOpenPanel();
+        panel.title = "Choose a ROM"
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+
+        if (panel.runModal() == NSApplication.ModalResponse.OK) {
+            if let url = panel.url,
+               let data = NSData(contentsOfFile: url.path)
+            {
+                memory.cartridge = [UInt8].init(repeating: 0, count: data.length)
+                data.getBytes(&memory.cartridge!, range: NSRange(location: 0, length: data.length))
+                gpu.reset()
+                cpu.reset()
+            }
+        }
+
+        running = true
     }
 
 

@@ -22,6 +22,13 @@ public class GPU {
         lineAttributes = AlignedArray<UInt8>(withCapacity: numAttributes * 144, alignedTo: 0x1000)
     }
 
+    public func reset() {
+        controlBits = 0
+        scy = 0
+        scx = 0
+        palette = 0
+    }
+
     public var controlBits: UInt8 = 0
     public var scy: UInt8 = 0
     public var scx: UInt8 = 0
