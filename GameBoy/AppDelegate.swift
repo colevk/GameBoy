@@ -25,4 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 
+    func application(_ sender: NSApplication, openFile filename: String) -> Bool {
+        return false
+    }
 }

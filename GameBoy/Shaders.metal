@@ -8,11 +8,21 @@
 
 #include <metal_stdlib>
 
+//#define GB_COLOR_0 half4(0.608, 0.737, 0.059, 1.0)
+//#define GB_COLOR_1 half4(0.545, 0.675, 0.059, 1.0)
+//#define GB_COLOR_2 half4(0.188, 0.384, 0.188, 1.0)
+//#define GB_COLOR_3 half4(0.059, 0.220, 0.059, 1.0)
+
+#define GB_COLOR_0 half4(1.0, 1.0, 1.0, 1.0)
+#define GB_COLOR_1 half4(0.66, 0.66, 0.66, 1.0)
+#define GB_COLOR_2 half4(0.33, 0.33, 0.33, 1.0)
+#define GB_COLOR_3 half4(0.0, 0.0, 0.0, 1.0)
+
 #define BACKGROUND_ON   0b00000001
 #define SPRITES_ON      0b00000010
 #define SPRITE_SIZE     0b00000100
 #define BG_TILE_MAP     0b00001000
-#define BG_TILE_SET     0b00010000
+#define TILE_SET        0b00010000
 #define WINDOW_ON       0b00100000
 #define WINDOW_TILE_MAP 0b01000000
 #define DISPLAY_ON      0b10000000
@@ -39,61 +49,85 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
                                    constant uchar* attributes [[ buffer(2) ]]) {
     int x = int(inFrag.position.x / 6);
     int y = int(inFrag.position.y / 6);
-    uchar attr = attributes[y * 4];
-    uchar scy = attributes[y * 4 + 1];
-    uchar scx = attributes[y * 4 + 2];
-    uchar palette = attributes[y * 4 + 3];
 
-    // If display off, return white
-    if (!(attr & DISPLAY_ON)) {
-        return half4(1.0 , 1.0 , 1.0, 1.0);
+    uchar control = attributes[y * 8];
+    uchar scrollY = attributes[y * 8 + 1];
+    uchar scrollX = attributes[y * 8 + 2];
+    uchar spritePalette0 = attributes[y * 8 + 3];
+    uchar spritePalette1 = attributes[y * 8 + 4];
+    uchar windowY = attributes[y * 8 + 5];
+    uchar windowX = attributes[y * 8 + 6];
+    uchar bgPalette = attributes[y * 8 + 7];
+
+    // If display off, return color 0
+    if (!(control & DISPLAY_ON)) {
+        return GB_COLOR_0;
     }
 
-    // if background on
-    if (attr & BACKGROUND_ON) {
-        uchar bgy = (y + scy) % 256;
-        uchar bgx = (x + scx) % 256;
-        int tiley = bgy / 8;
-        int tilex = bgx / 8;
-        int tilenum = tilex + tiley * 32;
+    // If sprites on, handle foreground sprites
+    if (control & SPRITES_ON) {
+        // TODO: implement sprites
+    }
 
-        int tileaddr = 0;
+    // If window or background on
+    bool windowPixel = control & WINDOW_ON && y >= windowY && x >= windowX;
+    if (windowPixel || control & BACKGROUND_ON) {
+        uchar posY;
+        uchar posX;
+        if (windowPixel) {
+            posY = y - windowY;
+            posX = x - windowX;
+        } else {
+            posY = (y + scrollY) % 256;
+            posX = (x + scrollX) % 256;
+        }
+
+        int tileY = posY / 8;
+        int tileX = posX / 8;
+        int tilenum = tileX + tileY * 32;
+
+        int tileAddr;
         // check which tile map to use
-        if (attr & BG_TILE_MAP) {
+        if ((windowPixel && control & WINDOW_TILE_MAP) ||
+            (!windowPixel && control & BG_TILE_MAP)) {
             // tile map 1 starts at 0x1C00
-            tileaddr = ram[0x1C00 + tilenum];
+            tileAddr = ram[0x1C00 + tilenum];
         } else {
             // tile map 0 starts at 0x1800
-            tileaddr = ram[0x1800 + tilenum];
+            tileAddr = ram[0x1800 + tilenum];
         }
 
-        int tilestart = 0;
+        int tileStart;
         // check which tileset to use
-        if (attr & BG_TILE_SET || tileaddr > 127) {
-            tilestart = tileaddr * 16;
+        if (control & TILE_SET || tileAddr > 127) {
+            tileStart = tileAddr * 16;
         } else {
-            tilestart = 0x1000 + tileaddr * 16;
+            tileStart = 0x1000 + tileAddr * 16;
         }
 
-        uchar pixely = bgy % 8;
-        uchar pixelx = bgx % 8;
-        uchar paletteidx =
-            ((ram[tilestart + pixely * 2] & (0x80 >> pixelx)) >> (7 - pixelx)) +
-            ((ram[tilestart + pixely * 2 + 1] & (0x80 >> pixelx)) >> (7 - pixelx) << 1);
+        uchar pixelY = posY % 8;
+        uchar pixelX = posX % 8;
+        uchar paletteIdx =
+            ((ram[tileStart + pixelY * 2] & (0x80 >> pixelX)) >> (7 - pixelX)) +
+            ((ram[tileStart + pixelY * 2 + 1] & (0x80 >> pixelX)) >> (7 - pixelX) << 1);
 
-        uchar color = (palette >> (paletteidx * 2)) & 0b00000011;
+        uchar color = (bgPalette >> (paletteIdx * 2)) & 0b11;
 
-        if (color == 0) {
-            return half4(1.0 , 1.0 , 1.0, 1.0);
-        } else if (color == 1) {
-            return half4(0.66 , 0.66 , 0.66, 1.0);
+        if (color == 1) {
+            return GB_COLOR_1;
         } else if (color == 2) {
-            return half4(0.33 , 0.33 , 0.33, 1.0);
-        } else {
-            return half4(0.0 , 0.0 , 0.0, 1.0);
+            return GB_COLOR_2;
+        } else if (color == 3) {
+            return GB_COLOR_3;
         }
+        // Color 0 is transparent, check for sprites underneath
     }
 
-    // Nothing at this pixel, return white
-    return half4(1.0 , 1.0 , 1.0, 1.0);
+    // If sprites on, handle background sprites
+    if (control & SPRITES_ON) {
+        // TODO: implement sprites
+    }
+
+    // Nothing at this pixel, return color 0
+    return GB_COLOR_0;
 };

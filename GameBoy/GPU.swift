@@ -14,7 +14,7 @@ public class GPU {
     public var oam: AlignedArray<UInt8>
     public var lineAttributes: AlignedArray<UInt8>
 
-    private let numAttributes: Int = 4
+    private let numAttributes: Int = 8
 
     public init() {
         ram = AlignedArray<UInt8>(withCapacity: 0x2000, alignedTo: 0x1000)
@@ -23,22 +23,30 @@ public class GPU {
     }
 
     public func reset() {
-        controlBits = 0
-        scy = 0
-        scx = 0
-        palette = 0
+        lcdControl = 0
+        scrollY = 0
+        scrollX = 0
+        bgPalette = 0
     }
 
-    public var controlBits: UInt8 = 0
-    public var scy: UInt8 = 0
-    public var scx: UInt8 = 0
-    public var palette: UInt8 = 0
+    public var lcdControl: UInt8 = 0
+    public var scrollY: UInt8 = 0
+    public var scrollX: UInt8 = 0
+    public var spritePalette0: UInt8 = 0
+    public var spritePalette1: UInt8 = 0
+    public var windowY: UInt8 = 0
+    public var windowX: UInt8 = 0
+    public var bgPalette: UInt8 = 0
 
     public func storeLineAttributes(line: Int) {
         if line >= 144 { return }
-        lineAttributes[line * numAttributes] = controlBits
-        lineAttributes[line * numAttributes + 1] = scy
-        lineAttributes[line * numAttributes + 2] = scx
-        lineAttributes[line * numAttributes + 3] = palette
+        lineAttributes[line * numAttributes + 0] = lcdControl
+        lineAttributes[line * numAttributes + 1] = scrollY
+        lineAttributes[line * numAttributes + 2] = scrollX
+        lineAttributes[line * numAttributes + 3] = spritePalette0
+        lineAttributes[line * numAttributes + 4] = spritePalette1
+        lineAttributes[line * numAttributes + 5] = windowY
+        lineAttributes[line * numAttributes + 6] = windowX
+        lineAttributes[line * numAttributes + 7] = bgPalette
     }
 }

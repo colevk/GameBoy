@@ -101,15 +101,15 @@ public class Memory {
 
         // 0xFF00 - 0xFF7F: I/O addresses
         case 0xFF40:
-            return gpu.controlBits
+            return gpu.lcdControl
         case 0xFF42:
-            return gpu.scy
+            return gpu.scrollY
         case 0xFF43:
-            return gpu.scx
+            return gpu.scrollX
         case 0xFF44:
             return UInt8((cpu.timer / 114) % 154)
         case 0xFF47:
-            return gpu.controlBits
+            return gpu.lcdControl
         case 0xFF00...0xFF7F,0xFFFF:
             print("Unsupported read from \(String(format: "0x%4X", addr))")
             return 0
@@ -145,13 +145,13 @@ public class Memory {
         case 0xFF01:
             print(Character(UnicodeScalar(newValue)), terminator:"")
         case 0xFF40:
-            gpu.controlBits = newValue
+            gpu.lcdControl = newValue
         case 0xFF42:
-            gpu.scy = newValue
+            gpu.scrollY = newValue
         case 0xFF43:
-            gpu.scx = newValue
+            gpu.scrollX = newValue
         case 0xFF47:
-            gpu.palette = newValue
+            gpu.bgPalette = newValue
         case 0xFF50:
             if newValue == 1 {
                 booting = false

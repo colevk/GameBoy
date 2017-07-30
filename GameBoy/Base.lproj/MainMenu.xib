@@ -94,7 +94,7 @@
                             </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
                                 <connections>
-                                    <action selector="openDocument:" target="hW3-AJ-wXb" id="uQD-nk-9Br"/>
+                                    <action selector="open:" target="hW3-AJ-wXb" id="Rky-vJ-cGZ"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Open Recent" id="tXI-mr-wws">
@@ -109,6 +109,9 @@
                                         </menuItem>
                                     </items>
                                 </menu>
+                                <connections>
+                                    <action selector="open:" target="hW3-AJ-wXb" id="LUz-ah-lmg"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                             <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
@@ -129,12 +132,12 @@
                             <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
                             <menuItem title="Pause" keyEquivalent="p" id="aTl-1u-JFS">
                                 <connections>
-                                    <action selector="pause:" target="hW3-AJ-wXb" id="hMR-6C-6nN"/>
+                                    <action selector="pause:" target="hW3-AJ-wXb" id="l2F-PK-I6g"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Restart" keyEquivalent="r" id="KaW-ft-85H">
                                 <connections>
-                                    <action selector="restart:" target="hW3-AJ-wXb" id="p58-Gc-Fc5"/>
+                                    <action selector="restart:" target="hW3-AJ-wXb" id="XFj-Xy-DJd"/>
                                 </connections>
                             </menuItem>
                         </items>
