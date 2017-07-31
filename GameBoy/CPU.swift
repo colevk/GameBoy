@@ -245,8 +245,10 @@ public class CPU {
             }
 
         case 0xD9: // RETI
-            print("Unimplemented instruction: \(instructionAt(address: mem.pc - 1))\n")
-            NSApplication.shared.terminate(self)
+            mem.pc = mem.words[mem.sp]
+            mem.sp += 2
+            ime = true
+            timer += 4
 
         case 0xC1, 0xD1, 0xE1: // POP rr
             let offset = (opcode - 0xC1) / 16
@@ -303,12 +305,16 @@ public class CPU {
             }
 
         case 0xE8: // ADD SP,n
-            print("Unimplemented instruction: \(instructionAt(address: mem.pc - 1))\n")
-            NSApplication.shared.terminate(self)
+            (mem.sp, mem.flags.h, mem.flags.c) = UInt16.addRelativeWithFlags(mem.sp, mem.pcByte())
+            mem.flags.z = false
+            mem.flags.n = false
+            timer += 4
 
         case 0xF8: // LD HL,SP+n
-            print("Unimplemented instruction: \(instructionAt(address: mem.pc - 1))\n")
-            NSApplication.shared.terminate(self)
+            (mem.hl, mem.flags.h, mem.flags.c) = UInt16.addRelativeWithFlags(mem.sp, mem.pcByte())
+            mem.flags.z = false
+            mem.flags.n = false
+            timer += 3
         case 0xF9: // LD SP,HL
             mem.sp = mem.hl
             timer += 2
@@ -351,11 +357,11 @@ public class CPU {
             runOpcodeCB(mem.pcByte())
 
         case 0xD3, 0xDB, 0xDD, 0xE3, 0xE4, 0xEB...0xED, 0xF4, 0xFC, 0xFD:
-            print("Unused opcode")
+            print("Opcode \(String(format: "$%04X", opcode)) is unused")
             NSApplication.shared.terminate(self)
 
         default:
-            print("Unimplemented instruction")
+            print("Missing case statement for opcode \(String(format: "$%04X", opcode))")
             NSApplication.shared.terminate(self)
         }
     }
@@ -383,12 +389,14 @@ public class CPU {
             timer += (offset != 6) ? 2 : 4
 
         case 0x20...0x27: // SLA r
-            print("Unimplemented instruction: \(instructionAt(address: mem.pc - 2))\n")
-            NSApplication.shared.terminate(self)
+            let offset = opcode % 8
+            ops.sla(register: &mem.registers8[offset])
+            timer += (offset != 6) ? 2 : 4
 
         case 0x28...0x2F: // SRA r
-            print("Unimplemented instruction: \(instructionAt(address: mem.pc - 2))\n")
-            NSApplication.shared.terminate(self)
+            let offset = opcode % 8
+            ops.sra(register: &mem.registers8[offset])
+            timer += (offset != 6) ? 2 : 4
 
         case 0x30...0x3F: // SWAP r
             let offset = opcode % 8
@@ -400,8 +408,9 @@ public class CPU {
             timer += (offset != 6) ? 2 : 4
 
         case 0x38...0x3F: // SRL r
-            print("Unimplemented instruction: \(instructionAt(address: mem.pc - 2))\n")
-            NSApplication.shared.terminate(self)
+            let offset = opcode % 8
+            ops.srl(register: &mem.registers8[offset])
+            timer += (offset != 6) ? 2 : 4
 
         case 0x40...0x7F: // BIT d,r
             let bitOffset = (opcode - 0x40) / 8

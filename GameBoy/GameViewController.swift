@@ -161,8 +161,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
         let wasRunning = running
         running = false
 
-        let panel = NSOpenPanel();
-        panel.title = "Choose a ROM"
+        let panel = NSOpenPanel()
         panel.canChooseDirectories = false
         panel.allowsMultipleSelection = false
 
@@ -170,6 +169,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
            let url = panel.url,
            openFile(url.path)
         {
+            print("Loaded file \"\(url.lastPathComponent)\"")
             NSDocumentController.shared.noteNewRecentDocumentURL(url)
             running = true
         } else {

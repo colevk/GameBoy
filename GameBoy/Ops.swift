@@ -67,6 +67,30 @@ public struct Ops {
         flags.h = false
     }
 
+    public func sla(register: inout UInt8) {
+        flags.c = register.checkBit(7)
+        register = register << 1
+        flags.z = register == 0
+        flags.n = false
+        flags.h = false
+    }
+
+    public func sra(register: inout UInt8) {
+        flags.c = register.checkBit(0)
+        register = (register >> 1) + (register.checkBit(7) ? 0x80 : 0)
+        flags.z = register == 0
+        flags.n = false
+        flags.h = false
+    }
+
+    public func srl(register: inout UInt8) {
+        flags.c = register.checkBit(0)
+        register = register >> 1
+        flags.z = register == 0
+        flags.n = false
+        flags.h = false
+    }
+
     public func add(to: inout UInt8, from: UInt8) {
         (to, flags.h, flags.c) = UInt8.addWithFlags(to, from)
         flags.n = false
@@ -164,6 +188,10 @@ infix operator &-=
 infix operator &*=
 
 extension UInt8 {
+    func checkBit(_ bit: Int) -> Bool {
+        return (self >> bit) & 1 == 1
+    }
+
     static func addWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
         let halfCarry = (((lhs & 0xF) + (rhs & 0xF)) & 0x10) == 0x10
         let (result, carry) = lhs.addingReportingOverflow(rhs)

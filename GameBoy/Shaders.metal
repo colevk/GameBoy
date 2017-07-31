@@ -113,12 +113,10 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
 
         uchar color = (bgPalette >> (paletteIdx * 2)) & 0b11;
 
-        if (color == 1) {
-            return GB_COLOR_1;
-        } else if (color == 2) {
-            return GB_COLOR_2;
-        } else if (color == 3) {
-            return GB_COLOR_3;
+        switch (color) {
+        case 1: return GB_COLOR_1;
+        case 2: return GB_COLOR_2;
+        case 3: return GB_COLOR_3;
         }
         // Color 0 is transparent, check for sprites underneath
     }
