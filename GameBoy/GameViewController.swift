@@ -12,9 +12,7 @@ import MetalKit
 class GameViewController: NSViewController, MTKViewDelegate {
     var running: Bool = true
 
-    var memory: Memory! = nil
-    var cpu: CPU! = nil
-    var gpu: GPU! = nil
+    var gameBoy: GameBoyRunner! = nil
 
     var device: MTLDevice! = nil
 
@@ -43,11 +41,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
         view.sampleCount = 4
         view.preferredFramesPerSecond = 60
 
-        memory = Memory()
-        cpu = CPU(withMemory: memory)
-        memory.cpu = cpu
-        gpu = GPU()
-        memory.gpu = gpu
+        gameBoy = GameBoyRunner()
 
         loadAssets()
     }
@@ -80,30 +74,18 @@ class GameViewController: NSViewController, MTKViewDelegate {
         vertexBuffer.label = "vertices"
 
         // All work is done in fragment shader based on screen position
-        graphicsRAMBuffer = device.makeBuffer(bytesNoCopy: gpu.ram.pointer, length: gpu.ram.bytes, options: [], deallocator: nil)
+        graphicsRAMBuffer = device.makeBuffer(bytesNoCopy: gameBoy.gpu.ram.pointer, length: gameBoy.gpu.ram.bytes, options: [], deallocator: nil)
         graphicsRAMBuffer.label = "graphics ram"
 
-        graphicsOAMBuffer = device.makeBuffer(bytesNoCopy: gpu.oam.pointer, length: gpu.oam.bytes, options: [], deallocator: nil)
+        graphicsOAMBuffer = device.makeBuffer(bytesNoCopy: gameBoy.gpu.oam.pointer, length: gameBoy.gpu.oam.bytes, options: [], deallocator: nil)
         graphicsOAMBuffer.label = "graphics oam"
 
-        graphicsAttributesBuffer = device.makeBuffer(bytesNoCopy: gpu.lineAttributes.pointer, length: gpu.lineAttributes.bytes, options: [], deallocator: nil)
+        graphicsAttributesBuffer = device.makeBuffer(bytesNoCopy: gameBoy.gpu.lineAttributes.pointer, length: gameBoy.gpu.lineAttributes.bytes, options: [], deallocator: nil)
         graphicsAttributesBuffer.label = "graphics line attributes"
     }
 
     func update() {
-        for line in 0..<154 {
-            let startTimer = cpu.timer - (cpu.timer % 114)
-            while cpu.timer - startTimer < 20 {
-                cpu.step()
-            }
-            while cpu.timer - startTimer < 63 {
-                cpu.step()
-            }
-            gpu.storeLineAttributes(line: line)
-            while cpu.timer - startTimer < 114 {
-                cpu.step()
-            }
-        }
+        gameBoy.advanceFrame()
     }
 
     func draw(in view: MTKView) {
@@ -142,16 +124,13 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
 
     @IBAction func restart(_ sender: NSMenuItem) {
-        cpu.reset()
+        gameBoy.reset()
         running = true
     }
 
     public func openFile(_ path: String) -> Bool {
-        if let data = NSData(contentsOfFile: path) {
-            memory.cartridge = [UInt8].init(repeating: 0, count: data.length)
-            data.getBytes(&memory.cartridge!, range: NSRange(location: 0, length: data.length))
-            gpu.reset()
-            cpu.reset()
+        if let data = NSData(contentsOfFile: path) as Data? {
+            gameBoy.loadCartridge(withData: data)
             return true
         }
         return false

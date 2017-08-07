@@ -53,8 +53,8 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
     uchar control = attributes[y * 8];
     uchar scrollY = attributes[y * 8 + 1];
     uchar scrollX = attributes[y * 8 + 2];
-    uchar spritePalette0 = attributes[y * 8 + 3];
-    uchar spritePalette1 = attributes[y * 8 + 4];
+//    uchar spritePalette0 = attributes[y * 8 + 3];
+//    uchar spritePalette1 = attributes[y * 8 + 4];
     uchar windowY = attributes[y * 8 + 5];
     uchar windowX = attributes[y * 8 + 6];
     uchar bgPalette = attributes[y * 8 + 7];

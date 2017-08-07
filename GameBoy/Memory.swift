@@ -9,10 +9,10 @@
 import Foundation
 
 public class Memory {
-    weak var cpu: CPU!
-    weak var gpu: GPU!
 
-    private var booting = true
+    private unowned let gb: GameBoyRunner
+
+    public var booting = true
 
     public private(set) var bytes: ByteAddress! = nil
     public private(set) var words: WordAddress! = nil
@@ -20,7 +20,9 @@ public class Memory {
     public private(set) var registers16: Registers16Bit! = nil
     public private(set) var conditions: Conditions! = nil
 
-    public init() {
+    public init(withParent parent: GameBoyRunner) {
+        gb = parent
+
         eRAM = [UInt8](repeating: 0, count: 0x2000)
         wRAM = [UInt8](repeating: 0, count: 0x2000)
         zRAM = [UInt8](repeating: 0, count: 0x80)
@@ -46,6 +48,10 @@ public class Memory {
     public func reset() {
         booting = true
         pc = 0
+    }
+
+    public func skipStartup() {
+        
     }
 
 
@@ -82,7 +88,7 @@ public class Memory {
             }
         // Graphics RAM
         case 0x8000...0x9FFF:
-            return gpu.ram[addr - 0x8000]
+            return gb.gpu.ram[addr - 0x8000]
         // Cartridge RAM
         case 0xA000...0xBFFF:
             return eRAM[addr - 0xA000]
@@ -94,22 +100,27 @@ public class Memory {
             return wRAM[addr - 0xE000]
         // Object Attribute Memory
         case 0xFE00...0xFE9F:
-            return gpu.oam[addr - 0xFE00]
+            return gb.gpu.oam[addr - 0xFE00]
         // Zero-page RAM, for fast interactions with RAM
         case 0xFF80...0xFFFE:
             return zRAM[addr - 0xFF80]
 
         // 0xFF00 - 0xFF7F: I/O addresses
+        case 0xFF0F:
+            return gb.interrupts.interruptFlag
         case 0xFF40:
-            return gpu.lcdControl
+            return gb.gpu.lcdControl
         case 0xFF42:
-            return gpu.scrollY
+            return gb.gpu.scrollY
         case 0xFF43:
-            return gpu.scrollX
+            return gb.gpu.scrollX
         case 0xFF44:
-            return UInt8((cpu.timer / 114) % 154)
+            // fix this later
+            return UInt8((gb.timer / 114) % 154)
         case 0xFF47:
-            return gpu.lcdControl
+            return gb.gpu.lcdControl
+        case 0xFFFF:
+            return gb.interrupts.interruptEnable
         case 0xFF00...0xFF7F,0xFFFF:
             print("Unsupported read from \(String(format: "0x%4X", addr))")
             return 0
@@ -124,7 +135,7 @@ public class Memory {
             break
         // Graphics RAM
         case 0x8000...0x9FFF:
-            gpu.ram[addr - 0x8000] = newValue
+            gb.gpu.ram[addr - 0x8000] = newValue
         // Cartridge RAM
         case 0xA000...0xBFFF:
             eRAM[addr - 0xA000] = newValue
@@ -136,26 +147,28 @@ public class Memory {
             wRAM[addr - 0xE000] = newValue
         // Object Attribute Memory
         case 0xFE00...0xFE9F:
-            gpu.oam[addr - 0xFE00] = newValue
+            gb.gpu.oam[addr - 0xFE00] = newValue
         // Zero-page RAM, for fast interactions with RAM
         case 0xFF80...0xFFFE:
             zRAM[addr - 0xFF80] = newValue
 
         // 0xFF00 - 0xFF7F: I/O addresses
-        case 0xFF01:
-            print(Character(UnicodeScalar(newValue)), terminator:"")
+        case 0xFF0F:
+            gb.interrupts.interruptFlag = newValue
         case 0xFF40:
-            gpu.lcdControl = newValue
+            gb.gpu.lcdControl = newValue
         case 0xFF42:
-            gpu.scrollY = newValue
+            gb.gpu.scrollY = newValue
         case 0xFF43:
-            gpu.scrollX = newValue
+            gb.gpu.scrollX = newValue
         case 0xFF47:
-            gpu.bgPalette = newValue
+            gb.gpu.bgPalette = newValue
         case 0xFF50:
             if newValue == 1 {
                 booting = false
             }
+        case 0xFFFF:
+            gb.interrupts.interruptEnable = newValue
         case 0xFF00...0xFF7F,0xFFFF:
             print("Unsupported write to \(String(format: "0x%04X", addr)): \(String(format: "0x%02X", newValue))")
         default:
