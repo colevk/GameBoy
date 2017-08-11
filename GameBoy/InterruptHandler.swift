@@ -46,9 +46,8 @@ public class InterruptHandler {
                 interruptFlag ^= IE_BUTTON
             }
             gb.cpu.ime = false
-            gb.memory.sp -= 2
-            gb.memory.words[gb.memory.sp] = gb.memory.pc
-            gb.memory.pc = address
+            gb.cpu.push(gb.cpu.PC)
+            gb.cpu.PC = address
         }
     }
 }

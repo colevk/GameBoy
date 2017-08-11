@@ -22,7 +22,7 @@ public class GameBoyRunner {
         timer = 0
         skipBIOS = false
 
-        memory = Memory(withParent: self)
+        memory = Memory()
         cpu = CPU(withParent: self)
         gpu = GPU(withParent: self)
         interrupts = InterruptHandler(withParent: self)
@@ -56,13 +56,13 @@ public class GameBoyRunner {
 
         if skipBIOS {
             memory.booting = false
-            memory.pc = 0x100
-            memory.a = 0x01
-            memory.f = 0xB0
-            memory.bc = 0x0013
-            memory.de = 0x00D8
-            memory.hl = 0x014D
-            memory.sp = 0xFFFE
+            cpu.PC = 0x100
+            cpu.A = 0x01
+            cpu.F = 0xB0
+            cpu.BC = 0x0013
+            cpu.DE = 0x00D8
+            cpu.HL = 0x014D
+            cpu.SP = 0xFFFE
             memory.bytes[0xFF05] = 0x00
             memory.bytes[0xFF06] = 0x00
             memory.bytes[0xFF07] = 0x00
@@ -96,14 +96,15 @@ public class GameBoyRunner {
             memory.bytes[0xFFFF] = 0x00
         } else {
             memory.booting = true
-            gpu.lcdControl = 0x00
-            memory.pc = 0x00
+            memory.LCDC = 0x00
+            cpu.PC = 0x00
         }
     }
 
     public func loadCartridge(withData data: Data) {
         memory.cartridge = [UInt8].init(repeating: 0, count: data.count)
         data.copyBytes(to: &memory.cartridge!, count: data.count)
+//        skipBIOS = true
         reset()
     }
 }

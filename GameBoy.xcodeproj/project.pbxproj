@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		F0125EF91F37D4B80086A64A /* GameBoyRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0125EF81F37D4B80086A64A /* GameBoyRunner.swift */; };
 		F04DE8961F381162007A10D7 /* InterruptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04DE8951F381162007A10D7 /* InterruptHandler.swift */; };
-		F08F482B1F1A85BE0041E4A8 /* MemoryHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08F482A1F1A85BE0041E4A8 /* MemoryHelpers.swift */; };
 		F0B9EAE01F20F4B0008426CF /* GPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9EADF1F20F4B0008426CF /* GPU.swift */; };
 		F0CB963F1F18F3F700291BAE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB963E1F18F3F700291BAE /* AppDelegate.swift */; };
 		F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96401F18F3F700291BAE /* GameViewController.swift */; };
@@ -20,7 +19,7 @@
 		F0CB966C1F18F68C00291BAE /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966B1F18F68C00291BAE /* Memory.swift */; };
 		F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966D1F1916CC00291BAE /* CPU.swift */; };
 		F0CB96701F191D3A00291BAE /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966F1F191D3A00291BAE /* Ops.swift */; };
-		F0CB96721F191F5E00291BAE /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96711F191F5E00291BAE /* Flags.swift */; };
+		F0D42BF81F3D9A2400861A87 /* CPUDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */; };
 		F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5087B1F237BD100833E53 /* AlignedArray.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,7 +36,6 @@
 /* Begin PBXFileReference section */
 		F0125EF81F37D4B80086A64A /* GameBoyRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyRunner.swift; sourceTree = "<group>"; };
 		F04DE8951F381162007A10D7 /* InterruptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterruptHandler.swift; sourceTree = "<group>"; };
-		F08F482A1F1A85BE0041E4A8 /* MemoryHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryHelpers.swift; sourceTree = "<group>"; };
 		F0B9EADF1F20F4B0008426CF /* GPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPU.swift; sourceTree = "<group>"; };
 		F0CB963B1F18F3F700291BAE /* GameBoy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBoy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0CB963E1F18F3F700291BAE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -52,7 +50,7 @@
 		F0CB966B1F18F68C00291BAE /* Memory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
 		F0CB966D1F1916CC00291BAE /* CPU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
 		F0CB966F1F191D3A00291BAE /* Ops.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ops.swift; sourceTree = "<group>"; };
-		F0CB96711F191F5E00291BAE /* Flags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Flags.swift; sourceTree = "<group>"; };
+		F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUDebugging.swift; sourceTree = "<group>"; };
 		F0D5087B1F237BD100833E53 /* AlignedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedArray.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,9 +101,8 @@
 				F0CB96491F18F3F700291BAE /* Info.plist */,
 				F0125EF81F37D4B80086A64A /* GameBoyRunner.swift */,
 				F0CB966B1F18F68C00291BAE /* Memory.swift */,
-				F08F482A1F1A85BE0041E4A8 /* MemoryHelpers.swift */,
-				F0CB96711F191F5E00291BAE /* Flags.swift */,
 				F0CB966D1F1916CC00291BAE /* CPU.swift */,
+				F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */,
 				F0B9EADF1F20F4B0008426CF /* GPU.swift */,
 				F04DE8951F381162007A10D7 /* InterruptHandler.swift */,
 				F0D5087B1F237BD100833E53 /* AlignedArray.swift */,
@@ -230,14 +227,13 @@
 				F0CB96431F18F3F700291BAE /* Shaders.metal in Sources */,
 				F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */,
 				F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */,
-				F08F482B1F1A85BE0041E4A8 /* MemoryHelpers.swift in Sources */,
 				F0CB96701F191D3A00291BAE /* Ops.swift in Sources */,
+				F0D42BF81F3D9A2400861A87 /* CPUDebugging.swift in Sources */,
 				F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */,
 				F0CB966C1F18F68C00291BAE /* Memory.swift in Sources */,
 				F0CB963F1F18F3F700291BAE /* AppDelegate.swift in Sources */,
 				F04DE8961F381162007A10D7 /* InterruptHandler.swift in Sources */,
 				F0125EF91F37D4B80086A64A /* GameBoyRunner.swift in Sources */,
-				F0CB96721F191F5E00291BAE /* Flags.swift in Sources */,
 				F0B9EAE01F20F4B0008426CF /* GPU.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

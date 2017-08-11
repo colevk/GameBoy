@@ -74,10 +74,10 @@ class GameViewController: NSViewController, MTKViewDelegate {
         vertexBuffer.label = "vertices"
 
         // All work is done in fragment shader based on screen position
-        graphicsRAMBuffer = device.makeBuffer(bytesNoCopy: gameBoy.gpu.ram.pointer, length: gameBoy.gpu.ram.bytes, options: [], deallocator: nil)
+        graphicsRAMBuffer = device.makeBuffer(bytesNoCopy: gameBoy.memory.videoRAM.pointer, length: gameBoy.memory.videoRAM.bytes, options: [], deallocator: nil)
         graphicsRAMBuffer.label = "graphics ram"
 
-        graphicsOAMBuffer = device.makeBuffer(bytesNoCopy: gameBoy.gpu.oam.pointer, length: gameBoy.gpu.oam.bytes, options: [], deallocator: nil)
+        graphicsOAMBuffer = device.makeBuffer(bytesNoCopy: gameBoy.memory.objectAttributeMemory.pointer, length: gameBoy.memory.objectAttributeMemory.bytes, options: [], deallocator: nil)
         graphicsOAMBuffer.label = "graphics oam"
 
         graphicsAttributesBuffer = device.makeBuffer(bytesNoCopy: gameBoy.gpu.lineAttributes.pointer, length: gameBoy.gpu.lineAttributes.bytes, options: [], deallocator: nil)
