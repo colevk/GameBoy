@@ -27,7 +27,6 @@ class CPUInstructionTests: XCTestCase {
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
 
@@ -101,5 +100,9 @@ class CPUInstructionTests: XCTestCase {
 
     func testAddressOps() {
         runTestROM(romName: "11-op a,(hl)", endLoopAddress: 52322)
+    }
+
+    func testInstructionTiming() {
+        runTestROM(romName: "instr_timing", endLoopAddress: 51376)
     }
 }

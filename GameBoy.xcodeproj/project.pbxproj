@@ -43,6 +43,9 @@
 		F0CB96701F191D3A00291BAE /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966F1F191D3A00291BAE /* Ops.swift */; };
 		F0D42BF81F3D9A2400861A87 /* CPUDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */; };
 		F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5087B1F237BD100833E53 /* AlignedArray.swift */; };
+		F0DCB9B81F3EC22300834ABE /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DCB9B71F3EC22300834ABE /* Timer.swift */; };
+		F0DCB9B91F3EC7DF00834ABE /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DCB9B71F3EC22300834ABE /* Timer.swift */; };
+		F0DCB9BB1F3EC84000834ABE /* instr_timing.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0DCB9BA1F3EC84000834ABE /* instr_timing.gb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +90,8 @@
 		F0CB966F1F191D3A00291BAE /* Ops.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ops.swift; sourceTree = "<group>"; };
 		F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUDebugging.swift; sourceTree = "<group>"; };
 		F0D5087B1F237BD100833E53 /* AlignedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedArray.swift; sourceTree = "<group>"; };
+		F0DCB9B71F3EC22300834ABE /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+		F0DCB9BA1F3EC84000834ABE /* instr_timing.gb */ = {isa = PBXFileReference; lastKnownFileType = file; name = instr_timing.gb; path = "../../../../Downloads/GB Roms/Test ROMs/instr_timing/instr_timing.gb"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,9 +112,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F09A3CBA1F3E963E00EC54B6 /* CPInstructionROMs */ = {
+		F09A3CBA1F3E963E00EC54B6 /* TestROMs */ = {
 			isa = PBXGroup;
 			children = (
+				F0DCB9BA1F3EC84000834ABE /* instr_timing.gb */,
 				F09A3CBE1F3E967700EC54B6 /* 01-special.gb */,
 				F09A3CBC1F3E967700EC54B6 /* 02-interrupts.gb */,
 				F09A3CC51F3E967700EC54B6 /* 03-op sp,hl.gb */,
@@ -122,7 +128,7 @@
 				F09A3CBB1F3E967700EC54B6 /* 10-bit ops.gb */,
 				F09A3CC41F3E967700EC54B6 /* 11-op a,(hl).gb */,
 			);
-			path = CPInstructionROMs;
+			path = TestROMs;
 			sourceTree = "<group>";
 		};
 		F0CB96321F18F3F700291BAE = {
@@ -156,6 +162,7 @@
 				F089FB221F3E850900DA2403 /* SerialDevice.swift */,
 				F0CB966B1F18F68C00291BAE /* Memory.swift */,
 				F0CB966D1F1916CC00291BAE /* CPU.swift */,
+				F0DCB9B71F3EC22300834ABE /* Timer.swift */,
 				F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */,
 				F0B9EADF1F20F4B0008426CF /* GPU.swift */,
 				F04DE8951F381162007A10D7 /* InterruptHandler.swift */,
@@ -168,7 +175,7 @@
 		F0CB96511F18F3F700291BAE /* GameBoyTests */ = {
 			isa = PBXGroup;
 			children = (
-				F09A3CBA1F3E963E00EC54B6 /* CPInstructionROMs */,
+				F09A3CBA1F3E963E00EC54B6 /* TestROMs */,
 				F0CB96521F18F3F700291BAE /* CPUInstructionTests.swift */,
 				F089FB241F3E875C00DA2403 /* TestROMSerialDevice.swift */,
 				F0CB96541F18F3F700291BAE /* Info.plist */,
@@ -277,6 +284,7 @@
 				F06DC0A71F3EA3B70069955A /* 03-op sp,hl.gb in Resources */,
 				F06DC0A81F3EA3B70069955A /* 04-op r,imm.gb in Resources */,
 				F06DC0A91F3EA3B70069955A /* 05-op rp.gb in Resources */,
+				F0DCB9BB1F3EC84000834ABE /* instr_timing.gb in Resources */,
 				F06DC0AA1F3EA3B70069955A /* 06-ld r,r.gb in Resources */,
 				F06DC0AB1F3EA3B70069955A /* 07-jr,jp,call,ret,rst.gb in Resources */,
 				F06DC0AC1F3EA3B70069955A /* 08-misc instrs.gb in Resources */,
@@ -297,6 +305,7 @@
 				F089FB231F3E850900DA2403 /* SerialDevice.swift in Sources */,
 				F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */,
 				F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */,
+				F0DCB9B81F3EC22300834ABE /* Timer.swift in Sources */,
 				F0CB96701F191D3A00291BAE /* Ops.swift in Sources */,
 				F0D42BF81F3D9A2400861A87 /* CPUDebugging.swift in Sources */,
 				F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */,
@@ -315,6 +324,7 @@
 				F06DC0B51F3EAE5D0069955A /* GPU.swift in Sources */,
 				F06DC0B01F3EAE5D0069955A /* GameBoyRunner.swift in Sources */,
 				F06DC0B71F3EAE5D0069955A /* AlignedArray.swift in Sources */,
+				F0DCB9B91F3EC7DF00834ABE /* Timer.swift in Sources */,
 				F06DC0B11F3EAE5D0069955A /* SerialDevice.swift in Sources */,
 				F06DC0B31F3EAE5D0069955A /* CPU.swift in Sources */,
 				F089FB251F3E875C00DA2403 /* TestROMSerialDevice.swift in Sources */,

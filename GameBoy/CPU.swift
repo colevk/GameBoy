@@ -13,20 +13,20 @@ public class CPU {
 
     unowned let gb: GameBoyRunner
 
-    var ime: Bool = true
-    var timer: Int = 0
-    var halt: Bool = false
+    public var ime: Bool = true
+    public var halt: Bool = false
+    var haltBug: Bool = false
 
     public var PC: UInt16 = 0
 
     public func pcByte() -> UInt8 {
-        PC += 1
-        return gb.memory.bytes[PC - 1]
+        PC &+= 1
+        return gb.memory.bytes[PC &- 1]
     }
     
     public func pcWord() -> UInt16 {
-        PC += 2
-        return gb.memory.words[PC - 2]
+        PC &+= 2
+        return gb.memory.words[PC &- 2]
     }
 
     public var reg8: Registers8Bit! = nil
@@ -125,12 +125,12 @@ public class CPU {
 
     public func runOpcode(_ opcode: UInt8) -> Int {
         if halt {
-            if ime {
-                return 1
-            } else {
-                PC -= 1
-                halt = false
-            }
+            PC &-= 1
+            return 1
+        }
+        if haltBug {
+            PC &-= 1
+            haltBug = false
         }
 
         switch opcode {
@@ -142,7 +142,7 @@ public class CPU {
             return 5
 
         case 0x10: // STOP 0
-            print("Unimplemented instruction: \(instructionAt(address: PC - 1))\n")
+            print("Unimplemented instruction: \(instructionAt(address: PC &- 1))\n")
             NSApplication.shared.terminate(self)
 
         case 0x18: // JR n
@@ -257,6 +257,7 @@ public class CPU {
             }
             flagZ = A == 0
             flagH = false
+            return 1
         case 0x2F: // CPL
             A = ~A
             flagN = true
@@ -280,7 +281,11 @@ public class CPU {
             return (srcOffset != 6 && dstOffset != 6) ? 1 : 2
 
         case 0x76: // HALT
-            halt = true
+            if ime || (gb.memory.IE & gb.memory.IF & 0x1F) == 0 {
+                halt = true
+            } else {
+                haltBug = true
+            }
             return 1
 
         case 0x80...0x87: // ADD A,r
@@ -458,8 +463,8 @@ public class CPU {
 
         case 0xD3, 0xDB, 0xDD, 0xE3, 0xE4, 0xEB...0xED, 0xF4, 0xFC, 0xFD:
             print("Opcode \(String(format: "$%04X", opcode)) is unused")
-            NSApplication.shared.terminate(self)
-
+            return 1
+        
         default:
             print("Missing case statement for opcode \(String(format: "$%04X", opcode))")
             NSApplication.shared.terminate(self)
@@ -518,7 +523,7 @@ public class CPU {
             let bitOffset = (opcode - 0x40) / 8
             let registerOffset = opcode % 8
             bit(bitOffset, register: reg8[registerOffset])
-            return (registerOffset != 6) ? 2 : 4
+            return (registerOffset != 6) ? 2 : 3
 
         case 0x80...0xBF: // RES d,r
             let bitOffset = (opcode - 0x80) / 8
@@ -703,13 +708,13 @@ public class CPU {
     }
 
     public func push(_ value: UInt16) {
-        SP -= 2
+        SP &-= 2
         gb.memory.words[SP] = value
     }
 
     public func pop() -> UInt16 {
-        SP += 2
-        return gb.memory.words[SP - 2]
+        SP &+= 2
+        return gb.memory.words[SP &- 2]
     }
 
     public func jp(cond: Bool, addr: UInt16) -> Int {

@@ -19,6 +19,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
     var commandQueue: MTLCommandQueue! = nil
     var pipelineState: MTLRenderPipelineState! = nil
     var vertexBuffer: MTLBuffer! = nil
+
     var graphicsRAMBuffer: MTLBuffer! = nil
     var graphicsOAMBuffer: MTLBuffer! = nil
     var graphicsAttributesBuffer: MTLBuffer! = nil

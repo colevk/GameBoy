@@ -130,7 +130,8 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
-                            <menuItem title="Skip Startup" keyEquivalent="s" id="aTl-1u-JFS">
+                            <menuItem title="Skip Startup" state="on" id="aTl-1u-JFS">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleBIOS:" target="hW3-AJ-wXb" id="cEH-WG-cEg"/>
                                 </connections>

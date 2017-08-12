@@ -75,7 +75,7 @@ public class Memory {
     public var SCX: UInt8 = 0  // FF43, scroll x
     public var LY: UInt8 = 0   // FF44, current line
     public var LYC: UInt8 = 0  // FF45, LY compare
-    public var DMA: UInt8 = 0  // FF46, DMA transfer to OAM
+
     public var BGP: UInt8 = 0  // FF47, BG & window palette
     public var OBP0: UInt8 = 0 // FF48, object palette 0
     public var OBP1: UInt8 = 0 // FF49, object palette 1
@@ -117,7 +117,9 @@ public class Memory {
                 return cart[index]
             }
         case 0x8000...0x9FFF: // Video RAM
-            return videoRAM[index - 0x8000]
+            if gb.gpu.ramAccessible() {
+                return videoRAM[index - 0x8000]
+            }
         case 0xA000...0xBFFF: // Cartridge RAM
             if let ext = externalRAM {
                 return ext[index - 0xA000]
@@ -127,7 +129,9 @@ public class Memory {
         case 0xE000...0xFDFF: // Echo RAM, copy of working RAM
             return workingRAM[index - 0xE000]
         case 0xFE00...0xFE9F: // OAM
-            return objectAttributeMemory[index - 0xFE00]
+            if gb.gpu.oamAccessible() {
+                return objectAttributeMemory[index - 0xFE00]
+            }
         case 0xFF80...0xFFFE: // Zero-page RAM
             return zeroPageRAM[index - 0xFF80]
 
@@ -152,7 +156,7 @@ public class Memory {
         case 0xFF40:
             return LCDC
         case 0xFF41:
-            return STAT
+            return STAT | 0b10000000
         case 0xFF42:
             return SCY
         case 0xFF43:
@@ -185,7 +189,9 @@ public class Memory {
         case 0x0000...0x7FFF:
             break
         case 0x8000...0x9FFF: // Video RAM
-            videoRAM[index - 0x8000] = newValue
+            if gb.gpu.ramAccessible() {
+                videoRAM[index - 0x8000] = newValue
+            }
         case 0xA000...0xBFFF: // Cartridge RAM
             if var ext = externalRAM {
                 ext[index - 0xA000] = newValue
@@ -195,7 +201,9 @@ public class Memory {
         case 0xE000...0xFDFF: // Echo RAM, copy of working RAM
             workingRAM[index - 0xE000] = newValue
         case 0xFE00...0xFE9F: // OAM
-            objectAttributeMemory[index - 0xFE00] = newValue
+            if gb.gpu.oamAccessible() {
+                objectAttributeMemory[index - 0xFE00] = newValue
+            }
         case 0xFF80...0xFFFE: // Zero-page RAM
             zeroPageRAM[index - 0xFF80] = newValue
 
@@ -220,7 +228,7 @@ public class Memory {
         case 0xFF40:
             LCDC = newValue
         case 0xFF41:
-            STAT = newValue
+            STAT = (newValue & 0b11111000) | (STAT & 0b00000111)
         case 0xFF42:
             SCY = newValue
         case 0xFF43:
@@ -230,10 +238,11 @@ public class Memory {
         case 0xFF45:
             LYC = newValue
         case 0xFF46:
-            print("DMA")
-            let start = 0x100 * Int(newValue)
-            for idx in 0..<160 {
-                objectAttributeMemory[idx] = readByte(start + idx)
+            if gb.gpu.oamAccessible() {
+                let start = 0x100 * Int(newValue)
+                for idx in 0..<160 {
+                    objectAttributeMemory[idx] = readByte(start + idx)
+                }
             }
         case 0xFF47:
             BGP = newValue
@@ -245,6 +254,8 @@ public class Memory {
             WY = newValue
         case 0xFF4B:
             WX = newValue
+        case 0xFF50:
+            booting = false
         case 0xFFFF:
             IE = newValue
         default:

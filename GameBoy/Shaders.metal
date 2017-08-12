@@ -43,6 +43,7 @@ vertex Vertex passThroughVertex(uint vid [[ vertex_id ]],
     return outVertex;
 };
 
+
 fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
                                    constant uchar* ram [[ buffer(0) ]],
                                    constant uchar* oam [[ buffer(1) ]],
@@ -70,8 +71,8 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
     }
 
     // If window or background on
-    bool windowPixel = control & WINDOW_ON && y >= windowY && x >= windowX;
-    if (windowPixel || control & BACKGROUND_ON) {
+    bool windowPixel = false;//control & WINDOW_ON && y >= windowY && x >= windowX;
+    if (true) {// || windowPixel || control & BACKGROUND_ON) {
         uchar posY;
         uchar posX;
         if (windowPixel) {
@@ -129,3 +130,4 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
     // Nothing at this pixel, return color 0
     return GB_COLOR_0;
 };
+
