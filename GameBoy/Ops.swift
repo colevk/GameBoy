@@ -56,8 +56,9 @@ extension UInt16 {
     }
 
     public static func addRelativeWithFlags(_ lhs: UInt16, _ rhs: UInt8) -> (UInt16, Bool, Bool) {
+        let (_, halfCarry, carry) = UInt8.addWithFlags(UInt8(lhs & 0xFF), rhs)
         let rhsExtended = UInt16(rhs) + ((rhs & 0x80 != 0) ? 0xFF00 : 0)
-        return UInt16.addWithFlags(lhs, rhsExtended)
+        return (lhs &+ rhsExtended, halfCarry, carry)
     }
 
     static func &+= (_ left: inout UInt16, _ right: UInt16) {

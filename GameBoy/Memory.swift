@@ -10,6 +10,8 @@ import Foundation
 
 public class Memory {
 
+    unowned let gb: GameBoyRunner
+
     // External interface to bytes and words
     public var bytes: ByteAddress! = nil
     public var words: WordAddress! = nil
@@ -33,8 +35,6 @@ public class Memory {
 
     // I/O registers
     public var P1: UInt8 = 0   // FF00, joypad I/O
-    public var SB: UInt8 = 0   // FF01, serial transfer
-    public var SC: UInt8 = 0   // FF02, serial control
 
     public var DIV: UInt8 = 0  // FF04, increments 16384 times per second
     public var TIMA: UInt8 = 0 // FF05, timer
@@ -87,7 +87,9 @@ public class Memory {
     // Internal stuff
     var booting = true
 
-    public init() {
+    public init(withParent parent: GameBoyRunner) {
+        gb = parent
+
         videoRAM = AlignedArray<UInt8>(withCapacity: 8192, alignedTo: 0x1000)
         objectAttributeMemory = AlignedArray<UInt8>(withCapacity: 160, alignedTo: 0x1000)
         workingRAM = [UInt8](repeating: 0, count: 8192)
@@ -133,9 +135,9 @@ public class Memory {
         case 0xFF00:
             return P1
         case 0xFF01:
-            return SB
+            return gb.serialDevice.SB
         case 0xFF02:
-            return SC
+            return gb.serialDevice.SC
         case 0xFF04:
             return DIV
         case 0xFF05:
@@ -201,9 +203,9 @@ public class Memory {
         case 0xFF00:
             P1 = newValue
         case 0xFF01:
-            SB = newValue
+            gb.serialDevice.SB = newValue
         case 0xFF02:
-            SC = newValue
+            gb.serialDevice.SC = newValue
         case 0xFF04:
             DIV = 0
         case 0xFF05:

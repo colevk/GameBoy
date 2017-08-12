@@ -19,17 +19,14 @@ public class CPU {
 
     public var PC: UInt16 = 0
 
-    public var pcByte: UInt8 {
-        get {
-            PC += 1
-            return gb.memory.bytes[PC - 1]
-        }
+    public func pcByte() -> UInt8 {
+        PC += 1
+        return gb.memory.bytes[PC - 1]
     }
-    public var pcWord: UInt16 {
-        get {
-            PC += 2
-            return gb.memory.words[PC - 2]
-        }
+    
+    public func pcWord() -> UInt16 {
+        PC += 2
+        return gb.memory.words[PC - 2]
     }
 
     public var reg8: Registers8Bit! = nil
@@ -123,7 +120,7 @@ public class CPU {
     }
 
     public func step() -> Int {
-        return runOpcode(pcByte)
+        return runOpcode(pcByte())
     }
 
     public func runOpcode(_ opcode: UInt8) -> Int {
@@ -141,7 +138,7 @@ public class CPU {
             return 1
 
         case 0x08: // LD (nn),SP
-            gb.memory.words[pcWord] = SP
+            gb.memory.words[pcWord()] = SP
             return 5
 
         case 0x10: // STOP 0
@@ -149,19 +146,19 @@ public class CPU {
             NSApplication.shared.terminate(self)
 
         case 0x18: // JR n
-            return jr(cond: true, offset: pcByte)
+            return jr(cond: true, offset: pcByte())
         case 0x20: // JR NZ,n
-            return jr(cond: !flagZ, offset: pcByte)
+            return jr(cond: !flagZ, offset: pcByte())
         case 0x28: // JR Z,n
-            return jr(cond: flagZ, offset: pcByte)
+            return jr(cond: flagZ, offset: pcByte())
         case 0x30: // JR NC,n
-            return jr(cond: !flagC, offset: pcByte)
+            return jr(cond: !flagC, offset: pcByte())
         case 0x38: // JR C,n
-            return jr(cond: flagC, offset: pcByte)
+            return jr(cond: flagC, offset: pcByte())
 
         case 0x01, 0x11, 0x21, 0x31: // LD rr,nn
             let offset = (opcode - 0x01) / 16
-            reg16[offset] = pcWord
+            reg16[offset] = pcWord()
             return 3
 
         case 0x09, 0x19, 0x29, 0x39: // ADD HL,rr
@@ -221,7 +218,7 @@ public class CPU {
 
         case 0x06, 0x0E, 0x16, 0x1E, 0x26, 0x2E, 0x36, 0x3E: // LD r,n
             let offset = (opcode - 0x06) / 8
-            reg8[offset] = pcByte
+            reg8[offset] = pcByte()
             return (offset != 6) ? 2 : 3
 
         case 0x07: // RLCA
@@ -242,8 +239,24 @@ public class CPU {
             return 1
 
         case 0x27: // DAA
-            print("Unimplemented instruction: \(instructionAt(address: PC - 1))")
-            NSApplication.shared.terminate(self)
+            if flagN {
+                if flagC {
+                    A &-= 0x60
+                }
+                if flagH {
+                    A &-= 0x06
+                }
+            } else {
+                if flagC || A > 0x99 {
+                    A &+= 0x60
+                    flagC = true
+                }
+                if flagH || (A & 0x0F) > 0x09 {
+                    A &+= 0x06
+                }
+            }
+            flagZ = A == 0
+            flagH = false
         case 0x2F: // CPL
             A = ~A
             flagN = true
@@ -311,28 +324,28 @@ public class CPU {
             return offset != 6 ? 1 : 2
 
         case 0xC6: // ADD A,n
-            add(pcByte)
+            add(pcByte())
             return 2
         case 0xCE: // ADC A,n
-            adc(pcByte)
+            adc(pcByte())
             return 2
         case 0xD6: // SUB n
-            sub(pcByte)
+            sub(pcByte())
             return 2
         case 0xDE: // SBC A,n
-            sbc(pcByte)
+            sbc(pcByte())
             return 2
         case 0xE6: // AND n
-            and(pcByte)
+            and(pcByte())
             return 2
         case 0xEE: // XOR n
-            xor(pcByte)
+            xor(pcByte())
             return 2
         case 0xF6: // OR n
-            or(pcByte)
+            or(pcByte())
             return 2
         case 0xFE: // CP n
-            cp(pcByte)
+            cp(pcByte())
             return 2
 
         case 0xC9: // RET
@@ -368,38 +381,38 @@ public class CPU {
             return 4
 
         case 0xC3: // JP nn
-            return jp(cond: true, addr: pcWord)
+            return jp(cond: true, addr: pcWord())
         case 0xC2: // JP NZ,nn
-            return jp(cond: !flagZ, addr: pcWord)
+            return jp(cond: !flagZ, addr: pcWord())
         case 0xCA: // JP Z,nn
-            return jp(cond: flagZ, addr: pcWord)
+            return jp(cond: flagZ, addr: pcWord())
         case 0xD2: // JP NC,nn
-            return jp(cond: !flagC, addr: pcWord)
+            return jp(cond: !flagC, addr: pcWord())
         case 0xDA: // JP C,nn
-            return jp(cond: flagC, addr: pcWord)
+            return jp(cond: flagC, addr: pcWord())
         case 0xE9: // JP (HL)
             PC = HL
             return 1
 
         case 0xCD: // CALL nn
-            return call(cond: true, addr: pcWord)
+            return call(cond: true, addr: pcWord())
         case 0xC4: // CALL NZ,nn
-            return call(cond: !flagZ, addr: pcWord)
+            return call(cond: !flagZ, addr: pcWord())
         case 0xCC: // CALL Z,nn
-            return call(cond: flagZ, addr: pcWord)
+            return call(cond: flagZ, addr: pcWord())
         case 0xD4:
-            return call(cond: !flagC, addr: pcWord)
+            return call(cond: !flagC, addr: pcWord())
         case 0xDC:
-            return call(cond: flagC, addr: pcWord)
+            return call(cond: flagC, addr: pcWord())
 
         case 0xE8: // ADD SP,n
-            (SP, flagH, flagC) = UInt16.addRelativeWithFlags(SP, pcByte)
+            (SP, flagH, flagC) = UInt16.addRelativeWithFlags(SP, pcByte())
             flagZ = false
             flagN = false
             return 4
 
         case 0xF8: // LD HL,SP+n
-            (HL, flagH, flagC) = UInt16.addRelativeWithFlags(SP, pcByte)
+            (HL, flagH, flagC) = UInt16.addRelativeWithFlags(SP, pcByte())
             flagZ = false
             flagN = false
             return 3
@@ -408,10 +421,10 @@ public class CPU {
             return 2
 
         case 0xE0: // LDH (n),A
-            gb.memory.bytes[0xFF00 + UInt16(pcByte)] = A
+            gb.memory.bytes[0xFF00 + UInt16(pcByte())] = A
             return 3
         case 0xF0: // LDH A,(n)
-            A = gb.memory.bytes[0xFF00 + UInt16(pcByte)]
+            A = gb.memory.bytes[0xFF00 + UInt16(pcByte())]
             return 3
 
         case 0xE2: // LD (C),A
@@ -422,10 +435,10 @@ public class CPU {
             return 2
 
         case 0xEA: // LD (nn),A
-            gb.memory.bytes[pcWord] = A
+            gb.memory.bytes[pcWord()] = A
             return 4
         case 0xFA: // LD A,(nn)
-            A = gb.memory.bytes[pcWord]
+            A = gb.memory.bytes[pcWord()]
             return 4
 
         case 0xF3: // DI
@@ -441,7 +454,7 @@ public class CPU {
             return 4
 
         case 0xCB:
-            return runOpcodeCB(pcByte)
+            return runOpcodeCB(pcByte())
 
         case 0xD3, 0xDB, 0xDD, 0xE3, 0xE4, 0xEB...0xED, 0xF4, 0xFC, 0xFD:
             print("Opcode \(String(format: "$%04X", opcode)) is unused")

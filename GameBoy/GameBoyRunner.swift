@@ -13,6 +13,7 @@ public class GameBoyRunner {
     public private(set) var gpu: GPU!
     public private(set) var memory: Memory!
     public private(set) var interrupts: InterruptHandler!
+    public var serialDevice: SerialDevice
 
     public var timer: Int
 
@@ -22,7 +23,9 @@ public class GameBoyRunner {
         timer = 0
         skipBIOS = false
 
-        memory = Memory()
+        serialDevice = EmptySerialDevice()
+        
+        memory = Memory(withParent: self)
         cpu = CPU(withParent: self)
         gpu = GPU(withParent: self)
         interrupts = InterruptHandler(withParent: self)
@@ -104,7 +107,6 @@ public class GameBoyRunner {
     public func loadCartridge(withData data: Data) {
         memory.cartridge = [UInt8].init(repeating: 0, count: data.count)
         data.copyBytes(to: &memory.cartridge!, count: data.count)
-//        skipBIOS = true
         reset()
     }
 }
