@@ -130,9 +130,14 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
-                            <menuItem title="Pause" keyEquivalent="p" id="aTl-1u-JFS">
+                            <menuItem title="Skip Startup" keyEquivalent="s" id="aTl-1u-JFS">
                                 <connections>
-                                    <action selector="pause:" target="hW3-AJ-wXb" id="l2F-PK-I6g"/>
+                                    <action selector="toggleBIOS:" target="hW3-AJ-wXb" id="cEH-WG-cEg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Pause" keyEquivalent="p" id="4Dm-AK-xCx">
+                                <connections>
+                                    <action selector="pause:" target="hW3-AJ-wXb" id="956-nY-ue4"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Restart" keyEquivalent="r" id="KaW-ft-85H">

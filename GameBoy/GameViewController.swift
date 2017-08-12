@@ -119,6 +119,16 @@ class GameViewController: NSViewController, MTKViewDelegate {
         commandBuffer?.commit()
     }
 
+    @IBAction func toggleBIOS(_ sender: NSMenuItem) {
+        if sender.state == .off {
+            sender.state = .on
+            gameBoy.skipBIOS = true
+        } else {
+            sender.state = .off
+            gameBoy.skipBIOS = false
+        }
+    }
+
     @IBAction func pause(_ sender: NSMenuItem) {
         running = !running
     }
