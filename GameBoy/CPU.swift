@@ -14,6 +14,7 @@ public class CPU {
     unowned let gb: GameBoyRunner
 
     public var ime: Bool = true
+    private var eiTimer = 0
     public var halt: Bool = false
     var haltBug: Bool = false
 
@@ -120,14 +121,20 @@ public class CPU {
     }
 
     public func step() -> Int {
-        return runOpcode(pcByte())
+        if halt {
+            return 1
+        }
+        let cycles = runOpcode(pcByte())
+        if eiTimer == 1 {
+            ime = true
+        }
+        if eiTimer > 0 {
+            eiTimer -= 1
+        }
+        return cycles
     }
 
     public func runOpcode(_ opcode: UInt8) -> Int {
-        if halt {
-            PC &-= 1
-            return 1
-        }
         if haltBug {
             PC &-= 1
             haltBug = false
@@ -450,7 +457,7 @@ public class CPU {
             ime = false
             return 1
         case 0xFB: // EI
-            ime = true
+            eiTimer = 2
             return 1
 
         case 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF: // RST

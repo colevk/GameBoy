@@ -57,25 +57,16 @@ public class GPU {
         lineAttributes[line * numAttributes + 2] = gb.memory.SCX
         lineAttributes[line * numAttributes + 3] = gb.memory.OBP0
         lineAttributes[line * numAttributes + 4] = gb.memory.OBP1
-        lineAttributes[line * numAttributes + 5] = gb.memory.WY
+        if line == 0 {
+            lineAttributes[5] = gb.memory.WY
+        } else {
+            lineAttributes[line * numAttributes + 5] = lineAttributes[5]
+        }
         lineAttributes[line * numAttributes + 6] = gb.memory.WX
         lineAttributes[line * numAttributes + 7] = gb.memory.BGP
     }
 
     public func step() {
-        if timer >= 114 {
-            timer = 0
-            gb.memory.LY = (gb.memory.LY + 1) % 154
-            if gb.memory.LY == gb.memory.LYC {
-                gb.memory.STAT |= 0x04
-                if gb.memory.STAT.checkBit(6) {
-                    gb.memory.IF |= gb.interrupts.IE_STAT
-                }
-            } else {
-                gb.memory.STAT &= ~0x04
-            }
-        }
-
         switch gb.memory.LY {
         case 0...143:
             switch timer {
@@ -112,6 +103,18 @@ public class GPU {
         }
 
         timer += 1
+        if timer >= 114 {
+            timer = 0
+            gb.memory.LY = (gb.memory.LY + 1) % 154
+            if gb.memory.LY == gb.memory.LYC {
+                gb.memory.STAT |= 0x04
+                if gb.memory.STAT.checkBit(6) {
+                    gb.memory.IF |= gb.interrupts.IE_STAT
+                }
+            } else {
+                gb.memory.STAT &= ~0x04
+            }
+        }
     }
 
     private func readOAM() {

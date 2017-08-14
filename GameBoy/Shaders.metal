@@ -18,15 +18,19 @@
 #define GB_COLOR_2 half4(0.33, 0.33, 0.33, 1.0)
 #define GB_COLOR_3 half4(0.0, 0.0, 0.0, 1.0)
 
-#define BACKGROUND_ON   0b00000001
-#define SPRITES_ON      0b00000010
-#define SPRITE_SIZE     0b00000100
-#define BG_TILE_MAP     0b00001000
-#define TILE_SET        0b00010000
-#define WINDOW_ON       0b00100000
-#define WINDOW_TILE_MAP 0b01000000
-#define DISPLAY_ON      0b10000000
+#define BACKGROUND_ON   0x01
+#define SPRITES_ON      0x02
+#define SPRITE_SIZE     0x04
+#define BG_TILE_MAP     0x08
+#define TILE_SET        0x10
+#define WINDOW_ON       0x20
+#define WINDOW_TILE_MAP 0x40
+#define DISPLAY_ON      0x80
 
+#define SPRITE_PALETTE  0x10
+#define SPRITE_X_FLIP   0x20
+#define SPRITE_Y_FLIP   0x40
+#define SPRITE_PRIORITY 0x80
 
 using namespace metal;
 
@@ -54,8 +58,8 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
     uchar control = attributes[y * 8];
     uchar scrollY = attributes[y * 8 + 1];
     uchar scrollX = attributes[y * 8 + 2];
-//    uchar spritePalette0 = attributes[y * 8 + 3];
-//    uchar spritePalette1 = attributes[y * 8 + 4];
+    uchar spritePalette0 = attributes[y * 8 + 3];
+    uchar spritePalette1 = attributes[y * 8 + 4];
     uchar windowY = attributes[y * 8 + 5];
     uchar windowX = attributes[y * 8 + 6];
     uchar bgPalette = attributes[y * 8 + 7];
@@ -71,13 +75,13 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
     }
 
     // If window or background on
-    bool windowPixel = false;//control & WINDOW_ON && y >= windowY && x >= windowX;
-    if (true) {// || windowPixel || control & BACKGROUND_ON) {
+    bool windowPixel = control & WINDOW_ON && y >= windowY && x >= windowX;
+    if (windowPixel || control & BACKGROUND_ON) {
         uchar posY;
         uchar posX;
         if (windowPixel) {
             posY = y - windowY;
-            posX = x - windowX;
+            posX = x - windowX + 7;
         } else {
             posY = (y + scrollY) % 256;
             posX = (x + scrollX) % 256;

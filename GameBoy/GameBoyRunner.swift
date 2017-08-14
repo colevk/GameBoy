@@ -31,13 +31,17 @@ public class GameBoyRunner {
     }
 
     public func step() {
-//        print(cpu.instructionAt(address: cpu.PC))
-        for _ in 0..<cpu.step() {
+        var cycles = cpu.step()
+        var interrupted = false
+        if cpu.ime || cpu.halt {
+            interrupted = interrupts.handleInterrupts()
+        }
+        if interrupted {
+            cycles += 3
+        }
+        for _ in 0 ..< cycles {
             gpu.step()
             timer.tick()
-        }
-        if cpu.ime || cpu.halt {
-            interrupts.handleInterrupts()
         }
     }
 
