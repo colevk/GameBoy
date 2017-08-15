@@ -35,11 +35,6 @@ public class Memory {
     public var wavePatternRAM: [UInt8]
 
     // I/O registers
-    public var DIV: UInt8 = 0  // FF04, increments 16384 times per second
-    public var TIMA: UInt8 = 0 // FF05, timer
-    public var TMA: UInt8 = 0  // FF06, timer modulo
-    public var TAC: UInt8 = 0  // FF07, timer control
-
     public var IF: UInt8 = 0   // FF0F, interrupt flag
 
     public var NR10: UInt8 = 0 // FF10, sound mode 1, sweep
@@ -69,11 +64,8 @@ public class Memory {
     public var NR52: UInt8 = 0 // FF26, sound on/off
 
     public var LCDC: UInt8 = 0 // FF40, LCD control
-    public var STAT: UInt8 = 0 // FF41, LCD status
     public var SCY: UInt8 = 0  // FF42, scroll y
     public var SCX: UInt8 = 0  // FF43, scroll x
-    public var LY: UInt8 = 0   // FF44, current line
-    public var LYC: UInt8 = 0  // FF45, LY compare
 
     public var BGP: UInt8 = 0  // FF47, BG & window palette
     public var OBP0: UInt8 = 0 // FF48, object palette 0
@@ -142,28 +134,28 @@ public class Memory {
         case 0xFF02:
             return gb.serialDevice.SC
         case 0xFF04:
-            return DIV
+            return gb.timer.DIV
         case 0xFF05:
-            return TIMA
+            return gb.timer.TIMA
         case 0xFF06:
-            return TMA
+            return gb.timer.TMA
         case 0xFF07:
-            return TAC
+            return gb.timer.TAC
         case 0xFF0F:
             return IF
 
         case 0xFF40:
             return LCDC
         case 0xFF41:
-            return STAT | 0b10000000
+            return gb.gpu.STAT
         case 0xFF42:
             return SCY
         case 0xFF43:
             return SCX
         case 0xFF44:
-            return LY
+            return gb.gpu.LY
         case 0xFF45:
-            return LYC
+            return gb.gpu.LYC
 
         case 0xFF47:
             return BGP
@@ -214,28 +206,28 @@ public class Memory {
         case 0xFF02:
             gb.serialDevice.SC = newValue
         case 0xFF04:
-            DIV = 0
+            gb.timer.DIV = newValue
         case 0xFF05:
-            TIMA = newValue
+            gb.timer.TIMA = newValue
         case 0xFF06:
-            TMA = newValue
+            gb.timer.TMA = newValue
         case 0xFF07:
-            TAC = newValue
+            gb.timer.TAC = newValue
         case 0xFF0F:
             IF = newValue
 
         case 0xFF40:
             LCDC = newValue
         case 0xFF41:
-            STAT = (newValue & 0b11111000) | (STAT & 0b00000111)
+            gb.gpu.STAT = newValue
         case 0xFF42:
             SCY = newValue
         case 0xFF43:
             SCX = newValue
         case 0xFF44:
-            LY = 0
+            gb.gpu.LY = 0
         case 0xFF45:
-            LYC = newValue
+            gb.gpu.LYC = newValue
         case 0xFF46:
             if gb.gpu.oamAccessible() {
                 let start = 0x100 * Int(newValue)

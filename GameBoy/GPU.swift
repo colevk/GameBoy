@@ -20,6 +20,44 @@ public class GPU {
     public var timer: Int = 0
     public var mode: GPUMode = .readingOAM
 
+    private var line: UInt8 = 0
+    private var statLineInterrupt: Bool = false
+    private var statOAMInterrupt: Bool = false
+    private var statVBlankInterrupt: Bool = false
+    private var statHBlankInterrupt: Bool = false
+    private var statCoincidence: Bool = false
+    private var modeBits: UInt8 = 0
+
+    public var STAT: UInt8 {
+        get {
+            return modeBits +
+                (statLineInterrupt ? 0x40 : 0) +
+                (statOAMInterrupt ? 0x20 : 0) +
+                (statVBlankInterrupt ? 0x10 : 0) +
+                (statHBlankInterrupt ? 0x08 : 0) +
+                (statCoincidence ? 0x04 : 0)
+        }
+        set {
+            statLineInterrupt = newValue & 0x40 != 0
+            statOAMInterrupt = newValue & 0x20 != 0
+            statVBlankInterrupt = newValue & 0x10 != 0
+            statHBlankInterrupt = newValue & 0x08 != 0
+        }
+    }
+
+    public var LY: UInt8 {
+        get { return line }
+        set {
+            line = newValue
+            statCoincidence = newValue == LYC
+            if statLineInterrupt && statCoincidence {
+                gb.interrupts.triggerInterrupt(.stat)
+            }
+        }
+    }
+
+    public var LYC: UInt8 = 0
+
     public func ramAccessible() -> Bool {
         return mode != .readingVRAM || !gb.memory.LCDC.checkBit(7)
     }
@@ -30,16 +68,27 @@ public class GPU {
 
     private func setMode(_ newValue: GPUMode) {
         mode = newValue
-        gb.memory.STAT &= ~0x03
         switch newValue {
         case .hBlank:
-            gb.memory.STAT |= 0b00
+            modeBits = 0b00
+            if statHBlankInterrupt {
+                gb.interrupts.triggerInterrupt(.stat)
+            }
         case .vBlank:
-            gb.memory.STAT |= 0b01
+            modeBits = 0b01
+            if gb.memory.LCDC.checkBit(7) {
+                gb.interrupts.triggerInterrupt(.vblank)
+            }
+            if statVBlankInterrupt {
+                gb.interrupts.triggerInterrupt(.stat)
+            }
         case .readingOAM:
-            gb.memory.STAT |= 0b10
+            modeBits = 0b10
+            if statOAMInterrupt {
+                gb.interrupts.triggerInterrupt(.stat)
+            }
         case .readingVRAM:
-            gb.memory.STAT |= 0b11
+            modeBits = 0b11
         }
     }
 
@@ -70,25 +119,25 @@ public class GPU {
         lineAttributes[line * numAttributes + 7] = gb.memory.BGP
     }
 
+    public func advanceBy(cycles: Int) {
+        for _ in 0..<cycles {
+            step()
+        }
+    }
+
     /** Increment the GPU by one cycle.
      */
     public func step() {
-        switch gb.memory.LY {
+        switch line {
         case 0...143:
             switch timer {
             case 0:
                 setMode(.readingOAM)
-                if gb.memory.STAT.checkBit(5) {
-                    gb.interrupts.triggerInterrupt(.stat)
-                }
             case 20:
                 setMode(.readingVRAM)
             case 63:
                 setMode(.hBlank)
-                storeLineAttributes(line: Int(gb.memory.LY))
-                if gb.memory.STAT.checkBit(3) {
-                    gb.interrupts.triggerInterrupt(.stat)
-                }
+                storeLineAttributes(line: Int(line))
             default:
                 break
             }
@@ -96,12 +145,6 @@ public class GPU {
             if timer == 0 {
                 setMode(.vBlank)
                 getSpritePriority()
-                if gb.memory.LCDC.checkBit(7) {
-                    gb.interrupts.triggerInterrupt(.vblank)
-                }
-                if gb.memory.STAT.checkBit(4) {
-                    gb.interrupts.triggerInterrupt(.stat)
-                }
             }
         default:
             break
@@ -110,15 +153,7 @@ public class GPU {
         timer += 1
         if timer >= 114 {
             timer = 0
-            gb.memory.LY = (gb.memory.LY + 1) % 154
-            if gb.memory.LY == gb.memory.LYC {
-                gb.memory.STAT |= 0x04
-                if gb.memory.STAT.checkBit(6) {
-                    gb.interrupts.triggerInterrupt(.stat)
-                }
-            } else {
-                gb.memory.STAT &= ~0x04
-            }
+            LY = (LY + 1) % 154
         }
     }
 

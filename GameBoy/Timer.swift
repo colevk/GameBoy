@@ -13,34 +13,58 @@ import Foundation
 public class Timer {
     unowned let gb: GameBoyRunner
 
+    private var divider: UInt16 = 0
+    private var timer: UInt16 = 0
+    private var timerUpdate: UInt16 = 0
+    private var timerModulo: UInt16 = 0
+    private var rawTimerControl: UInt8 = 0
+
+    public var DIV: UInt8 {
+        get { return UInt8(divider >> 8) }
+        set { divider = 0 }
+    }
+
+    public var TIMA: UInt8 {
+        get { return UInt8(timer >> 8) }
+        set { timer = timer & 0x00FF + UInt16(newValue) << 8 }
+    }
+
+    public var TAC: UInt8 {
+        get { return rawTimerControl }
+        set {
+            rawTimerControl = newValue
+            if rawTimerControl.checkBit(2) {
+                switch rawTimerControl & 0x03 {
+                case 0b00: timerUpdate = 1
+                case 0b01: timerUpdate = 64
+                case 0b10: timerUpdate = 16
+                case 0b11: timerUpdate = 4
+                default: break
+                }
+            } else {
+                timerUpdate = 0
+            }
+        }
+    }
+
+    public var TMA: UInt8 {
+        get { return UInt8(timerModulo >> 8) }
+        set { timerModulo = UInt16(timerModulo) << 8 }
+    }
+
     public init(withParent parent: GameBoyRunner) {
         gb = parent
     }
 
-    public var timer: Int = 0
+    public func advanceBy(cycles: Int) {
+        divider &+= UInt16(4 * cycles)
 
-    public func tick() {
-        timer += 1
-        timer %= 256
-        if timer % 64 == 0 {
-            gb.memory.DIV &+= 1
-        }
-        if gb.memory.TAC & 0x04 != 0 {
-            let interval: Int
-            switch gb.memory.TAC & 0x03 {
-            case 0b00: interval = 256
-            case 0b01: interval = 4
-            case 0b10: interval = 16
-            case 0b11: interval = 64
-            default: return
-            }
-            if timer % interval == 0 {
-                gb.memory.TIMA &+= 1
-            }
-            if gb.memory.TIMA == 0 {
-                gb.memory.TIMA = gb.memory.TMA
-                gb.interrupts.triggerInterrupt(.timer)
-            }
+        let overflow: ArithmeticOverflow
+        (timer, overflow) = timer.addingReportingOverflow(timerUpdate * UInt16(cycles))
+
+        if overflow == .overflow {
+            timer += timerModulo
+            gb.interrupts.triggerInterrupt(.timer)
         }
     }
 }

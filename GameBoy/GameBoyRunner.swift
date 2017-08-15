@@ -46,10 +46,8 @@ public class GameBoyRunner {
         if interrupted {
             cycles += 3
         }
-        for _ in 0 ..< cycles {
-            gpu.step()
-            timer.tick()
-        }
+        timer.advanceBy(cycles: cycles)
+        gpu.advanceBy(cycles: cycles)
     }
 
     /** Run the CPU until the next vblank.
