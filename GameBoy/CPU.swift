@@ -17,22 +17,21 @@ public class CPU {
     public var ime: Bool = true
     private var eiTimer = 0
     public var halt: Bool = false
-    var haltBug: Bool = false
 
-    public var PC: UInt16 = 0
+    public var PC: Int = 0
 
     /** Access the byte at the program counter and increment it.
      */
     public func pcByte() -> UInt8 {
         PC += 1
-        return gb.memory.bytes[PC - 1]
+        return gb.memory.readByte(PC - 1)
     }
 
     /** Access the word at the program counter and increment it.
      */
     public func pcWord() -> UInt16 {
-        PC &+= 2
-        return gb.memory.words[PC &- 2]
+        PC += 2
+        return gb.memory.readWord(PC - 2)
     }
 
     public var reg8: Registers8Bit! = nil
@@ -151,11 +150,6 @@ public class CPU {
     /** Perform the given opcode and return the number of cycles it took.
      */
     public func runOpcode(_ opcode: UInt8) -> Int {
-        if haltBug {
-            PC &-= 1
-            haltBug = false
-        }
-
         switch opcode {
         case 0x00: // NOP
             return 1
@@ -304,11 +298,7 @@ public class CPU {
             return (srcOffset != 6 && dstOffset != 6) ? 1 : 2
 
         case 0x76: // HALT
-            if ime || (gb.memory.IE & gb.memory.IF & 0x1F) == 0 {
-                halt = true
-            } else {
-                haltBug = true
-            }
+            halt = true
             return 1
 
         case 0x80...0x87: // ADD A,r
@@ -377,7 +367,7 @@ public class CPU {
             return 2
 
         case 0xC9: // RET
-            PC = pop()
+            PC = Int(pop())
             return 4
         case 0xC0: // RET NZ
             return ret(cond: !flagZ)
@@ -388,7 +378,7 @@ public class CPU {
         case 0xD8: // RET C
             return ret(cond: flagC)
         case 0xD9: // RETI
-            PC = pop()
+            PC = Int(pop())
             ime = true
             return 4
 
@@ -419,7 +409,7 @@ public class CPU {
         case 0xDA: // JP C,nn
             return jp(cond: flagC, addr: pcWord())
         case 0xE9: // JP (HL)
-            PC = HL
+            PC = Int(HL)
             return 1
 
         case 0xCD: // CALL nn
@@ -477,8 +467,8 @@ public class CPU {
             return 1
 
         case 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF: // RST
-            push(PC)
-            PC = UInt16(opcode - 0xC7)
+            push(UInt16(PC))
+            PC = Int(opcode - 0xC7)
             return 4
 
         case 0xCB:
@@ -796,7 +786,7 @@ public class CPU {
      */
     public func jp(cond: Bool, addr: UInt16) -> Int {
         if cond {
-            PC = addr
+            PC = Int(addr)
             return 4
         } else {
             return 3
@@ -807,7 +797,7 @@ public class CPU {
      */
     public func jr(cond: Bool, offset: UInt8) -> Int {
         if cond {
-            PC = UInt16(Int(PC) + Int(Int8(bitPattern: offset)))
+            PC = PC + Int(Int8(bitPattern: offset))
             return 3
         } else {
             return 2
@@ -818,7 +808,7 @@ public class CPU {
      */
     public func ret(cond: Bool) -> Int {
         if cond {
-            PC = pop()
+            PC = Int(pop())
             return 5
         } else {
             return 2
@@ -829,8 +819,8 @@ public class CPU {
      */
     public func call(cond: Bool, addr: UInt16) -> Int {
         if cond {
-            push(PC)
-            PC = addr
+            push(UInt16(PC))
+            PC = Int(addr)
             return 6
         } else {
             return 3

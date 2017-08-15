@@ -35,8 +35,6 @@ public class Memory {
     public var wavePatternRAM: [UInt8]
 
     // I/O registers
-    public var IF: UInt8 = 0   // FF0F, interrupt flag
-
     public var NR10: UInt8 = 0 // FF10, sound mode 1, sweep
     public var NR11: UInt8 = 0 // FF11, sound mode 1, wave pattern
     public var NR12: UInt8 = 0 // FF12, sound mode 1, envelope
@@ -72,8 +70,6 @@ public class Memory {
     public var OBP1: UInt8 = 0 // FF49, object palette 1
     public var WY: UInt8 = 0   // FF4A, window y
     public var WX: UInt8 = 0   // FF4B, window x
-
-    public var IE: UInt8 = 0   // FFFF, interrupt enable
 
     // Internal stuff
     var booting = true
@@ -142,7 +138,7 @@ public class Memory {
         case 0xFF07:
             return gb.timer.TAC
         case 0xFF0F:
-            return IF
+            return gb.interrupts.IF
 
         case 0xFF40:
             return LCDC
@@ -168,7 +164,7 @@ public class Memory {
         case 0xFF4B:
             return WX
         case 0xFFFF:
-            return IE
+            return gb.interrupts.IE
         default:
             return 0xFF
         }
@@ -214,7 +210,7 @@ public class Memory {
         case 0xFF07:
             gb.timer.TAC = newValue
         case 0xFF0F:
-            IF = newValue
+            gb.interrupts.IF = newValue
 
         case 0xFF40:
             LCDC = newValue
@@ -248,7 +244,7 @@ public class Memory {
         case 0xFF50:
             booting = false
         case 0xFFFF:
-            IE = newValue
+            gb.interrupts.IE = newValue
         default:
             break
         }

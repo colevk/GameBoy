@@ -14,6 +14,7 @@ class TestGameBoyRunner: GameBoyRunner {
         memory.cartridge = [UInt8](repeating: 0, count: data.count)
         data.copyBytes(to: &memory.cartridge!, count: data.count)
         memory.externalRAM = [UInt8](repeating: 0, count: 8192)
+        skipBIOS = true
         reset()
     }
 }
@@ -50,9 +51,6 @@ class CPUInstructionTests: XCTestCase {
             XCTFail("Cound not load ROM")
             return
         }
-        
-        gameBoy.skipBIOS = true
-        gameBoy.reset()
 
         var timer = 0
 

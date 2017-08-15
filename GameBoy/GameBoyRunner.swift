@@ -39,12 +39,10 @@ public class GameBoyRunner {
      */
     public func step() {
         var cycles = cpu.step()
-        var interrupted = false
         if cpu.ime || cpu.halt {
-            interrupted = interrupts.handleInterrupts()
-        }
-        if interrupted {
-            cycles += 3
+            if interrupts.handleInterrupts() {
+                cycles += 3
+            }
         }
         timer.advanceBy(cycles: cycles)
         gpu.advanceBy(cycles: cycles)
@@ -68,8 +66,8 @@ public class GameBoyRunner {
     public func reset() {
         cpu.ime = true
         cpu.halt = false
-        memory.IF = 0
-        memory.IE = 0
+        interrupts.IF = 0
+        interrupts.IE = 0
         cpu.F = 0
 
         if skipBIOS {

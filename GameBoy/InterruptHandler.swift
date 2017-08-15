@@ -13,11 +13,52 @@ import Foundation
 public class InterruptHandler {
     public unowned let gb: GameBoyRunner
 
-    public let IE_VBLANK: UInt8 = 0b00000001
-    public let IE_STAT: UInt8   = 0b00000010
-    public let IE_TIMER: UInt8  = 0b00000100
-    public let IE_SERIAL: UInt8 = 0b00001000
-    public let IE_BUTTON: UInt8 = 0b00010000
+    private var vblankEnable: Bool = false
+    private var statEnable: Bool = false
+    private var timerEnable: Bool = false
+    private var serialEnable: Bool = false
+    private var buttonEnable: Bool = false
+
+    private var vblankFlag: Bool = false
+    private var statFlag: Bool = false
+    private var timerFlag: Bool = false
+    private var serialFlag: Bool = false
+    private var buttonFlag: Bool = false
+
+    public var IF: UInt8 {
+        get {
+            return
+                (vblankFlag ? 0x01 : 0) +
+                (statFlag ? 0x02: 0) +
+                (timerFlag ? 0x04 : 0) +
+                (serialFlag ? 0x08 : 0) +
+                (buttonFlag ? 0x10 : 0)
+        }
+        set {
+            vblankFlag = newValue & 0x01 != 0
+            statFlag = newValue & 0x02 != 0
+            timerFlag = newValue & 0x04 != 0
+            serialFlag = newValue & 0x08 != 0
+            buttonFlag = newValue & 0x10 != 0
+        }
+    }
+    public var IE: UInt8 {
+        get {
+            return
+                (vblankEnable ? 0x01 : 0) +
+                (statEnable ? 0x02: 0) +
+                (timerEnable ? 0x04 : 0) +
+                (serialEnable ? 0x08 : 0) +
+                (buttonEnable ? 0x10 : 0)
+        }
+        set {
+            vblankEnable = newValue & 0x01 != 0
+            statEnable = newValue & 0x02 != 0
+            timerEnable = newValue & 0x04 != 0
+            serialEnable = newValue & 0x08 != 0
+            buttonEnable = newValue & 0x10 != 0
+        }
+    }
 
     public init(withParent parent: GameBoyRunner) {
         gb = parent
@@ -26,48 +67,51 @@ public class InterruptHandler {
     public func triggerInterrupt(_ interrupt: Interrupt) {
         switch interrupt {
         case .vblank:
-            gb.memory.IF |= IE_VBLANK
+            vblankFlag = true
         case .stat:
-            gb.memory.IF |= IE_STAT
+            statFlag = true
         case .timer:
-            gb.memory.IF |= IE_TIMER
+            timerFlag = true
         case .serial:
-            gb.memory.IF |= IE_SERIAL
+            serialFlag = true
         case .button:
-            gb.memory.IF |= IE_BUTTON
+            buttonFlag = true
         }
     }
 
     /** Checks if any active interrupts have been triggered, jumping to the interrupt address if so and returning true.
      */
     public func handleInterrupts() -> Bool {
-        let activeFlags = gb.memory.IF & gb.memory.IE & 0x1F
-        if activeFlags != 0 {
-            if gb.cpu.ime {
-                let address: UInt16
-                if activeFlags & IE_VBLANK != 0 {
-                    address = 0x40
-                    gb.memory.IF &= ~IE_VBLANK
-                } else if activeFlags & IE_STAT != 0 {
-                    address = 0x48
-                    gb.memory.IF &= ~IE_STAT
-                } else if activeFlags & IE_TIMER != 0 {
-                    address = 0x50
-                    gb.memory.IF &= ~IE_TIMER
-                } else if activeFlags & IE_SERIAL != 0 {
-                    address = 0x58
-                    gb.memory.IF &= ~IE_SERIAL
-                } else {
-                    address = 0x60
-                    gb.memory.IF &= ~IE_BUTTON
-                }
-                gb.cpu.ime = false
-                _ = gb.cpu.call(cond: true, addr: address)
-            }
-            gb.cpu.halt = false
+        if vblankFlag && vblankEnable {
+            callInterrupt(address: 0x40, flag: &vblankFlag)
+            return true
+        }
+        if statFlag && statEnable {
+            callInterrupt(address: 0x48, flag: &statFlag)
+            return true
+        }
+        if timerFlag && timerEnable {
+            callInterrupt(address: 0x50, flag: &timerFlag)
+            return true
+        }
+        if serialFlag && serialEnable {
+            callInterrupt(address: 0x58, flag: &serialFlag)
+            return true
+        }
+        if buttonFlag && buttonEnable {
+            callInterrupt(address: 0x60, flag: &buttonFlag)
             return true
         }
         return false
+    }
+
+    private func callInterrupt(address: UInt16, flag: inout Bool) {
+        if gb.cpu.ime {
+            gb.cpu.ime = false
+            flag = false
+            _ = gb.cpu.call(cond: true, addr: address)
+        }
+        gb.cpu.halt = false
     }
 }
 
