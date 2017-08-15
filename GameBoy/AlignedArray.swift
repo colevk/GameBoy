@@ -8,6 +8,8 @@
 
 import Foundation
 
+/** Arrays passed to MTLBuffers must be aligned to 0x1000 if they are to automatically pick up changes to the underlying memory.
+ */
 public class AlignedArray<T> {
     public let pointer: UnsafeMutableRawPointer
     public let count: Int

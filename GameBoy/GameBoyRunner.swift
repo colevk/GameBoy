@@ -7,7 +7,10 @@
 //
 
 import Foundation
+import Cocoa
 
+/** Holds all the component parts of the Game Boy and lets them access each other.
+ */
 public class GameBoyRunner {
     public private(set) var cpu: CPU!
     public private(set) var gpu: GPU!
@@ -32,6 +35,8 @@ public class GameBoyRunner {
         interrupts = InterruptHandler(withParent: self)
     }
 
+    /** Run one CPU instruction and then check for interrupts and let the GPU and timer catch up.
+     */
     public func step() {
         var cycles = cpu.step()
         var interrupted = false
@@ -47,6 +52,8 @@ public class GameBoyRunner {
         }
     }
 
+    /** Run the CPU until the next vblank.
+     */
     public func advanceFrame() {
         if gpu.mode == .vBlank {
             while gpu.mode == .vBlank {
@@ -58,6 +65,8 @@ public class GameBoyRunner {
         }
     }
 
+    /** Reset everything to a default state.
+     */
     public func reset() {
         cpu.ime = true
         cpu.halt = false
@@ -112,10 +121,97 @@ public class GameBoyRunner {
         }
     }
 
+    /** Load a cartridge and print some debug data.
+     */
     public func loadCartridge(withData data: Data) {
         memory.cartridge = [UInt8](repeating: 0, count: data.count)
-        memory.externalRAM = [UInt8](repeating: 0, count: 8192)
-        data.copyBytes(to: &memory.cartridge!, count: data.count)
-        reset()
+
+        let nameBytes = data[0x134...0x142].prefix { $0 != 0 }
+        print("Internal name: \(String(data: nameBytes, encoding: .utf8)!)")
+        print("Cartridge type: \(cartridgeType(data[0x147]))")
+        print("ROM size: \(romSize(data[0x148]))")
+        print("RAM size: \(ramSize(data[0x149]))")
+
+        if supportedCartridgeTypes.contains(data[0x147]) {
+            data.copyBytes(to: &memory.cartridge!, count: data.count)
+            memory.externalRAM = [UInt8](repeating: 0, count: 8192)
+            reset()
+        } else {
+            let alert = NSAlert()
+            alert.messageText = "Could not load cartridge."
+            alert.informativeText = "The cartridge type \(cartridgeType(data[0x147])) is not currently supported."
+            alert.alertStyle = .critical
+            alert.runModal()
+        }
+    }
+
+    private let supportedCartridgeTypes: [UInt8] = [0x00, 0x08, 0x09]
+
+    private func cartridgeType(_ byte: UInt8) -> String {
+        switch byte {
+        case 0x00: return "ROM ONLY"
+        case 0x01: return "MBC1"
+        case 0x02: return "MBC1+RAM"
+        case 0x03: return "MBC1+RAM+BATTERY"
+        case 0x05: return "MBC2"
+        case 0x06: return "MBC2+BATTERY"
+        case 0x08: return "ROM+RAM"
+        case 0x09: return "ROM+RAM+BATTERY"
+        case 0x0B: return "MMM01"
+        case 0x0C: return "MMM01+RAM"
+        case 0x0D: return "MMM01+RAM+BATTERY"
+        case 0x0F: return "MBC3+TIMER+BATTERY"
+        case 0x10: return "MBC3+TIMER+RAM+BATTERY"
+        case 0x11: return "MBC3"
+        case 0x12: return "MBC3+RAM"
+        case 0x13: return "MBC3+RAM+BATTERY"
+        case 0x19: return "MBC5"
+        case 0x1A: return "MBC5+RAM"
+        case 0x1B: return "MBC5+RAM+BATTERY"
+        case 0x1C: return "MBC5+RUMBLE"
+        case 0x1D: return "MBC5+RUMBLE+RAM"
+        case 0x1E: return "MBC5+RUMBLE+RAM+BATTERY"
+        case 0x20: return "MBC6"
+        case 0x22: return "MBC7+SENSOR+RUMBLE+RAM+BATTERY"
+        case 0xFC: return "POCKET CAMERA"
+        case 0xFD: return "BANDAI TAMA5"
+        case 0xFE: return "HuC3"
+        case 0xFF: return "HuC1+RAM+BATTERY"
+        default: return "UNKNOWN"
+        }
+    }
+
+    private func romSize(_ byte: UInt8) -> Int {
+        let numBanks: Int
+        switch byte {
+        case 0x00...0x08:
+            numBanks = 2 << byte
+        case 0x52:
+            numBanks = 72
+        case 0x53:
+            numBanks = 80
+        case 0x54:
+            numBanks = 96
+        default:
+            numBanks = 0
+        }
+        return numBanks * 0x4000
+    }
+
+    private func ramSize(_ byte: UInt8) -> Int {
+        switch byte {
+        case 0x01:
+            return 0x800
+        case 0x02:
+            return 0x2000
+        case 0x03:
+            return 0x8000
+        case 0x04:
+            return 0x20000
+        case 0x05:
+            return 0x10000
+        default:
+            return 0
+        }
     }
 }

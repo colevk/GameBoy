@@ -59,14 +59,14 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
 
     func loadAssets() {
-        // load any resources required for rendering
+        // MTK boilerplate
         let view = self.view as! MTKView
         commandQueue = device.makeCommandQueue()
         commandQueue.label = "main command queue"
 
         let defaultLibrary = device.makeDefaultLibrary()!
-        let fragmentProgram = defaultLibrary.makeFunction(name: "passThroughFragment")!
         let vertexProgram = defaultLibrary.makeFunction(name: "passThroughVertex")!
+        let fragmentProgram = defaultLibrary.makeFunction(name: "gameBoyPixelFragment")!
 
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexFunction = vertexProgram
@@ -171,32 +171,43 @@ class GameViewController: NSViewController, MTKViewDelegate {
         panel.allowsMultipleSelection = false
 
         if panel.runModal() == NSApplication.ModalResponse.OK,
-           let url = panel.url,
-           openFile(url.path)
+           let url = panel.url
         {
-            print("Loaded file \"\(url.lastPathComponent)\"")
-            NSDocumentController.shared.noteNewRecentDocumentURL(url)
-            running = true
+            print("Loading file \"\(url.lastPathComponent)\"")
+            if openFile(url.path) {
+                NSDocumentController.shared.noteNewRecentDocumentURL(url)
+                running = true
+            } else {
+                running = wasRunning
+            }
         } else {
             running = wasRunning
         }
     }
 
+    /** Indicates whether the controller or the view should handle key press events. Currently hard-coded.
+
+        A <- A
+        B <- S
+        START <- Space
+        SELECT <- Return
+        Joypad <- Arrow keys
+     */
     public func canHandleKeyEvent(with event: NSEvent) -> Bool {
-        let keyCodes: [UInt16] = [6, 7, 49, 36, 123, 124, 125, 126]
+        let keyCodes: [UInt16] = [0, 1, 49, 36, 123, 124, 125, 126]
         return (event.type == .keyDown || event.type == .keyUp) && keyCodes.contains(event.keyCode)
     }
 
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
-        case 6: gameBoy.joypad.pressedA = true
-        case 7: gameBoy.joypad.pressedB = true
-        case 49: gameBoy.joypad.pressedStart = true
-        case 36: gameBoy.joypad.pressedSelect = true
-        case 123: gameBoy.joypad.pressedLeft = true
-        case 124: gameBoy.joypad.pressedRight = true
-        case 125: gameBoy.joypad.pressedDown = true
-        case 126: gameBoy.joypad.pressedUp = true
+        case 0: gameBoy.joypad.keyA = true
+        case 1: gameBoy.joypad.keyB = true
+        case 49: gameBoy.joypad.keyStart = true
+        case 36: gameBoy.joypad.keySelect = true
+        case 123: gameBoy.joypad.keyLeft = true
+        case 124: gameBoy.joypad.keyRight = true
+        case 125: gameBoy.joypad.keyDown = true
+        case 126: gameBoy.joypad.keyUp = true
         default: return
         }
 
@@ -205,14 +216,14 @@ class GameViewController: NSViewController, MTKViewDelegate {
 
     override func keyUp(with event: NSEvent) {
         switch event.keyCode {
-        case 6: gameBoy.joypad.pressedA = false
-        case 7: gameBoy.joypad.pressedB = false
-        case 49: gameBoy.joypad.pressedStart = false
-        case 36: gameBoy.joypad.pressedSelect = false
-        case 123: gameBoy.joypad.pressedLeft = false
-        case 124: gameBoy.joypad.pressedRight = false
-        case 125: gameBoy.joypad.pressedDown = false
-        case 126: gameBoy.joypad.pressedUp = false
+        case 0: gameBoy.joypad.keyA = false
+        case 1: gameBoy.joypad.keyB = false
+        case 49: gameBoy.joypad.keyStart = false
+        case 36: gameBoy.joypad.keySelect = false
+        case 123: gameBoy.joypad.keyLeft = false
+        case 124: gameBoy.joypad.keyRight = false
+        case 125: gameBoy.joypad.keyDown = false
+        case 126: gameBoy.joypad.keyUp = false
         default: return
         }
     }

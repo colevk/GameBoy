@@ -8,8 +8,9 @@
 
 import Foundation
 
+/** Handles checking for interrupts and the jumps necessary if triggered.
+ */
 public class InterruptHandler {
-
     public unowned let gb: GameBoyRunner
 
     public let IE_VBLANK: UInt8 = 0b00000001
@@ -37,6 +38,8 @@ public class InterruptHandler {
         }
     }
 
+    /** Checks if any active interrupts have been triggered, jumping to the interrupt address if so and returning true.
+     */
     public func handleInterrupts() -> Bool {
         let activeFlags = gb.memory.IF & gb.memory.IE & 0x1F
         if activeFlags != 0 {

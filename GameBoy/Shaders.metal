@@ -43,7 +43,7 @@ vertex Vertex passThroughVertex(uint vid [[ vertex_id ]],
 };
 
 
-fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
+fragment half4 gameBoyPixelFragment(Vertex inFrag [[stage_in]],
                                    constant uchar* ram [[ buffer(0) ]],
                                    constant uchar* oam [[ buffer(1) ]],
                                    constant uchar* spriteOrder [[ buffer(2) ]],

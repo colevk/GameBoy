@@ -12,6 +12,8 @@ infix operator &+=
 infix operator &-=
 infix operator &*=
 
+/** Helper functions that record whether half-carry happened.
+ */
 extension UInt8 {
     func checkBit(_ bit: Int) -> Bool {
         return (self >> bit) & 1 == 1
@@ -42,6 +44,8 @@ extension UInt8 {
     }
 }
 
+/** Helper functions that record whether half-carry happened.
+ */
 extension UInt16 {
     public static func addWithFlags(_ lhs: UInt16, _ rhs: UInt16) -> (UInt16, Bool, Bool) {
         let halfCarry = ((lhs & 0xFFF) + (rhs & 0xFFF)) & 0x1000 == 0x1000

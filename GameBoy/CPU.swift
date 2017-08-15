@@ -9,8 +9,9 @@
 import Foundation
 import Cocoa
 
+/** Store CPU instructions and registers.
+ */
 public class CPU {
-
     unowned let gb: GameBoyRunner
 
     public var ime: Bool = true
@@ -20,11 +21,15 @@ public class CPU {
 
     public var PC: UInt16 = 0
 
+    /** Access the byte at the program counter and increment it.
+     */
     public func pcByte() -> UInt8 {
         PC += 1
         return gb.memory.bytes[PC - 1]
     }
-    
+
+    /** Access the word at the program counter and increment it.
+     */
     public func pcWord() -> UInt16 {
         PC &+= 2
         return gb.memory.words[PC &- 2]
@@ -35,6 +40,7 @@ public class CPU {
 
     public var SP: UInt16 = 0
 
+    // 8 bit registers
     public var A: UInt8 = 0
     public var B: UInt8 = 0
     public var C: UInt8 = 0
@@ -43,6 +49,7 @@ public class CPU {
     public var H: UInt8 = 0
     public var L: UInt8 = 0
 
+    // 16 bit registers
     public var AF: UInt16 {
         get {
             return UInt16(A) << 8 + UInt16(F)
@@ -83,6 +90,7 @@ public class CPU {
         }
     }
 
+    // The byte in memory pointed to by HL, sometimes used in place of register
     public var addrHL: UInt8 {
         get {
             return gb.memory.bytes[HL]
@@ -92,9 +100,13 @@ public class CPU {
         }
     }
 
+    // Result of last operation was 0
     private var flagZ: Bool = false
+    // Last operation was a subtraction
     private var flagN: Bool = false
+    // Last operation overflowed from bit 3 to bit 4
     private var flagH: Bool = false
+    // Last operation overflowed
     private var flagC: Bool = false
 
     public var F: UInt8 {
@@ -120,6 +132,8 @@ public class CPU {
         reg16 = Registers16Bit(onCPU: self)
     }
 
+    /** Perform the current instruction and return the number of cycles it took.
+     */
     public func step() -> Int {
         if halt {
             return 1
@@ -134,6 +148,8 @@ public class CPU {
         return cycles
     }
 
+    /** Perform the given opcode and return the number of cycles it took.
+     */
     public func runOpcode(_ opcode: UInt8) -> Int {
         if haltBug {
             PC &-= 1
@@ -480,6 +496,8 @@ public class CPU {
         return 0
     }
 
+    /** Perform the given CB-prefixed opcode and return the number of cycles it took.
+     */
     public func runOpcodeCB(_ opcode: UInt8) -> Int {
         switch opcode {
         case 0x00...0x07: // RLC r
@@ -548,6 +566,8 @@ public class CPU {
         }
     }
 
+    /** Increment 8-bit register.
+     */
     public func inc(_ register: inout UInt8) {
         flagH = register & 0xF == 0xF
         register &+= 1
@@ -555,10 +575,14 @@ public class CPU {
         flagN = false
     }
 
+    /** Increment 16-bit register.
+     */
     public func inc(_ register: inout UInt16) {
         register &+= 1
     }
 
+    /** Decrement 8-bit register.
+     */
     public func dec(_ register: inout UInt8) {
         flagH = register & 0xF == 0x0
         register &-= 1
@@ -566,10 +590,14 @@ public class CPU {
         flagN = true
     }
 
+    /** Decrement 16-bit register.
+     */
     public func dec(_ register: inout UInt16) {
         register &-= 1
     }
 
+    /** Rotate register left.
+     */
     public func rlc(_ register: inout UInt8) {
         register = register << 1 + register >> 7
         flagZ = register == 0
@@ -578,6 +606,8 @@ public class CPU {
         flagC = register & 0x01 != 0
     }
 
+    /** Rotate register left through carry flag.
+     */
     public func rl(_ register: inout UInt8) {
         (flagC, register) = (register & 0x80 == 0x80, register << 1 + (flagC ? 1 : 0))
         flagZ = register == 0
@@ -585,6 +615,8 @@ public class CPU {
         flagH = false
     }
 
+    /** Rotate register right.
+     */
     public func rrc(_ register: inout UInt8) {
         flagC = (register & 0x01) != 0
         register = register >> 1 + register << 7
@@ -593,6 +625,8 @@ public class CPU {
         flagH = false
     }
 
+    /** Rotate register right through carry flag.
+     */
     public func rr(_ register: inout UInt8) {
         (flagC, register) = (register & 0x01 == 0x01, register >> 1 + (flagC ? 0x80 : 0))
         flagZ = register == 0
@@ -600,6 +634,8 @@ public class CPU {
         flagH = false
     }
 
+    /** Shift register left.
+     */
     public func sla(_ register: inout UInt8) {
         flagC = register.checkBit(7)
         register = register << 1
@@ -608,6 +644,8 @@ public class CPU {
         flagH = false
     }
 
+    /** Shift register right, repeating bit 7.
+     */
     public func sra(_ register: inout UInt8) {
         flagC = register.checkBit(0)
         register = (register >> 1) + (register.checkBit(7) ? 0x80 : 0)
@@ -616,6 +654,8 @@ public class CPU {
         flagH = false
     }
 
+    /** Rotate register right.
+     */
     public func srl(_ register: inout UInt8) {
         flagC = register.checkBit(0)
         register = (register >> 1)
@@ -624,12 +664,16 @@ public class CPU {
         flagH = false
     }
 
+    /** Add register to accumulator.
+     */
     public func add(_ value: UInt8) {
         (A, flagH, flagC) = UInt8.addWithFlags(A, value)
         flagN = false
         flagZ = A == 0
     }
 
+    /** Add register and carry to accumulator.
+     */
     public func adc(_ value: UInt8) {
         if (flagC) {
             let (temp, h1, c1) = UInt8.addWithFlags(A, value)
@@ -644,12 +688,16 @@ public class CPU {
         }
     }
 
+    /** Subtract register from accumulator.
+     */
     public func sub(_ value: UInt8) {
         (A, flagH, flagC) = UInt8.subtractWithFlags(A, value)
         flagN = true
         flagZ = A == 0
     }
 
+    /** Subtract register and carry from accumulator.
+     */
     public func sbc(_ value: UInt8) {
         if (flagC) {
             let (temp, h1, c1) = UInt8.subtractWithFlags(A, value)
@@ -664,6 +712,8 @@ public class CPU {
         }
     }
 
+    /** AND register with accumulator.
+     */
     public func and(_ value: UInt8) {
         A &= value
         flagZ = A == 0
@@ -672,6 +722,8 @@ public class CPU {
         flagC = false
     }
 
+    /** OR register with accumulator.
+     */
     public func or(_ value: UInt8) {
         A |= value
         flagZ = A == 0
@@ -680,6 +732,8 @@ public class CPU {
         flagC = false
     }
 
+    /** XOR register with accumulator.
+     */
     public func xor(_ value: UInt8) {
         A ^= value
         flagZ = A == 0
@@ -688,6 +742,8 @@ public class CPU {
         flagC = false
     }
 
+    /** Compare register with accumulator.
+     */
     public func cp(_ value: UInt8) {
         let result: UInt8
         (result, flagH, flagC) = UInt8.subtractWithFlags(A, value)
@@ -695,35 +751,49 @@ public class CPU {
         flagZ = result == 0
     }
 
+    /** Add two 16-bit registers.
+     */
     public func add(_ to: inout UInt16, _ from: UInt16) {
         (to, flagH, flagC) = UInt16.addWithFlags(to, from)
         flagN = false
     }
 
+    /** Check whether register has bit set.
+     */
     public func bit(_ offset: UInt8, register: UInt8) {
         flagZ = register & (0x01 << offset) == 0
         flagN = false
         flagH = true
     }
 
+    /** Set given bit of register.
+      */
     public func set(_ offset: UInt8, register: inout UInt8) {
         register |= (0x01 << offset)
     }
 
+    /** Reset given bit of register.
+     */
     public func reset(_ offset: UInt8, register: inout UInt8) {
         register &= ~(0x01 << offset)
     }
 
+    /** Push word to stack.
+     */
     public func push(_ value: UInt16) {
         SP &-= 2
         gb.memory.words[SP] = value
     }
 
+    /** Pop word from stack.
+     */
     public func pop() -> UInt16 {
         SP &+= 2
         return gb.memory.words[SP &- 2]
     }
 
+    /** Do a conditional jump to the given address.
+     */
     public func jp(cond: Bool, addr: UInt16) -> Int {
         if cond {
             PC = addr
@@ -733,6 +803,8 @@ public class CPU {
         }
     }
 
+    /** Do a conditional jump by a given offset (interpreted as signed).
+     */
     public func jr(cond: Bool, offset: UInt8) -> Int {
         if cond {
             PC = UInt16(Int(PC) + Int(Int8(bitPattern: offset)))
@@ -742,6 +814,8 @@ public class CPU {
         }
     }
 
+    /** Pop program counter from stack.
+     */
     public func ret(cond: Bool) -> Int {
         if cond {
             PC = pop()
@@ -751,6 +825,8 @@ public class CPU {
         }
     }
 
+    /** Push program counter to stack and jump to address.
+     */
     public func call(cond: Bool, addr: UInt16) -> Int {
         if cond {
             push(PC)

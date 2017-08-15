@@ -9,8 +9,9 @@
 import Foundation
 import MetalKit
 
+/** Control graphics. Current setup is a cheat, reading video RAM and OAM only at vblank, rather than at their proper times. Graphics-relevant registers are also only stored per-line, rather than per-pixel. This is to offload most of the graphics work to the GPU.
+ */
 public class GPU {
-
     private unowned let gb: GameBoyRunner
 
     public var lineAttributes: AlignedArray<UInt8>
@@ -42,7 +43,6 @@ public class GPU {
         }
     }
 
-
     private let numAttributes: Int = 8
 
     public init(withParent parent: GameBoyRunner) {
@@ -52,6 +52,8 @@ public class GPU {
         spritePriorityOrder = AlignedArray<UInt8>(withCapacity: 40, alignedTo: 0x1000)
     }
 
+    /** Save relevant registers to a buffer for the GPU.
+     */
     public func storeLineAttributes(line: Int) {
         if line >= 144 { return }
         lineAttributes[line * numAttributes + 0] = gb.memory.LCDC
@@ -68,6 +70,8 @@ public class GPU {
         lineAttributes[line * numAttributes + 7] = gb.memory.BGP
     }
 
+    /** Increment the GPU by one cycle.
+     */
     public func step() {
         switch gb.memory.LY {
         case 0...143:
@@ -77,10 +81,8 @@ public class GPU {
                 if gb.memory.STAT.checkBit(5) {
                     gb.interrupts.triggerInterrupt(.stat)
                 }
-                readOAM()
             case 20:
                 setMode(.readingVRAM)
-                readVRAM()
             case 63:
                 setMode(.hBlank)
                 storeLineAttributes(line: Int(gb.memory.LY))
@@ -120,15 +122,8 @@ public class GPU {
         }
     }
 
-    private func readOAM() {
-
-    }
-
-    private func readVRAM() {
-
-    }
-
-    // Get sprite indices in order of on-screen priority (first x-coords, then index)
+    /** Get sprite indices in order of on-screen priority (first x-coords, then index), so the GPU doesn't have to sort them.
+      */
     private func getSpritePriority() {
         let xCoords = (0..<40).map { gb.memory.objectAttributeMemory[$0 * 4 + 1] }
         let indices = xCoords.enumerated().sorted {

@@ -8,8 +8,9 @@
 
 import Foundation
 
+/** Store timing information, including the DIV, TAC, TIMA, and TMA registers.
+ */
 public class Timer {
-
     unowned let gb: GameBoyRunner
 
     public init(withParent parent: GameBoyRunner) {

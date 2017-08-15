@@ -34,6 +34,7 @@
 		F089FB231F3E850900DA2403 /* SerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F089FB221F3E850900DA2403 /* SerialDevice.swift */; };
 		F089FB251F3E875C00DA2403 /* TestROMSerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F089FB241F3E875C00DA2403 /* TestROMSerialDevice.swift */; };
 		F0B9EAE01F20F4B0008426CF /* GPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9EADF1F20F4B0008426CF /* GPU.swift */; };
+		F0C01ECD1F42DEB300750D08 /* Joypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F071ACF01F429042004D330E /* Joypad.swift */; };
 		F0CB963F1F18F3F700291BAE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB963E1F18F3F700291BAE /* AppDelegate.swift */; };
 		F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96401F18F3F700291BAE /* GameViewController.swift */; };
 		F0CB96431F18F3F700291BAE /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96421F18F3F700291BAE /* Shaders.metal */; };
@@ -330,6 +331,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F06DC0B51F3EAE5D0069955A /* GPU.swift in Sources */,
+				F0C01ECD1F42DEB300750D08 /* Joypad.swift in Sources */,
 				F06DC0B01F3EAE5D0069955A /* GameBoyRunner.swift in Sources */,
 				F06DC0B71F3EAE5D0069955A /* AlignedArray.swift in Sources */,
 				F0DCB9B91F3EC7DF00834ABE /* Timer.swift in Sources */,

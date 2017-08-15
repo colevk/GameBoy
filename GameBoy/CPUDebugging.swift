@@ -8,6 +8,8 @@
 
 import Foundation
 
+/** Functions to pretty-print given instructions.
+ */
 extension CPU {
     private func byteAt(_ address: Int) -> String {
         return String(format: "$%02X", gb.memory.bytes[address])

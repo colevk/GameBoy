@@ -8,8 +8,9 @@
 
 import Foundation
 
+/** Controls the Game Boy's memory mapping and some I/O register. Contains "bytes" and "words" objects that act as subscriptable pointers to the memory map.
+ */
 public class Memory {
-
     unowned let gb: GameBoyRunner
 
     // External interface to bytes and words

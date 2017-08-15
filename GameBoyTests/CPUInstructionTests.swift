@@ -9,6 +9,17 @@
 import XCTest
 @testable import GameBoy
 
+class TestGameBoyRunner: GameBoyRunner {
+    override public func loadCartridge(withData data: Data) {
+        memory.cartridge = [UInt8](repeating: 0, count: data.count)
+        data.copyBytes(to: &memory.cartridge!, count: data.count)
+        memory.externalRAM = [UInt8](repeating: 0, count: 8192)
+        reset()
+    }
+}
+
+/** Run Blargg's CPU instruction and instruction timing test ROMs.
+ */
 class CPUInstructionTests: XCTestCase {
     var gameBoy: GameBoyRunner! = nil
     var serialDevice: TestROMSerialDevice! = nil
@@ -19,7 +30,7 @@ class CPUInstructionTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        gameBoy = GameBoyRunner()
+        gameBoy = TestGameBoyRunner()
         gameBoy.skipBIOS = true
 
         serialDevice = TestROMSerialDevice()

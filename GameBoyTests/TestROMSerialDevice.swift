@@ -9,11 +9,13 @@
 import Foundation
 import GameBoy
 
+/** Accepts bytes written to the serial port and saves them as a string.
+ */
 public class TestROMSerialDevice: SerialDevice {
-    public var receivedBytes: [UInt8] = []
+    public var receivedBytes: Data = Data()
 
     public func results() -> String {
-        return String(data: Data(bytes: receivedBytes), encoding: .utf8)!
+        return String(data: receivedBytes, encoding: .utf8)!
     }
 
     public var SB: UInt8 {
@@ -31,6 +33,4 @@ public class TestROMSerialDevice: SerialDevice {
         }
         set { }
     }
-
-
 }
