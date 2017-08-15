@@ -8,15 +8,10 @@
 
 #include <metal_stdlib>
 
-//#define GB_COLOR_0 half4(0.608, 0.737, 0.059, 1.0)
-//#define GB_COLOR_1 half4(0.545, 0.675, 0.059, 1.0)
-//#define GB_COLOR_2 half4(0.188, 0.384, 0.188, 1.0)
-//#define GB_COLOR_3 half4(0.059, 0.220, 0.059, 1.0)
-
-#define GB_COLOR_0 half4(1.0, 1.0, 1.0, 1.0)
-#define GB_COLOR_1 half4(0.66, 0.66, 0.66, 1.0)
-#define GB_COLOR_2 half4(0.33, 0.33, 0.33, 1.0)
-#define GB_COLOR_3 half4(0.0, 0.0, 0.0, 1.0)
+#define COLOR_0 half4(1.0, 1.0, 1.0, 1.0)
+#define COLOR_1 half4(0.66, 0.66, 0.66, 1.0)
+#define COLOR_2 half4(0.33, 0.33, 0.33, 1.0)
+#define COLOR_3 half4(0.0, 0.0, 0.0, 1.0)
 
 #define BACKGROUND_ON   0x01
 #define SPRITES_ON      0x02
@@ -51,7 +46,8 @@ vertex Vertex passThroughVertex(uint vid [[ vertex_id ]],
 fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
                                    constant uchar* ram [[ buffer(0) ]],
                                    constant uchar* oam [[ buffer(1) ]],
-                                   constant uchar* attributes [[ buffer(2) ]]) {
+                                   constant uchar* spriteOrder [[ buffer(2) ]],
+                                   constant uchar* attributes [[ buffer(3) ]]) {
     int x = int(inFrag.position.x / 6);
     int y = int(inFrag.position.y / 6);
 
@@ -66,12 +62,63 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
 
     // If display off, return color 0
     if (!(control & DISPLAY_ON)) {
-        return GB_COLOR_0;
+        return COLOR_0;
     }
 
     // If sprites on, handle foreground sprites
+    bool foundBackgroundSprite = false;
+    uchar backgroundSpriteColor = 0;
     if (control & SPRITES_ON) {
-        // TODO: implement sprites
+        bool bigSprites = control & SPRITE_SIZE;
+        for (int i = 0; i < 40; i++) {
+            int spriteIdx = spriteOrder[i];
+            uchar spriteY = oam[spriteIdx * 4];
+            uchar spriteX = oam[spriteIdx * 4 + 1];
+            uchar spriteTile = oam[spriteIdx * 4 + 2];
+            uchar spriteFlags = oam[spriteIdx * 4 + 3];
+
+            if (x >= spriteX || x < spriteX - 8 || y >= spriteY - (bigSprites ? 0 : 8) || y < spriteY - 16) {
+                continue;
+            }
+
+            uchar tileX = x - spriteX + 8;
+            uchar tileY = y - spriteY + 16;
+            if (spriteFlags & SPRITE_X_FLIP) {
+                tileX = 8 - tileX;
+            }
+            if (spriteFlags & SPRITE_Y_FLIP) {
+                tileY = (bigSprites ? 16 : 8) - tileY;
+            }
+
+            int tileStart;
+            if (bigSprites) {
+                tileStart = ((spriteTile & 0xFE) + (tileY >= 8 ? 0 : 1)) * 16;
+            } else {
+                tileStart = spriteTile * 16;
+            }
+
+            uchar paletteIdx =
+                ((ram[tileStart + tileY * 2] & (0x80 >> tileX)) >> (7 - tileX)) +
+                ((ram[tileStart + tileY * 2 + 1] & (0x80 >> tileX)) >> (7 - tileX) << 1);
+            if (paletteIdx == 0) {
+                continue;
+            }
+
+            uchar palette = (spriteFlags & SPRITE_PALETTE) ? spritePalette1 : spritePalette0;
+            uchar color = (palette >> (paletteIdx * 2)) & 0b11;
+            if (spriteFlags & SPRITE_PRIORITY) {
+                foundBackgroundSprite = true;
+                backgroundSpriteColor = color;
+                break;
+            } else {
+                switch (color) {
+                    case 0: return COLOR_0;
+                    case 1: return COLOR_1;
+                    case 2: return COLOR_2;
+                    case 3: return COLOR_3;
+                }
+            }
+        }
     }
 
     // If window or background on
@@ -119,19 +166,23 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
         uchar color = (bgPalette >> (paletteIdx * 2)) & 0b11;
 
         switch (color) {
-        case 1: return GB_COLOR_1;
-        case 2: return GB_COLOR_2;
-        case 3: return GB_COLOR_3;
+        case 1: return COLOR_1;
+        case 2: return COLOR_2;
+        case 3: return COLOR_3;
         }
         // Color 0 is transparent, check for sprites underneath
     }
 
-    // If sprites on, handle background sprites
-    if (control & SPRITES_ON) {
-        // TODO: implement sprites
+    if (foundBackgroundSprite) {
+        switch (backgroundSpriteColor) {
+            case 0: return COLOR_0;
+            case 1: return COLOR_1;
+            case 2: return COLOR_2;
+            case 3: return COLOR_3;
+        }
     }
 
     // Nothing at this pixel, return color 0
-    return GB_COLOR_0;
+    return COLOR_0;
 };
 

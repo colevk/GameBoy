@@ -22,6 +22,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
 
     var graphicsRAMBuffer: MTLBuffer! = nil
     var graphicsOAMBuffer: MTLBuffer! = nil
+    var graphicsSpriteOrderBuffer: MTLBuffer! = nil
     var graphicsAttributesBuffer: MTLBuffer! = nil
 
     override func viewDidLoad() {
@@ -81,6 +82,9 @@ class GameViewController: NSViewController, MTKViewDelegate {
         graphicsOAMBuffer = device.makeBuffer(bytesNoCopy: gameBoy.memory.objectAttributeMemory.pointer, length: gameBoy.memory.objectAttributeMemory.bytes, options: [], deallocator: nil)
         graphicsOAMBuffer.label = "graphics oam"
 
+        graphicsSpriteOrderBuffer = device.makeBuffer(bytesNoCopy: gameBoy.gpu.spritePriorityOrder.pointer, length: gameBoy.gpu.spritePriorityOrder.bytes, options: [], deallocator: nil)
+        graphicsOAMBuffer.label = "graphics sprite order"
+
         graphicsAttributesBuffer = device.makeBuffer(bytesNoCopy: gameBoy.gpu.lineAttributes.pointer, length: gameBoy.gpu.lineAttributes.bytes, options: [], deallocator: nil)
         graphicsAttributesBuffer.label = "graphics line attributes"
     }
@@ -107,7 +111,8 @@ class GameViewController: NSViewController, MTKViewDelegate {
 
             renderEncoder?.setFragmentBuffer(graphicsRAMBuffer, offset: 0, index: 0)
             renderEncoder?.setFragmentBuffer(graphicsOAMBuffer, offset: 0, index: 1)
-            renderEncoder?.setFragmentBuffer(graphicsAttributesBuffer, offset: 0, index: 2)
+            renderEncoder?.setFragmentBuffer(graphicsSpriteOrderBuffer, offset: 0, index: 2)
+            renderEncoder?.setFragmentBuffer(graphicsAttributesBuffer, offset: 0, index: 3)
 
             renderEncoder?.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
             renderEncoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)

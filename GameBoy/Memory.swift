@@ -34,7 +34,10 @@ public class Memory {
     public var wavePatternRAM: [UInt8]
 
     // I/O registers
-    public var P1: UInt8 = 0   // FF00, joypad I/O
+    public var P1: UInt8 {
+        get { return 0xFF }
+        set {}
+    }   // FF00, joypad I/O
 
     public var DIV: UInt8 = 0  // FF04, increments 16384 times per second
     public var TIMA: UInt8 = 0 // FF05, timer

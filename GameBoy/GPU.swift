@@ -14,6 +14,7 @@ public class GPU {
     private unowned let gb: GameBoyRunner
 
     public var lineAttributes: AlignedArray<UInt8>
+    public var spritePriorityOrder: AlignedArray<UInt8>
 
     public var timer: Int = 0
     public var mode: GPUMode = .readingOAM
@@ -48,6 +49,7 @@ public class GPU {
         gb = parent
 
         lineAttributes = AlignedArray<UInt8>(withCapacity: numAttributes * 144, alignedTo: 0x1000)
+        spritePriorityOrder = AlignedArray<UInt8>(withCapacity: 40, alignedTo: 0x1000)
     }
 
     public func storeLineAttributes(line: Int) {
@@ -91,6 +93,7 @@ public class GPU {
         case 144:
             if timer == 0 {
                 setMode(.vBlank)
+                getSpritePriority()
                 if gb.memory.LCDC.checkBit(7) {
                     gb.memory.IF |= gb.interrupts.IE_VBLANK
                 }
@@ -123,6 +126,17 @@ public class GPU {
 
     private func readVRAM() {
 
+    }
+
+    // Get sprite indices in order of on-screen priority (first x-coords, then index)
+    private func getSpritePriority() {
+        let xCoords = (0..<40).map { gb.memory.objectAttributeMemory[$0 * 4 + 1] }
+        let indices = xCoords.enumerated().sorted {
+            $0.element != $1.element ? $0.element > $1.element : $0.offset > $1.offset
+        }
+        for idx in 0..<40 {
+            spritePriorityOrder[idx] = UInt8(indices[idx].offset)
+        }
     }
 }
 
