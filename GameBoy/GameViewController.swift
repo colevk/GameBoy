@@ -10,6 +10,7 @@ import Cocoa
 import MetalKit
 
 class GameViewController: NSViewController, MTKViewDelegate {
+
     var running: Bool = true
 
     var gameBoy: GameBoyRunner! = nil
@@ -26,8 +27,17 @@ class GameViewController: NSViewController, MTKViewDelegate {
     var graphicsAttributesBuffer: MTLBuffer! = nil
 
     override func viewDidLoad() {
-
         super.viewDidLoad()
+
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
+            self.keyDown(with: $0)
+            return $0
+        }
+
+        NSEvent.addLocalMonitorForEvents(matching: .keyUp) {
+            self.keyUp(with: $0)
+            return $0
+        }
 
         device = MTLCreateSystemDefaultDevice()
         guard device != nil else { // Fallback to a blank NSView, an application could also fallback to OpenGL here.
@@ -169,6 +179,41 @@ class GameViewController: NSViewController, MTKViewDelegate {
             running = true
         } else {
             running = wasRunning
+        }
+    }
+
+    public func canHandleKeyEvent(with event: NSEvent) -> Bool {
+        let keyCodes: [UInt16] = [6, 7, 49, 36, 123, 124, 125, 126]
+        return (event.type == .keyDown || event.type == .keyUp) && keyCodes.contains(event.keyCode)
+    }
+
+    override func keyDown(with event: NSEvent) {
+        switch event.keyCode {
+        case 6: gameBoy.joypad.pressedA = true
+        case 7: gameBoy.joypad.pressedB = true
+        case 49: gameBoy.joypad.pressedStart = true
+        case 36: gameBoy.joypad.pressedSelect = true
+        case 123: gameBoy.joypad.pressedLeft = true
+        case 124: gameBoy.joypad.pressedRight = true
+        case 125: gameBoy.joypad.pressedDown = true
+        case 126: gameBoy.joypad.pressedUp = true
+        default: return
+        }
+
+        gameBoy.interrupts.triggerInterrupt(.button)
+    }
+
+    override func keyUp(with event: NSEvent) {
+        switch event.keyCode {
+        case 6: gameBoy.joypad.pressedA = false
+        case 7: gameBoy.joypad.pressedB = false
+        case 49: gameBoy.joypad.pressedStart = false
+        case 36: gameBoy.joypad.pressedSelect = false
+        case 123: gameBoy.joypad.pressedLeft = false
+        case 124: gameBoy.joypad.pressedRight = false
+        case 125: gameBoy.joypad.pressedDown = false
+        case 126: gameBoy.joypad.pressedUp = false
+        default: return
         }
     }
 

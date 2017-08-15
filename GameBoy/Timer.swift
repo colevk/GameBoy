@@ -38,7 +38,7 @@ public class Timer {
             }
             if gb.memory.TIMA == 0 {
                 gb.memory.TIMA = gb.memory.TMA
-                gb.memory.IF |= gb.interrupts.IE_TIMER
+                gb.interrupts.triggerInterrupt(.timer)
             }
         }
     }

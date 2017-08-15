@@ -14,6 +14,7 @@ public class GameBoyRunner {
     public private(set) var memory: Memory!
     public private(set) var timer: Timer!
     public private(set) var interrupts: InterruptHandler!
+    public private(set) var joypad: Joypad
     public var serialDevice: SerialDevice
 
     public var skipBIOS: Bool
@@ -21,6 +22,7 @@ public class GameBoyRunner {
     public init() {
         skipBIOS = true
 
+        joypad = Joypad()
         serialDevice = EmptySerialDevice()
         
         memory = Memory(withParent: self)

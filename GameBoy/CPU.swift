@@ -21,8 +21,8 @@ public class CPU {
     public var PC: UInt16 = 0
 
     public func pcByte() -> UInt8 {
-        PC &+= 1
-        return gb.memory.bytes[PC &- 1]
+        PC += 1
+        return gb.memory.bytes[PC - 1]
     }
     
     public func pcWord() -> UInt16 {

@@ -34,11 +34,6 @@ public class Memory {
     public var wavePatternRAM: [UInt8]
 
     // I/O registers
-    public var P1: UInt8 {
-        get { return 0xFF }
-        set {}
-    }   // FF00, joypad I/O
-
     public var DIV: UInt8 = 0  // FF04, increments 16384 times per second
     public var TIMA: UInt8 = 0 // FF05, timer
     public var TMA: UInt8 = 0  // FF06, timer modulo
@@ -140,7 +135,7 @@ public class Memory {
 
         // I/O registers
         case 0xFF00:
-            return P1
+            return gb.joypad.P1
         case 0xFF01:
             return gb.serialDevice.SB
         case 0xFF02:
@@ -212,7 +207,7 @@ public class Memory {
 
         // I/O registers
         case 0xFF00:
-            P1 = newValue
+            gb.joypad.P1 = newValue
         case 0xFF01:
             gb.serialDevice.SB = newValue
         case 0xFF02:

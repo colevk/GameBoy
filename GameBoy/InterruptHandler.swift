@@ -22,6 +22,21 @@ public class InterruptHandler {
         gb = parent
     }
 
+    public func triggerInterrupt(_ interrupt: Interrupt) {
+        switch interrupt {
+        case .vblank:
+            gb.memory.IF |= IE_VBLANK
+        case .stat:
+            gb.memory.IF |= IE_STAT
+        case .timer:
+            gb.memory.IF |= IE_TIMER
+        case .serial:
+            gb.memory.IF |= IE_SERIAL
+        case .button:
+            gb.memory.IF |= IE_BUTTON
+        }
+    }
+
     public func handleInterrupts() -> Bool {
         let activeFlags = gb.memory.IF & gb.memory.IE & 0x1F
         if activeFlags != 0 {
@@ -51,4 +66,12 @@ public class InterruptHandler {
         }
         return false
     }
+}
+
+public enum Interrupt {
+    case vblank
+    case stat
+    case timer
+    case serial
+    case button
 }

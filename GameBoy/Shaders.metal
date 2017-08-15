@@ -67,7 +67,7 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
 
     // If sprites on, handle foreground sprites
     bool foundBackgroundSprite = false;
-    uchar backgroundSpriteColor = 0;
+    half4 spriteColor = COLOR_0;
     if (control & SPRITES_ON) {
         bool bigSprites = control & SPRITE_SIZE;
         for (int i = 0; i < 40; i++) {
@@ -106,17 +106,25 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
 
             uchar palette = (spriteFlags & SPRITE_PALETTE) ? spritePalette1 : spritePalette0;
             uchar color = (palette >> (paletteIdx * 2)) & 0b11;
+            switch (color) {
+                case 0:
+                    spriteColor = COLOR_0;
+                    break;
+                case 1:
+                    spriteColor = COLOR_1;
+                    break;
+                case 2:
+                    spriteColor = COLOR_2;
+                    break;
+                case 3:
+                    spriteColor = COLOR_3;
+                    break;
+            }
             if (spriteFlags & SPRITE_PRIORITY) {
                 foundBackgroundSprite = true;
-                backgroundSpriteColor = color;
                 break;
             } else {
-                switch (color) {
-                    case 0: return COLOR_0;
-                    case 1: return COLOR_1;
-                    case 2: return COLOR_2;
-                    case 3: return COLOR_3;
-                }
+                return spriteColor;
             }
         }
     }
@@ -166,23 +174,17 @@ fragment half4 passThroughFragment(Vertex inFrag [[stage_in]],
         uchar color = (bgPalette >> (paletteIdx * 2)) & 0b11;
 
         switch (color) {
-        case 1: return COLOR_1;
-        case 2: return COLOR_2;
-        case 3: return COLOR_3;
+            case 1: return COLOR_1;
+            case 2: return COLOR_2;
+            case 3: return COLOR_3;
         }
         // Color 0 is transparent, check for sprites underneath
     }
 
     if (foundBackgroundSprite) {
-        switch (backgroundSpriteColor) {
-            case 0: return COLOR_0;
-            case 1: return COLOR_1;
-            case 2: return COLOR_2;
-            case 3: return COLOR_3;
-        }
+        return spriteColor;
     }
 
-    // Nothing at this pixel, return color 0
     return COLOR_0;
 };
 

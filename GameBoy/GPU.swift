@@ -75,7 +75,7 @@ public class GPU {
             case 0:
                 setMode(.readingOAM)
                 if gb.memory.STAT.checkBit(5) {
-                    gb.memory.IF |= gb.interrupts.IE_STAT
+                    gb.interrupts.triggerInterrupt(.stat)
                 }
                 readOAM()
             case 20:
@@ -85,7 +85,7 @@ public class GPU {
                 setMode(.hBlank)
                 storeLineAttributes(line: Int(gb.memory.LY))
                 if gb.memory.STAT.checkBit(3) {
-                    gb.memory.IF |= gb.interrupts.IE_STAT
+                    gb.interrupts.triggerInterrupt(.stat)
                 }
             default:
                 break
@@ -95,10 +95,10 @@ public class GPU {
                 setMode(.vBlank)
                 getSpritePriority()
                 if gb.memory.LCDC.checkBit(7) {
-                    gb.memory.IF |= gb.interrupts.IE_VBLANK
+                    gb.interrupts.triggerInterrupt(.vblank)
                 }
                 if gb.memory.STAT.checkBit(4) {
-                    gb.memory.IF |= gb.interrupts.IE_STAT
+                    gb.interrupts.triggerInterrupt(.stat)
                 }
             }
         default:
@@ -112,7 +112,7 @@ public class GPU {
             if gb.memory.LY == gb.memory.LYC {
                 gb.memory.STAT |= 0x04
                 if gb.memory.STAT.checkBit(6) {
-                    gb.memory.IF |= gb.interrupts.IE_STAT
+                    gb.interrupts.triggerInterrupt(.stat)
                 }
             } else {
                 gb.memory.STAT &= ~0x04

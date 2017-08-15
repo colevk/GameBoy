@@ -29,6 +29,8 @@
 		F06DC0B61F3EAE5D0069955A /* InterruptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04DE8951F381162007A10D7 /* InterruptHandler.swift */; };
 		F06DC0B71F3EAE5D0069955A /* AlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5087B1F237BD100833E53 /* AlignedArray.swift */; };
 		F06DC0B81F3EAE5D0069955A /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966F1F191D3A00291BAE /* Ops.swift */; };
+		F071ACF11F429042004D330E /* Joypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F071ACF01F429042004D330E /* Joypad.swift */; };
+		F071ACF31F42AF5C004D330E /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = F071ACF21F42AF5C004D330E /* View.swift */; };
 		F089FB231F3E850900DA2403 /* SerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F089FB221F3E850900DA2403 /* SerialDevice.swift */; };
 		F089FB251F3E875C00DA2403 /* TestROMSerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F089FB241F3E875C00DA2403 /* TestROMSerialDevice.swift */; };
 		F0B9EAE01F20F4B0008426CF /* GPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9EADF1F20F4B0008426CF /* GPU.swift */; };
@@ -61,6 +63,8 @@
 /* Begin PBXFileReference section */
 		F0125EF81F37D4B80086A64A /* GameBoyRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyRunner.swift; sourceTree = "<group>"; };
 		F04DE8951F381162007A10D7 /* InterruptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterruptHandler.swift; sourceTree = "<group>"; };
+		F071ACF01F429042004D330E /* Joypad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joypad.swift; sourceTree = "<group>"; };
+		F071ACF21F42AF5C004D330E /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		F089FB221F3E850900DA2403 /* SerialDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialDevice.swift; sourceTree = "<group>"; };
 		F089FB241F3E875C00DA2403 /* TestROMSerialDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestROMSerialDevice.swift; sourceTree = "<group>"; };
 		F09A3CBB1F3E967700EC54B6 /* 10-bit ops.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "10-bit ops.gb"; sourceTree = "<group>"; };
@@ -153,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				F0CB963E1F18F3F700291BAE /* AppDelegate.swift */,
+				F071ACF21F42AF5C004D330E /* View.swift */,
 				F0CB96401F18F3F700291BAE /* GameViewController.swift */,
 				F0CB96421F18F3F700291BAE /* Shaders.metal */,
 				F0CB96441F18F3F700291BAE /* Assets.xcassets */,
@@ -164,6 +169,7 @@
 				F0CB966D1F1916CC00291BAE /* CPU.swift */,
 				F0DCB9B71F3EC22300834ABE /* Timer.swift */,
 				F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */,
+				F071ACF01F429042004D330E /* Joypad.swift */,
 				F0B9EADF1F20F4B0008426CF /* GPU.swift */,
 				F04DE8951F381162007A10D7 /* InterruptHandler.swift */,
 				F0D5087B1F237BD100833E53 /* AlignedArray.swift */,
@@ -303,6 +309,7 @@
 			files = (
 				F0CB96431F18F3F700291BAE /* Shaders.metal in Sources */,
 				F089FB231F3E850900DA2403 /* SerialDevice.swift in Sources */,
+				F071ACF31F42AF5C004D330E /* View.swift in Sources */,
 				F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */,
 				F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */,
 				F0DCB9B81F3EC22300834ABE /* Timer.swift in Sources */,
@@ -311,6 +318,7 @@
 				F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */,
 				F0CB966C1F18F68C00291BAE /* Memory.swift in Sources */,
 				F0CB963F1F18F3F700291BAE /* AppDelegate.swift in Sources */,
+				F071ACF11F429042004D330E /* Joypad.swift in Sources */,
 				F04DE8961F381162007A10D7 /* InterruptHandler.swift in Sources */,
 				F0125EF91F37D4B80086A64A /* GameBoyRunner.swift in Sources */,
 				F0B9EAE01F20F4B0008426CF /* GPU.swift in Sources */,
@@ -470,7 +478,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = GameBoy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = GB.GameBoy;
@@ -486,6 +494,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = GameBoy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = GB.GameBoy;
