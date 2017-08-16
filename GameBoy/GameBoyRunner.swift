@@ -15,6 +15,7 @@ public class GameBoyRunner {
     public private(set) var cpu: CPU!
     public private(set) var gpu: GPU!
     public private(set) var memory: Memory!
+    public private(set) var mbc: MemoryBankController!
     public private(set) var timer: Timer!
     public private(set) var interrupts: InterruptHandler!
     public private(set) var joypad: Joypad
@@ -31,6 +32,7 @@ public class GameBoyRunner {
         serialDevice = EmptySerialDevice()
         
         memory = Memory(withParent: self)
+        mbc = NoCartridgeMBC()
         cpu = CPU(withParent: self)
         gpu = GPU(withParent: self)
         timer = Timer(withParent: self)
@@ -125,78 +127,79 @@ public class GameBoyRunner {
     /** Load a cartridge and print some debug data.
      */
     public func loadCartridge(withData data: Data) {
-        memory.cartridge = [UInt8](repeating: 0, count: data.count)
-
         let nameBytes = data[0x134...0x142].prefix { $0 != 0 }
         print("Internal name: \(String(data: nameBytes, encoding: .utf8)!)")
-        print("Cartridge type: \(cartridgeType(data[0x147]))")
+        print("Cartridge type: \(cartridgeTypeNames[data[0x147]] ?? "UNKNOWN")")
         print("ROM size: \(romSize(data[0x148]))")
         print("RAM size: \(ramSize(data[0x149]))")
 
-        if supportedCartridgeTypes.contains(data[0x147]) {
-            data.copyBytes(to: &memory.cartridge!, count: data.count)
-            memory.externalRAM = [UInt8](repeating: 0, count: 8192)
+        var cartridge = [UInt8](repeating: 0, count: data.count)
+        data.copyBytes(to: &cartridge, count: data.count)
+
+        if let mbc = getMBC(cartridge: cartridge) {
+            self.mbc = mbc
             reset()
         } else {
             let alert = NSAlert()
             alert.messageText = "Could not load cartridge."
-            alert.informativeText = "The cartridge type \(cartridgeType(data[0x147])) is not currently supported."
+            alert.informativeText = "The cartridge type \(cartridgeTypeNames[data[0x147]] ?? "UNKNOWN") is not currently supported."
             alert.alertStyle = .critical
             alert.runModal()
         }
     }
 
-    private let supportedCartridgeTypes: [UInt8] = [0x00, 0x08, 0x09]
-
-    private func cartridgeType(_ byte: UInt8) -> String {
-        switch byte {
-        case 0x00: return "ROM ONLY"
-        case 0x01: return "MBC1"
-        case 0x02: return "MBC1+RAM"
-        case 0x03: return "MBC1+RAM+BATTERY"
-        case 0x05: return "MBC2"
-        case 0x06: return "MBC2+BATTERY"
-        case 0x08: return "ROM+RAM"
-        case 0x09: return "ROM+RAM+BATTERY"
-        case 0x0B: return "MMM01"
-        case 0x0C: return "MMM01+RAM"
-        case 0x0D: return "MMM01+RAM+BATTERY"
-        case 0x0F: return "MBC3+TIMER+BATTERY"
-        case 0x10: return "MBC3+TIMER+RAM+BATTERY"
-        case 0x11: return "MBC3"
-        case 0x12: return "MBC3+RAM"
-        case 0x13: return "MBC3+RAM+BATTERY"
-        case 0x19: return "MBC5"
-        case 0x1A: return "MBC5+RAM"
-        case 0x1B: return "MBC5+RAM+BATTERY"
-        case 0x1C: return "MBC5+RUMBLE"
-        case 0x1D: return "MBC5+RUMBLE+RAM"
-        case 0x1E: return "MBC5+RUMBLE+RAM+BATTERY"
-        case 0x20: return "MBC6"
-        case 0x22: return "MBC7+SENSOR+RUMBLE+RAM+BATTERY"
-        case 0xFC: return "POCKET CAMERA"
-        case 0xFD: return "BANDAI TAMA5"
-        case 0xFE: return "HuC3"
-        case 0xFF: return "HuC1+RAM+BATTERY"
-        default: return "UNKNOWN"
+    private func getMBC(cartridge: [UInt8]) -> MemoryBankController? {
+        switch cartridge[0x147] {
+        case 0x00:
+            return NoMBC(rom: cartridge, ram: nil, battery: false)
+        case 0x01:
+            return MBC1(rom: cartridge, ram: nil, battery: false)
+        case 0x02:
+            return MBC1(rom: cartridge, ram: [UInt8](repeating: 0, count: ramSize(cartridge[0x149])), battery: false)
+        case 0x03:
+            return MBC1(rom: cartridge, ram: [UInt8](repeating: 0, count: ramSize(cartridge[0x149])), battery: true)
+        case 0x08:
+            return NoMBC(rom: cartridge, ram: [UInt8](repeating: 0, count: ramSize(cartridge[0x149])), battery: false)
+        case 0x09:
+            return NoMBC(rom: cartridge, ram: [UInt8](repeating: 0, count: ramSize(cartridge[0x149])), battery: true)
+        default:
+            return nil
         }
     }
 
+    private let cartridgeTypeNames: [UInt8: String] = [
+        0x00: "ROM ONLY",
+        0x01: "MBC1",
+        0x02: "MBC1+RAM",
+        0x03: "MBC1+RAM+BATTERY",
+        0x05: "MBC2",
+        0x06: "MBC2+BATTERY",
+        0x08: "ROM+RAM",
+        0x09: "ROM+RAM+BATTERY",
+        0x0B: "MMM01",
+        0x0C: "MMM01+RAM",
+        0x0D: "MMM01+RAM+BATTERY",
+        0x0F: "MBC3+TIMER+BATTERY",
+        0x10: "MBC3+TIMER+RAM+BATTERY",
+        0x11: "MBC3",
+        0x12: "MBC3+RAM",
+        0x13: "MBC3+RAM+BATTERY",
+        0x19: "MBC5",
+        0x1A: "MBC5+RAM",
+        0x1B: "MBC5+RAM+BATTERY",
+        0x1C: "MBC5+RUMBLE",
+        0x1D: "MBC5+RUMBLE+RAM",
+        0x1E: "MBC5+RUMBLE+RAM+BATTERY",
+        0x20: "MBC6",
+        0x22: "MBC7+SENSOR+RUMBLE+RAM+BATTERY",
+        0xFC: "POCKET CAMERA",
+        0xFD: "BANDAI TAMA5",
+        0xFE: "HuC3",
+        0xFF: "HuC1+RAM+BATTERY",
+    ]
+
     private func romSize(_ byte: UInt8) -> Int {
-        let numBanks: Int
-        switch byte {
-        case 0x00...0x08:
-            numBanks = 2 << byte
-        case 0x52:
-            numBanks = 72
-        case 0x53:
-            numBanks = 80
-        case 0x54:
-            numBanks = 96
-        default:
-            numBanks = 0
-        }
-        return numBanks * 0x4000
+        return 32768 << byte
     }
 
     private func ramSize(_ byte: UInt8) -> Int {

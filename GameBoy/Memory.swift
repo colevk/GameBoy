@@ -17,10 +17,6 @@ public class Memory {
     public var bytes: ByteAddress! = nil
     public var words: WordAddress! = nil
 
-    // Stored on cartridge
-    public var cartridge: [UInt8]? = nil
-    public var externalRAM: [UInt8]? = nil
-
     // Video and sprite memory
     public var videoRAM: AlignedArray<UInt8>
     public var objectAttributeMemory: AlignedArray<UInt8>
@@ -96,21 +92,15 @@ public class Memory {
                 fallthrough
             }
         case 0x0100...0x3FFF: // Cart ROM bank 0
-            if let cart = cartridge {
-                return cart[index]
-            }
+            return gb.mbc.readROM0(index: index)
         case 0x4000...0x7FFF: // Cart ROM switchable
-            if let cart = cartridge {
-                return cart[index]
-            }
+            return gb.mbc.readROM1(index: index - 0x4000)
         case 0x8000...0x9FFF: // Video RAM
             if gb.gpu.ramAccessible() {
                 return videoRAM[index - 0x8000]
             }
         case 0xA000...0xBFFF: // Cartridge RAM
-            if let ext = externalRAM {
-                return ext[index - 0xA000]
-            }
+            return gb.mbc.readRAM(index: index - 0xA000)
         case 0xC000...0xDFFF: // Working RAM
             return workingRAM[index - 0xC000]
         case 0xE000...0xFDFF: // Echo RAM, copy of working RAM
@@ -174,15 +164,13 @@ public class Memory {
     func writeByte(_ index: Int, _ newValue: UInt8) {
         switch index {
         case 0x0000...0x7FFF:
-            break
+            gb.mbc.writeROM(index: index, value: newValue)
         case 0x8000...0x9FFF: // Video RAM
             if gb.gpu.ramAccessible() {
                 videoRAM[index - 0x8000] = newValue
             }
         case 0xA000...0xBFFF: // Cartridge RAM
-            if var ext = externalRAM {
-                ext[index - 0xA000] = newValue
-            }
+            gb.mbc.writeRAM(index: index - 0xA000, value: newValue)
         case 0xC000...0xDFFF: // Working RAM
             workingRAM[index - 0xC000] = newValue
         case 0xE000...0xFDFF: // Echo RAM, copy of working RAM
