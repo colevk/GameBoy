@@ -90,10 +90,10 @@ fragment half4 gameBoyPixelFragment(Vertex inFrag [[stage_in]],
             uchar tileX = x - spriteX + 8;
             uchar tileY = y - spriteY + 16;
             if (spriteFlags & SPRITE_X_FLIP) {
-                tileX = 8 - tileX;
+                tileX = 7 - tileX;
             }
             if (spriteFlags & SPRITE_Y_FLIP) {
-                tileY = (bigSprites ? 16 : 8) - tileY;
+                tileY = (bigSprites ? 15 : 7) - tileY;
             }
 
             int tileStart;
@@ -136,7 +136,8 @@ fragment half4 gameBoyPixelFragment(Vertex inFrag [[stage_in]],
     }
 
     // If window or background on
-    bool windowPixel = control & WINDOW_ON && y >= windowY && x >= windowX;
+    half4 backgroundPixel = COLOR_0;
+    bool windowPixel = control & WINDOW_ON && y >= windowY && x >= windowX - 7;
     if (windowPixel || control & BACKGROUND_ON) {
         uchar posY;
         uchar posX;
@@ -180,17 +181,29 @@ fragment half4 gameBoyPixelFragment(Vertex inFrag [[stage_in]],
         uchar color = (bgPalette >> (paletteIdx * 2)) & 0b11;
 
         switch (color) {
-            case 1: return COLOR_1;
-            case 2: return COLOR_2;
-            case 3: return COLOR_3;
+            case 0:
+                backgroundPixel = COLOR_0;
+                break;
+            case 1:
+                backgroundPixel = COLOR_1;
+                break;
+            case 2:
+                backgroundPixel = COLOR_2;
+                break;
+            case 3:
+                backgroundPixel = COLOR_3;
+                break;
         }
-        // Color 0 is transparent, check for sprites underneath
+
+        if (paletteIdx != 0) {
+            return backgroundPixel;
+        }
     }
 
     if (foundBackgroundSprite) {
         return spriteColor;
     }
 
-    return COLOR_0;
+    return backgroundPixel;
 };
 
