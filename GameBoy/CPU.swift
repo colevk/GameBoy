@@ -16,6 +16,7 @@ public class CPU {
 
     public var ime: Bool = true
     private var eiTimer = 0
+
     public var halt: Bool = false
 
     public var PC: Int = 0
@@ -159,8 +160,11 @@ public class CPU {
             return 5
 
         case 0x10: // STOP 0
-            print("Unimplemented instruction: \(instructionAt(address: PC &- 1))\n")
-            NSApplication.shared.terminate(self)
+            gb.stop = true
+            if gb.memory.bytes[PC] == 0 {
+                PC += 1
+            }
+            return 1
 
         case 0x18: // JR n
             return jr(cond: true, offset: pcByte())

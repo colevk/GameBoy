@@ -50,7 +50,6 @@ class GameViewController: NSViewController, MTKViewDelegate {
         let view = self.view as! MTKView
         view.delegate = self
         view.device = device
-        view.sampleCount = 4
         view.preferredFramesPerSecond = 60
 
         gameBoy = GameBoyRunner()
@@ -100,7 +99,9 @@ class GameViewController: NSViewController, MTKViewDelegate {
     }
 
     func update() {
-        gameBoy.advanceFrame()
+        if !gameBoy.stop {
+            gameBoy.advanceFrame()
+        }
     }
 
     func draw(in view: MTKView) {
@@ -123,6 +124,8 @@ class GameViewController: NSViewController, MTKViewDelegate {
             renderEncoder?.setFragmentBuffer(graphicsOAMBuffer, offset: 0, index: 1)
             renderEncoder?.setFragmentBuffer(graphicsSpriteOrderBuffer, offset: 0, index: 2)
             renderEncoder?.setFragmentBuffer(graphicsAttributesBuffer, offset: 0, index: 3)
+            renderEncoder?.setFragmentBytes(&gameBoy.stop, length: 1, index: 4)
+
 
             renderEncoder?.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
             renderEncoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
@@ -211,6 +214,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
         default: return
         }
 
+        gameBoy.stop = false
         gameBoy.interrupts.triggerInterrupt(.button)
     }
 

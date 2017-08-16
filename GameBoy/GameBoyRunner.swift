@@ -22,6 +22,8 @@ public class GameBoyRunner {
 
     public var skipBIOS: Bool
 
+    public var stop: Bool = false
+
     public init() {
         skipBIOS = true
 
@@ -38,25 +40,27 @@ public class GameBoyRunner {
     /** Run one CPU instruction and then check for interrupts and let the GPU and timer catch up.
      */
     public func step() {
-        var cycles = cpu.step()
-        if cpu.ime || cpu.halt {
-            if interrupts.handleInterrupts() {
-                cycles += 3
+        if !stop {
+            var cycles = cpu.step()
+            if cpu.ime || cpu.halt {
+                if interrupts.handleInterrupts() {
+                    cycles += 3
+                }
             }
+            timer.advanceBy(cycles: cycles)
+            gpu.advanceBy(cycles: cycles)
         }
-        timer.advanceBy(cycles: cycles)
-        gpu.advanceBy(cycles: cycles)
     }
 
     /** Run the CPU until the next vblank.
      */
     public func advanceFrame() {
         if gpu.mode == .vBlank {
-            while gpu.mode == .vBlank {
+            while gpu.mode == .vBlank && !stop {
                 step()
             }
         }
-        while gpu.mode != .vBlank {
+        while gpu.mode != .vBlank && !stop {
             step()
         }
     }
@@ -66,6 +70,7 @@ public class GameBoyRunner {
     public func reset() {
         cpu.ime = true
         cpu.halt = false
+        stop = false
         interrupts.IF = 0
         interrupts.IE = 0
         cpu.F = 0

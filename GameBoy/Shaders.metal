@@ -44,10 +44,16 @@ vertex Vertex passThroughVertex(uint vid [[ vertex_id ]],
 
 
 fragment half4 gameBoyPixelFragment(Vertex inFrag [[stage_in]],
-                                   constant uchar* ram [[ buffer(0) ]],
-                                   constant uchar* oam [[ buffer(1) ]],
-                                   constant uchar* spriteOrder [[ buffer(2) ]],
-                                   constant uchar* attributes [[ buffer(3) ]]) {
+                                    constant uchar* ram [[ buffer(0) ]],
+                                    constant uchar* oam [[ buffer(1) ]],
+                                    constant uchar* spriteOrder [[ buffer(2) ]],
+                                    constant uchar* attributes [[ buffer(3) ]],
+                                    constant bool* stopped [[ buffer(4) ]])
+{
+    if (*stopped) {
+        return COLOR_0;
+    }
+
     int x = int(inFrag.position.x / 6);
     int y = int(inFrag.position.y / 6);
 
