@@ -16,7 +16,7 @@ public protocol MemoryBankController {
     func writeROM(index: Int, value newValue: UInt8)
     func writeRAM(index: Int, value newValue: UInt8)
 
-    func save() -> Data?
+    func save()
 }
 
 public class NoCartridgeMBC: MemoryBankController {
@@ -25,18 +25,19 @@ public class NoCartridgeMBC: MemoryBankController {
     public func readRAM(index: Int) -> UInt8 { return 0xFF }
     public func writeROM(index: Int, value newValue: UInt8) { }
     public func writeRAM(index: Int, value newValue: UInt8) { }
-    public func save() -> Data? { return nil }
+    public func save() { }
 }
 
 public class NoMBC: MemoryBankController {
     private var rom: [UInt8]
-    private var ram: [UInt8]?
-    private let battery: Bool
+    private var ram: Data?
+    private var fileURL: URL?
+    private var updated: Bool = false
 
-    public init(rom: [UInt8], ram: [UInt8]?, battery: Bool) {
+    public init(rom: [UInt8], ram: Data?, file: URL?) {
         self.rom = rom
         self.ram = ram
-        self.battery = battery
+        self.fileURL = file
     }
 
     public func readROM0(index: Int) -> UInt8 {
@@ -48,10 +49,8 @@ public class NoMBC: MemoryBankController {
     }
 
     public func readRAM(index: Int) -> UInt8 {
-        if let ram = ram {
-            if index < ram.count {
-                return ram[index]
-            }
+        if ram != nil && index < ram!.count {
+            return ram![index]
         }
         return 0xFF
     }
@@ -59,37 +58,39 @@ public class NoMBC: MemoryBankController {
     public func writeROM(index: Int, value newValue: UInt8) { }
 
     public func writeRAM(index: Int, value newValue: UInt8) {
-        if var ram = ram {
-            if index < ram.count {
-                ram[index] = newValue
-            }
+        if ram != nil && index < ram!.count {
+            ram![index] = newValue
+            updated = true
         }
     }
 
-    public func save() -> Data? {
-        if let ram = ram {
-            return Data(bytes: ram)
+    public func save() {
+        if updated {
+            if let url = fileURL, let ram = ram {
+                _ = try? ram.write(to: url)
+                updated = false
+            }
         }
-        return nil
     }
 }
 
 public class MBC1: MemoryBankController {
     private var rom: [UInt8]
-    private var ram: [UInt8]?
-    private let battery: Bool
+    private var ram: Data?
+    private let fileURL: URL?
+    private var updated: Bool = false
 
     private var romBank = 1
     private var otherBank = 0
-    private var romOffset = 1
+    private var romOffset = 0x4000
     private var ramOffset = 0
     private var bankingMode: BankingMode = .rom
     private var ramEnable: Bool = false
 
-    public init(rom: [UInt8], ram: [UInt8]?, battery: Bool) {
+    public init(rom: [UInt8], ram: Data?, file: URL?) {
         self.rom = rom
         self.ram = ram
-        self.battery = battery
+        self.fileURL = file
     }
 
     private func setBankingMode(_ mode: BankingMode) {
@@ -133,10 +134,8 @@ public class MBC1: MemoryBankController {
     }
 
     public func readRAM(index: Int) -> UInt8 {
-        if let ram = ram {
-            if ramEnable && index + ramOffset < ram.count {
-                return ram[index + ramOffset]
-            }
+        if ram != nil && ramEnable && index + ramOffset < ram!.count {
+            return ram![index + ramOffset]
         }
         return 0xFF
     }
@@ -144,7 +143,11 @@ public class MBC1: MemoryBankController {
     public func writeROM(index: Int, value newValue: UInt8) {
         switch index {
         case 0x0000...0x1FFF:
-            ramEnable = newValue & 0x0F == 0x0A
+            if newValue & 0x0F == 0x0A {
+                ramEnable = true
+            } else {
+                ramEnable = false
+            }
         case 0x2000...0x3FFF:
             let newBank = newValue & 0b11111
             setRomBank(newBank != 0 ? newBank : 1)
@@ -158,20 +161,19 @@ public class MBC1: MemoryBankController {
     }
 
     public func writeRAM(index: Int, value newValue: UInt8) {
-        if var ram = ram {
-            if ramEnable && index + ramOffset < ram.count {
-                ram[index + ramOffset] = newValue
-            }
+        if ram != nil && ramEnable && index + ramOffset < ram!.count {
+            ram![index + ramOffset] = newValue
+            updated = true
         }
     }
 
-    public func save() -> Data? {
-        if battery {
-            if let ram = ram {
-                return Data(bytes: ram)
+    public func save() {
+        if updated {
+            if let url = fileURL, let ram = ram {
+                _ = try? ram.write(to: url)
+                updated = false
             }
         }
-        return nil
     }
 
     private enum BankingMode {

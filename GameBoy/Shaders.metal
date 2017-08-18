@@ -98,7 +98,7 @@ fragment half4 gameBoyPixelFragment(Vertex inFrag [[stage_in]],
 
             int tileStart;
             if (bigSprites) {
-                tileStart = ((spriteTile & 0xFE) + (tileY >= 8 ? 0 : 1)) * 16;
+                tileStart = (spriteTile & 0xFE) * 16;
             } else {
                 tileStart = spriteTile * 16;
             }
