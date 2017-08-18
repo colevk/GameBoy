@@ -184,6 +184,12 @@ public class GameBoyRunner {
             return NoMBC(rom: cartridge, ram: ram, file: nil)
         case 0x09:
             return NoMBC(rom: cartridge, ram: ram, file: saveFileURL)
+        case 0x11:
+            return MBC3(rom:cartridge, ram: nil, file: nil)
+        case 0x12:
+            return MBC3(rom:cartridge, ram: ram, file: nil)
+        case 0x13:
+            return MBC3(rom:cartridge, ram: ram, file: saveFileURL)
         default:
             return nil
         }
