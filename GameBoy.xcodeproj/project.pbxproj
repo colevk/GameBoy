@@ -3,126 +3,128 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F0125EF91F37D4B80086A64A /* GameBoyRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0125EF81F37D4B80086A64A /* GameBoyRunner.swift */; };
-		F04DE8961F381162007A10D7 /* InterruptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04DE8951F381162007A10D7 /* InterruptHandler.swift */; };
-		F06DC0A51F3EA3B70069955A /* 01-special.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CBE1F3E967700EC54B6 /* 01-special.gb */; };
-		F06DC0A61F3EA3B70069955A /* 02-interrupts.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CBC1F3E967700EC54B6 /* 02-interrupts.gb */; };
-		F06DC0A71F3EA3B70069955A /* 03-op sp,hl.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CC51F3E967700EC54B6 /* 03-op sp,hl.gb */; };
-		F06DC0A81F3EA3B70069955A /* 04-op r,imm.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CC01F3E967700EC54B6 /* 04-op r,imm.gb */; };
-		F06DC0A91F3EA3B70069955A /* 05-op rp.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CC31F3E967700EC54B6 /* 05-op rp.gb */; };
-		F06DC0AA1F3EA3B70069955A /* 06-ld r,r.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CBD1F3E967700EC54B6 /* 06-ld r,r.gb */; };
-		F06DC0AB1F3EA3B70069955A /* 07-jr,jp,call,ret,rst.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CC21F3E967700EC54B6 /* 07-jr,jp,call,ret,rst.gb */; };
-		F06DC0AC1F3EA3B70069955A /* 08-misc instrs.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CBF1F3E967700EC54B6 /* 08-misc instrs.gb */; };
-		F06DC0AD1F3EA3B70069955A /* 09-op r,r.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CC11F3E967700EC54B6 /* 09-op r,r.gb */; };
-		F06DC0AE1F3EA3B70069955A /* 10-bit ops.gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CBB1F3E967700EC54B6 /* 10-bit ops.gb */; };
-		F06DC0AF1F3EA3B70069955A /* 11-op a,(hl).gb in Resources */ = {isa = PBXBuildFile; fileRef = F09A3CC41F3E967700EC54B6 /* 11-op a,(hl).gb */; };
-		F06DC0B01F3EAE5D0069955A /* GameBoyRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0125EF81F37D4B80086A64A /* GameBoyRunner.swift */; };
-		F06DC0B11F3EAE5D0069955A /* SerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F089FB221F3E850900DA2403 /* SerialDevice.swift */; };
-		F06DC0B21F3EAE5D0069955A /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966B1F18F68C00291BAE /* Memory.swift */; };
-		F06DC0B31F3EAE5D0069955A /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966D1F1916CC00291BAE /* CPU.swift */; };
-		F06DC0B41F3EAE5D0069955A /* CPUDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */; };
-		F06DC0B51F3EAE5D0069955A /* GPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9EADF1F20F4B0008426CF /* GPU.swift */; };
-		F06DC0B61F3EAE5D0069955A /* InterruptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04DE8951F381162007A10D7 /* InterruptHandler.swift */; };
-		F06DC0B71F3EAE5D0069955A /* AlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5087B1F237BD100833E53 /* AlignedArray.swift */; };
-		F06DC0B81F3EAE5D0069955A /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966F1F191D3A00291BAE /* Ops.swift */; };
-		F071ACF11F429042004D330E /* Joypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F071ACF01F429042004D330E /* Joypad.swift */; };
-		F071ACF31F42AF5C004D330E /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = F071ACF21F42AF5C004D330E /* View.swift */; };
-		F089FB231F3E850900DA2403 /* SerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F089FB221F3E850900DA2403 /* SerialDevice.swift */; };
-		F089FB251F3E875C00DA2403 /* TestROMSerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F089FB241F3E875C00DA2403 /* TestROMSerialDevice.swift */; };
-		F0B9375B1F441C7A003C34F6 /* MemoryBankController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9375A1F441C7A003C34F6 /* MemoryBankController.swift */; };
-		F0B9375C1F441C8B003C34F6 /* MemoryBankController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9375A1F441C7A003C34F6 /* MemoryBankController.swift */; };
-		F0B9375F1F4676F3003C34F6 /* NoCartridgeMBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9375E1F4676F3003C34F6 /* NoCartridgeMBC.swift */; };
-		F0B937601F4676F3003C34F6 /* NoCartridgeMBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9375E1F4676F3003C34F6 /* NoCartridgeMBC.swift */; };
-		F0B937621F467716003C34F6 /* NoMBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B937611F467716003C34F6 /* NoMBC.swift */; };
-		F0B937631F467716003C34F6 /* NoMBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B937611F467716003C34F6 /* NoMBC.swift */; };
-		F0B937651F467745003C34F6 /* MBC1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B937641F467745003C34F6 /* MBC1.swift */; };
-		F0B937661F467745003C34F6 /* MBC1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B937641F467745003C34F6 /* MBC1.swift */; };
-		F0B937681F467761003C34F6 /* MBC3.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B937671F467761003C34F6 /* MBC3.swift */; };
-		F0B937691F467761003C34F6 /* MBC3.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B937671F467761003C34F6 /* MBC3.swift */; };
-		F0B9EAE01F20F4B0008426CF /* GPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B9EADF1F20F4B0008426CF /* GPU.swift */; };
-		F0C01ECD1F42DEB300750D08 /* Joypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F071ACF01F429042004D330E /* Joypad.swift */; };
-		F0CB963F1F18F3F700291BAE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB963E1F18F3F700291BAE /* AppDelegate.swift */; };
-		F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96401F18F3F700291BAE /* GameViewController.swift */; };
-		F0CB96431F18F3F700291BAE /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96421F18F3F700291BAE /* Shaders.metal */; };
-		F0CB96451F18F3F700291BAE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0CB96441F18F3F700291BAE /* Assets.xcassets */; };
-		F0CB96481F18F3F700291BAE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F0CB96461F18F3F700291BAE /* MainMenu.xib */; };
-		F0CB96531F18F3F700291BAE /* CPUInstructionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB96521F18F3F700291BAE /* CPUInstructionTests.swift */; };
-		F0CB966C1F18F68C00291BAE /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966B1F18F68C00291BAE /* Memory.swift */; };
-		F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966D1F1916CC00291BAE /* CPU.swift */; };
-		F0CB96701F191D3A00291BAE /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CB966F1F191D3A00291BAE /* Ops.swift */; };
-		F0D42BF81F3D9A2400861A87 /* CPUDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */; };
-		F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5087B1F237BD100833E53 /* AlignedArray.swift */; };
-		F0DCB9B81F3EC22300834ABE /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DCB9B71F3EC22300834ABE /* Timer.swift */; };
-		F0DCB9B91F3EC7DF00834ABE /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DCB9B71F3EC22300834ABE /* Timer.swift */; };
-		F0DCB9BB1F3EC84000834ABE /* instr_timing.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0DCB9BA1F3EC84000834ABE /* instr_timing.gb */; };
+		F0328F7F1F4A392D007AEB5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E2CAFC1F4A386900A73FF5 /* AppDelegate.swift */; };
+		F0328F9D1F4A4252007AEB5C /* CPUInstructionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328F9B1F4A423D007AEB5C /* CPUInstructionTests.swift */; };
+		F0328F9E1F4A4266007AEB5C /* TestROMSerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328F9C1F4A423D007AEB5C /* TestROMSerialDevice.swift */; };
+		F0328F9F1F4A42B2007AEB5C /* 01-special.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F8F1F4A423D007AEB5C /* 01-special.gb */; };
+		F0328FA01F4A42B2007AEB5C /* 02-interrupts.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F901F4A423D007AEB5C /* 02-interrupts.gb */; };
+		F0328FA11F4A42B2007AEB5C /* 03-op sp,hl.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F911F4A423D007AEB5C /* 03-op sp,hl.gb */; };
+		F0328FA21F4A42B2007AEB5C /* 04-op r,imm.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F921F4A423D007AEB5C /* 04-op r,imm.gb */; };
+		F0328FA31F4A42B2007AEB5C /* 05-op rp.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F931F4A423D007AEB5C /* 05-op rp.gb */; };
+		F0328FA41F4A42B2007AEB5C /* 06-ld r,r.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F941F4A423D007AEB5C /* 06-ld r,r.gb */; };
+		F0328FA51F4A42B2007AEB5C /* 07-jr,jp,call,ret,rst.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F951F4A423D007AEB5C /* 07-jr,jp,call,ret,rst.gb */; };
+		F0328FA61F4A42B2007AEB5C /* 08-misc instrs.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F961F4A423D007AEB5C /* 08-misc instrs.gb */; };
+		F0328FA71F4A42B2007AEB5C /* 09-op r,r.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F971F4A423D007AEB5C /* 09-op r,r.gb */; };
+		F0328FA81F4A42B2007AEB5C /* 10-bit ops.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F981F4A423D007AEB5C /* 10-bit ops.gb */; };
+		F0328FA91F4A42B2007AEB5C /* 11-op a,(hl).gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F991F4A423D007AEB5C /* 11-op a,(hl).gb */; };
+		F0328FAA1F4A42B2007AEB5C /* instr_timing.gb in Resources */ = {isa = PBXBuildFile; fileRef = F0328F9A1F4A423D007AEB5C /* instr_timing.gb */; };
+		F0328FF91F4A54A7007AEB5C /* AlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF71F4A5477007AEB5C /* AlignedArray.swift */; };
+		F0328FFA1F4A54A7007AEB5C /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEB1F4A5477007AEB5C /* CPU.swift */; };
+		F0328FFB1F4A54A7007AEB5C /* CPUDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEF1F4A5477007AEB5C /* CPUDebugging.swift */; };
+		F0328FFC1F4A54A7007AEB5C /* GameBoyRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF31F4A5477007AEB5C /* GameBoyRunner.swift */; };
+		F0328FFD1F4A54A7007AEB5C /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEC1F4A5477007AEB5C /* GameViewController.swift */; };
+		F0328FFE1F4A54A7007AEB5C /* GPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF61F4A5477007AEB5C /* GPU.swift */; };
+		F0328FFF1F4A54A7007AEB5C /* InterruptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF21F4A5477007AEB5C /* InterruptHandler.swift */; };
+		F03290001F4A54A7007AEB5C /* Joypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF11F4A5477007AEB5C /* Joypad.swift */; };
+		F03290011F4A54A7007AEB5C /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF01F4A5477007AEB5C /* Memory.swift */; };
+		F03290021F4A54A7007AEB5C /* MBC1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FE61F4A5477007AEB5C /* MBC1.swift */; };
+		F03290031F4A54A7007AEB5C /* MBC3.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FE71F4A5477007AEB5C /* MBC3.swift */; };
+		F03290041F4A54A7007AEB5C /* MemoryBankController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FE81F4A5477007AEB5C /* MemoryBankController.swift */; };
+		F03290051F4A54A7007AEB5C /* NoCartridgeMBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FE91F4A5477007AEB5C /* NoCartridgeMBC.swift */; };
+		F03290061F4A54A7007AEB5C /* NoMBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEA1F4A5477007AEB5C /* NoMBC.swift */; };
+		F03290071F4A54A7007AEB5C /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF41F4A5477007AEB5C /* Ops.swift */; };
+		F03290081F4A54A7007AEB5C /* SerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF81F4A5477007AEB5C /* SerialDevice.swift */; };
+		F03290091F4A54A7007AEB5C /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F0328FED1F4A5477007AEB5C /* Shaders.metal */; };
+		F032900A1F4A54A7007AEB5C /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF51F4A5477007AEB5C /* Timer.swift */; };
+		F032900B1F4A54A7007AEB5C /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEE1F4A5477007AEB5C /* WindowController.swift */; };
+		F032900C1F4A54BE007AEB5C /* AlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF71F4A5477007AEB5C /* AlignedArray.swift */; };
+		F032900D1F4A54BE007AEB5C /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEB1F4A5477007AEB5C /* CPU.swift */; };
+		F032900E1F4A54BE007AEB5C /* CPUDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEF1F4A5477007AEB5C /* CPUDebugging.swift */; };
+		F032900F1F4A54BE007AEB5C /* GameBoyRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF31F4A5477007AEB5C /* GameBoyRunner.swift */; };
+		F03290101F4A54BE007AEB5C /* GPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF61F4A5477007AEB5C /* GPU.swift */; };
+		F03290111F4A54BE007AEB5C /* InterruptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF21F4A5477007AEB5C /* InterruptHandler.swift */; };
+		F03290121F4A54BE007AEB5C /* Joypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF11F4A5477007AEB5C /* Joypad.swift */; };
+		F03290131F4A54BE007AEB5C /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF01F4A5477007AEB5C /* Memory.swift */; };
+		F03290141F4A54BE007AEB5C /* MBC1.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FE61F4A5477007AEB5C /* MBC1.swift */; };
+		F03290151F4A54BE007AEB5C /* MBC3.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FE71F4A5477007AEB5C /* MBC3.swift */; };
+		F03290161F4A54BE007AEB5C /* MemoryBankController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FE81F4A5477007AEB5C /* MemoryBankController.swift */; };
+		F03290171F4A54BE007AEB5C /* NoCartridgeMBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FE91F4A5477007AEB5C /* NoCartridgeMBC.swift */; };
+		F03290181F4A54BE007AEB5C /* NoMBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEA1F4A5477007AEB5C /* NoMBC.swift */; };
+		F03290191F4A54BE007AEB5C /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF41F4A5477007AEB5C /* Ops.swift */; };
+		F032901A1F4A54BE007AEB5C /* SerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF81F4A5477007AEB5C /* SerialDevice.swift */; };
+		F032901B1F4A54BE007AEB5C /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF51F4A5477007AEB5C /* Timer.swift */; };
+		F032901C1F4A54BE007AEB5C /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEE1F4A5477007AEB5C /* WindowController.swift */; };
+		F0E2CB011F4A386900A73FF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0E2CB001F4A386900A73FF5 /* Assets.xcassets */; };
+		F0E2CB041F4A386900A73FF5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0E2CB021F4A386900A73FF5 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		F0CB964F1F18F3F700291BAE /* PBXContainerItemProxy */ = {
+		F0E2CB0C1F4A386900A73FF5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F0CB96331F18F3F700291BAE /* Project object */;
+			containerPortal = F0E2CAF11F4A386900A73FF5 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F0CB963A1F18F3F700291BAE;
+			remoteGlobalIDString = F0E2CAF81F4A386900A73FF5;
 			remoteInfo = GameBoy;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F0125EF81F37D4B80086A64A /* GameBoyRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyRunner.swift; sourceTree = "<group>"; };
-		F04DE8951F381162007A10D7 /* InterruptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterruptHandler.swift; sourceTree = "<group>"; };
-		F071ACF01F429042004D330E /* Joypad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joypad.swift; sourceTree = "<group>"; };
-		F071ACF21F42AF5C004D330E /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
-		F089FB221F3E850900DA2403 /* SerialDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialDevice.swift; sourceTree = "<group>"; };
-		F089FB241F3E875C00DA2403 /* TestROMSerialDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestROMSerialDevice.swift; sourceTree = "<group>"; };
-		F09A3CBB1F3E967700EC54B6 /* 10-bit ops.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "10-bit ops.gb"; sourceTree = "<group>"; };
-		F09A3CBC1F3E967700EC54B6 /* 02-interrupts.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "02-interrupts.gb"; sourceTree = "<group>"; };
-		F09A3CBD1F3E967700EC54B6 /* 06-ld r,r.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "06-ld r,r.gb"; sourceTree = "<group>"; };
-		F09A3CBE1F3E967700EC54B6 /* 01-special.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "01-special.gb"; sourceTree = "<group>"; };
-		F09A3CBF1F3E967700EC54B6 /* 08-misc instrs.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "08-misc instrs.gb"; sourceTree = "<group>"; };
-		F09A3CC01F3E967700EC54B6 /* 04-op r,imm.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "04-op r,imm.gb"; sourceTree = "<group>"; };
-		F09A3CC11F3E967700EC54B6 /* 09-op r,r.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "09-op r,r.gb"; sourceTree = "<group>"; };
-		F09A3CC21F3E967700EC54B6 /* 07-jr,jp,call,ret,rst.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "07-jr,jp,call,ret,rst.gb"; sourceTree = "<group>"; };
-		F09A3CC31F3E967700EC54B6 /* 05-op rp.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "05-op rp.gb"; sourceTree = "<group>"; };
-		F09A3CC41F3E967700EC54B6 /* 11-op a,(hl).gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "11-op a,(hl).gb"; sourceTree = "<group>"; };
-		F09A3CC51F3E967700EC54B6 /* 03-op sp,hl.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "03-op sp,hl.gb"; sourceTree = "<group>"; };
-		F0B9375A1F441C7A003C34F6 /* MemoryBankController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryBankController.swift; sourceTree = "<group>"; };
-		F0B9375E1F4676F3003C34F6 /* NoCartridgeMBC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCartridgeMBC.swift; sourceTree = "<group>"; };
-		F0B937611F467716003C34F6 /* NoMBC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoMBC.swift; sourceTree = "<group>"; };
-		F0B937641F467745003C34F6 /* MBC1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBC1.swift; sourceTree = "<group>"; };
-		F0B937671F467761003C34F6 /* MBC3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBC3.swift; sourceTree = "<group>"; };
-		F0B9EADF1F20F4B0008426CF /* GPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPU.swift; sourceTree = "<group>"; };
-		F0CB963B1F18F3F700291BAE /* GameBoy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBoy.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0CB963E1F18F3F700291BAE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F0CB96401F18F3F700291BAE /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		F0CB96421F18F3F700291BAE /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
-		F0CB96441F18F3F700291BAE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F0CB96471F18F3F700291BAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		F0CB96491F18F3F700291BAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F0CB964E1F18F3F700291BAE /* GameBoyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameBoyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0CB96521F18F3F700291BAE /* CPUInstructionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUInstructionTests.swift; sourceTree = "<group>"; };
-		F0CB96541F18F3F700291BAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F0CB966B1F18F68C00291BAE /* Memory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
-		F0CB966D1F1916CC00291BAE /* CPU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
-		F0CB966F1F191D3A00291BAE /* Ops.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ops.swift; sourceTree = "<group>"; };
-		F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUDebugging.swift; sourceTree = "<group>"; };
-		F0D5087B1F237BD100833E53 /* AlignedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedArray.swift; sourceTree = "<group>"; };
-		F0DCB9B71F3EC22300834ABE /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
-		F0DCB9BA1F3EC84000834ABE /* instr_timing.gb */ = {isa = PBXFileReference; lastKnownFileType = file; name = instr_timing.gb; path = "../../../../Downloads/GB Roms/Test ROMs/instr_timing/instr_timing.gb"; sourceTree = "<group>"; };
+		F0328F8F1F4A423D007AEB5C /* 01-special.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "01-special.gb"; sourceTree = "<group>"; };
+		F0328F901F4A423D007AEB5C /* 02-interrupts.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "02-interrupts.gb"; sourceTree = "<group>"; };
+		F0328F911F4A423D007AEB5C /* 03-op sp,hl.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "03-op sp,hl.gb"; sourceTree = "<group>"; };
+		F0328F921F4A423D007AEB5C /* 04-op r,imm.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "04-op r,imm.gb"; sourceTree = "<group>"; };
+		F0328F931F4A423D007AEB5C /* 05-op rp.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "05-op rp.gb"; sourceTree = "<group>"; };
+		F0328F941F4A423D007AEB5C /* 06-ld r,r.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "06-ld r,r.gb"; sourceTree = "<group>"; };
+		F0328F951F4A423D007AEB5C /* 07-jr,jp,call,ret,rst.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "07-jr,jp,call,ret,rst.gb"; sourceTree = "<group>"; };
+		F0328F961F4A423D007AEB5C /* 08-misc instrs.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "08-misc instrs.gb"; sourceTree = "<group>"; };
+		F0328F971F4A423D007AEB5C /* 09-op r,r.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "09-op r,r.gb"; sourceTree = "<group>"; };
+		F0328F981F4A423D007AEB5C /* 10-bit ops.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "10-bit ops.gb"; sourceTree = "<group>"; };
+		F0328F991F4A423D007AEB5C /* 11-op a,(hl).gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "11-op a,(hl).gb"; sourceTree = "<group>"; };
+		F0328F9A1F4A423D007AEB5C /* instr_timing.gb */ = {isa = PBXFileReference; lastKnownFileType = file; path = instr_timing.gb; sourceTree = "<group>"; };
+		F0328F9B1F4A423D007AEB5C /* CPUInstructionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUInstructionTests.swift; sourceTree = "<group>"; };
+		F0328F9C1F4A423D007AEB5C /* TestROMSerialDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestROMSerialDevice.swift; sourceTree = "<group>"; };
+		F0328FE61F4A5477007AEB5C /* MBC1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBC1.swift; sourceTree = "<group>"; };
+		F0328FE71F4A5477007AEB5C /* MBC3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBC3.swift; sourceTree = "<group>"; };
+		F0328FE81F4A5477007AEB5C /* MemoryBankController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryBankController.swift; sourceTree = "<group>"; };
+		F0328FE91F4A5477007AEB5C /* NoCartridgeMBC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCartridgeMBC.swift; sourceTree = "<group>"; };
+		F0328FEA1F4A5477007AEB5C /* NoMBC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoMBC.swift; sourceTree = "<group>"; };
+		F0328FEB1F4A5477007AEB5C /* CPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
+		F0328FEC1F4A5477007AEB5C /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		F0328FED1F4A5477007AEB5C /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		F0328FEE1F4A5477007AEB5C /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		F0328FEF1F4A5477007AEB5C /* CPUDebugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUDebugging.swift; sourceTree = "<group>"; };
+		F0328FF01F4A5477007AEB5C /* Memory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
+		F0328FF11F4A5477007AEB5C /* Joypad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joypad.swift; sourceTree = "<group>"; };
+		F0328FF21F4A5477007AEB5C /* InterruptHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterruptHandler.swift; sourceTree = "<group>"; };
+		F0328FF31F4A5477007AEB5C /* GameBoyRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyRunner.swift; sourceTree = "<group>"; };
+		F0328FF41F4A5477007AEB5C /* Ops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ops.swift; sourceTree = "<group>"; };
+		F0328FF51F4A5477007AEB5C /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+		F0328FF61F4A5477007AEB5C /* GPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPU.swift; sourceTree = "<group>"; };
+		F0328FF71F4A5477007AEB5C /* AlignedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedArray.swift; sourceTree = "<group>"; };
+		F0328FF81F4A5477007AEB5C /* SerialDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialDevice.swift; sourceTree = "<group>"; };
+		F0E2CAF91F4A386900A73FF5 /* GameBoy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBoy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0E2CAFC1F4A386900A73FF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F0E2CB001F4A386900A73FF5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F0E2CB031F4A386900A73FF5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F0E2CB051F4A386900A73FF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F0E2CB061F4A386900A73FF5 /* GameBoy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GameBoy.entitlements; sourceTree = "<group>"; };
+		F0E2CB0B1F4A386900A73FF5 /* GameBoyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameBoyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0E2CB111F4A386900A73FF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		F0CB96381F18F3F700291BAE /* Frameworks */ = {
+		F0E2CAF61F4A386900A73FF5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F0CB964B1F18F3F700291BAE /* Frameworks */ = {
+		F0E2CB081F4A386900A73FF5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -132,88 +134,89 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F09A3CBA1F3E963E00EC54B6 /* TestROMs */ = {
+		F0328F8E1F4A423D007AEB5C /* TestROMs */ = {
 			isa = PBXGroup;
 			children = (
-				F0DCB9BA1F3EC84000834ABE /* instr_timing.gb */,
-				F09A3CBE1F3E967700EC54B6 /* 01-special.gb */,
-				F09A3CBC1F3E967700EC54B6 /* 02-interrupts.gb */,
-				F09A3CC51F3E967700EC54B6 /* 03-op sp,hl.gb */,
-				F09A3CC01F3E967700EC54B6 /* 04-op r,imm.gb */,
-				F09A3CC31F3E967700EC54B6 /* 05-op rp.gb */,
-				F09A3CBD1F3E967700EC54B6 /* 06-ld r,r.gb */,
-				F09A3CC21F3E967700EC54B6 /* 07-jr,jp,call,ret,rst.gb */,
-				F09A3CBF1F3E967700EC54B6 /* 08-misc instrs.gb */,
-				F09A3CC11F3E967700EC54B6 /* 09-op r,r.gb */,
-				F09A3CBB1F3E967700EC54B6 /* 10-bit ops.gb */,
-				F09A3CC41F3E967700EC54B6 /* 11-op a,(hl).gb */,
+				F0328F8F1F4A423D007AEB5C /* 01-special.gb */,
+				F0328F901F4A423D007AEB5C /* 02-interrupts.gb */,
+				F0328F911F4A423D007AEB5C /* 03-op sp,hl.gb */,
+				F0328F921F4A423D007AEB5C /* 04-op r,imm.gb */,
+				F0328F931F4A423D007AEB5C /* 05-op rp.gb */,
+				F0328F941F4A423D007AEB5C /* 06-ld r,r.gb */,
+				F0328F951F4A423D007AEB5C /* 07-jr,jp,call,ret,rst.gb */,
+				F0328F961F4A423D007AEB5C /* 08-misc instrs.gb */,
+				F0328F971F4A423D007AEB5C /* 09-op r,r.gb */,
+				F0328F981F4A423D007AEB5C /* 10-bit ops.gb */,
+				F0328F991F4A423D007AEB5C /* 11-op a,(hl).gb */,
+				F0328F9A1F4A423D007AEB5C /* instr_timing.gb */,
 			);
 			path = TestROMs;
 			sourceTree = "<group>";
 		};
-		F0B9375D1F4676C6003C34F6 /* MemoryBankControllers */ = {
+		F0328FE51F4A5477007AEB5C /* MemoryBankControllers */ = {
 			isa = PBXGroup;
 			children = (
-				F0B9375A1F441C7A003C34F6 /* MemoryBankController.swift */,
-				F0B9375E1F4676F3003C34F6 /* NoCartridgeMBC.swift */,
-				F0B937611F467716003C34F6 /* NoMBC.swift */,
-				F0B937641F467745003C34F6 /* MBC1.swift */,
-				F0B937671F467761003C34F6 /* MBC3.swift */,
+				F0328FE61F4A5477007AEB5C /* MBC1.swift */,
+				F0328FE71F4A5477007AEB5C /* MBC3.swift */,
+				F0328FE81F4A5477007AEB5C /* MemoryBankController.swift */,
+				F0328FE91F4A5477007AEB5C /* NoCartridgeMBC.swift */,
+				F0328FEA1F4A5477007AEB5C /* NoMBC.swift */,
 			);
 			path = MemoryBankControllers;
 			sourceTree = "<group>";
 		};
-		F0CB96321F18F3F700291BAE = {
+		F0E2CAF01F4A386900A73FF5 = {
 			isa = PBXGroup;
 			children = (
-				F0CB963D1F18F3F700291BAE /* GameBoy */,
-				F0CB96511F18F3F700291BAE /* GameBoyTests */,
-				F0CB963C1F18F3F700291BAE /* Products */,
+				F0E2CAFB1F4A386900A73FF5 /* GameBoy */,
+				F0E2CB0E1F4A386900A73FF5 /* GameBoyTests */,
+				F0E2CAFA1F4A386900A73FF5 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		F0CB963C1F18F3F700291BAE /* Products */ = {
+		F0E2CAFA1F4A386900A73FF5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F0CB963B1F18F3F700291BAE /* GameBoy.app */,
-				F0CB964E1F18F3F700291BAE /* GameBoyTests.xctest */,
+				F0E2CAF91F4A386900A73FF5 /* GameBoy.app */,
+				F0E2CB0B1F4A386900A73FF5 /* GameBoyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F0CB963D1F18F3F700291BAE /* GameBoy */ = {
+		F0E2CAFB1F4A386900A73FF5 /* GameBoy */ = {
 			isa = PBXGroup;
 			children = (
-				F0CB963E1F18F3F700291BAE /* AppDelegate.swift */,
-				F071ACF21F42AF5C004D330E /* View.swift */,
-				F0CB96401F18F3F700291BAE /* GameViewController.swift */,
-				F0CB96421F18F3F700291BAE /* Shaders.metal */,
-				F0CB96441F18F3F700291BAE /* Assets.xcassets */,
-				F0CB96461F18F3F700291BAE /* MainMenu.xib */,
-				F0CB96491F18F3F700291BAE /* Info.plist */,
-				F0125EF81F37D4B80086A64A /* GameBoyRunner.swift */,
-				F0B9375D1F4676C6003C34F6 /* MemoryBankControllers */,
-				F089FB221F3E850900DA2403 /* SerialDevice.swift */,
-				F0CB966B1F18F68C00291BAE /* Memory.swift */,
-				F0CB966D1F1916CC00291BAE /* CPU.swift */,
-				F0DCB9B71F3EC22300834ABE /* Timer.swift */,
-				F0D42BF71F3D9A2400861A87 /* CPUDebugging.swift */,
-				F071ACF01F429042004D330E /* Joypad.swift */,
-				F0B9EADF1F20F4B0008426CF /* GPU.swift */,
-				F04DE8951F381162007A10D7 /* InterruptHandler.swift */,
-				F0D5087B1F237BD100833E53 /* AlignedArray.swift */,
-				F0CB966F1F191D3A00291BAE /* Ops.swift */,
+				F0E2CAFC1F4A386900A73FF5 /* AppDelegate.swift */,
+				F0328FF71F4A5477007AEB5C /* AlignedArray.swift */,
+				F0328FEB1F4A5477007AEB5C /* CPU.swift */,
+				F0328FEF1F4A5477007AEB5C /* CPUDebugging.swift */,
+				F0328FF31F4A5477007AEB5C /* GameBoyRunner.swift */,
+				F0328FEC1F4A5477007AEB5C /* GameViewController.swift */,
+				F0328FF61F4A5477007AEB5C /* GPU.swift */,
+				F0328FF21F4A5477007AEB5C /* InterruptHandler.swift */,
+				F0328FF11F4A5477007AEB5C /* Joypad.swift */,
+				F0328FF01F4A5477007AEB5C /* Memory.swift */,
+				F0328FE51F4A5477007AEB5C /* MemoryBankControllers */,
+				F0328FF41F4A5477007AEB5C /* Ops.swift */,
+				F0328FF81F4A5477007AEB5C /* SerialDevice.swift */,
+				F0328FED1F4A5477007AEB5C /* Shaders.metal */,
+				F0328FF51F4A5477007AEB5C /* Timer.swift */,
+				F0328FEE1F4A5477007AEB5C /* WindowController.swift */,
+				F0E2CB001F4A386900A73FF5 /* Assets.xcassets */,
+				F0E2CB021F4A386900A73FF5 /* Main.storyboard */,
+				F0E2CB051F4A386900A73FF5 /* Info.plist */,
+				F0E2CB061F4A386900A73FF5 /* GameBoy.entitlements */,
 			);
 			path = GameBoy;
 			sourceTree = "<group>";
 		};
-		F0CB96511F18F3F700291BAE /* GameBoyTests */ = {
+		F0E2CB0E1F4A386900A73FF5 /* GameBoyTests */ = {
 			isa = PBXGroup;
 			children = (
-				F09A3CBA1F3E963E00EC54B6 /* TestROMs */,
-				F0CB96521F18F3F700291BAE /* CPUInstructionTests.swift */,
-				F089FB241F3E875C00DA2403 /* TestROMSerialDevice.swift */,
-				F0CB96541F18F3F700291BAE /* Info.plist */,
+				F0328F8E1F4A423D007AEB5C /* TestROMs */,
+				F0328F9B1F4A423D007AEB5C /* CPUInstructionTests.swift */,
+				F0328F9C1F4A423D007AEB5C /* TestROMSerialDevice.swift */,
+				F0E2CB111F4A386900A73FF5 /* Info.plist */,
 			);
 			path = GameBoyTests;
 			sourceTree = "<group>";
@@ -221,13 +224,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F0CB963A1F18F3F700291BAE /* GameBoy */ = {
+		F0E2CAF81F4A386900A73FF5 /* GameBoy */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F0CB96621F18F3F700291BAE /* Build configuration list for PBXNativeTarget "GameBoy" */;
+			buildConfigurationList = F0E2CB141F4A386900A73FF5 /* Build configuration list for PBXNativeTarget "GameBoy" */;
 			buildPhases = (
-				F0CB96371F18F3F700291BAE /* Sources */,
-				F0CB96381F18F3F700291BAE /* Frameworks */,
-				F0CB96391F18F3F700291BAE /* Resources */,
+				F0E2CAF51F4A386900A73FF5 /* Sources */,
+				F0E2CAF61F4A386900A73FF5 /* Frameworks */,
+				F0E2CAF71F4A386900A73FF5 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -235,184 +238,178 @@
 			);
 			name = GameBoy;
 			productName = GameBoy;
-			productReference = F0CB963B1F18F3F700291BAE /* GameBoy.app */;
+			productReference = F0E2CAF91F4A386900A73FF5 /* GameBoy.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F0CB964D1F18F3F700291BAE /* GameBoyTests */ = {
+		F0E2CB0A1F4A386900A73FF5 /* GameBoyTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F0CB96651F18F3F700291BAE /* Build configuration list for PBXNativeTarget "GameBoyTests" */;
+			buildConfigurationList = F0E2CB171F4A386900A73FF5 /* Build configuration list for PBXNativeTarget "GameBoyTests" */;
 			buildPhases = (
-				F0CB964A1F18F3F700291BAE /* Sources */,
-				F0CB964B1F18F3F700291BAE /* Frameworks */,
-				F0CB964C1F18F3F700291BAE /* Resources */,
+				F0E2CB071F4A386900A73FF5 /* Sources */,
+				F0E2CB081F4A386900A73FF5 /* Frameworks */,
+				F0E2CB091F4A386900A73FF5 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				F0CB96501F18F3F700291BAE /* PBXTargetDependency */,
+				F0E2CB0D1F4A386900A73FF5 /* PBXTargetDependency */,
 			);
 			name = GameBoyTests;
 			productName = GameBoyTests;
-			productReference = F0CB964E1F18F3F700291BAE /* GameBoyTests.xctest */;
+			productReference = F0E2CB0B1F4A386900A73FF5 /* GameBoyTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		F0CB96331F18F3F700291BAE /* Project object */ = {
+		F0E2CAF11F4A386900A73FF5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				KnownAssetTags = (
-					New,
-				);
-				LastSwiftUpdateCheck = 0830;
+				LastSwiftUpdateCheck = 0900;
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Cole van Krieken";
 				TargetAttributes = {
-					F0CB963A1F18F3F700291BAE = {
-						CreatedOnToolsVersion = 8.3.3;
-						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
+					F0E2CAF81F4A386900A73FF5 = {
+						CreatedOnToolsVersion = 9.0;
 					};
-					F0CB964D1F18F3F700291BAE = {
-						CreatedOnToolsVersion = 8.3.3;
-						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
+					F0E2CB0A1F4A386900A73FF5 = {
+						CreatedOnToolsVersion = 9.0;
 					};
 				};
 			};
-			buildConfigurationList = F0CB96361F18F3F700291BAE /* Build configuration list for PBXProject "GameBoy" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			buildConfigurationList = F0E2CAF41F4A386900A73FF5 /* Build configuration list for PBXProject "GameBoy" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = F0CB96321F18F3F700291BAE;
-			productRefGroup = F0CB963C1F18F3F700291BAE /* Products */;
+			mainGroup = F0E2CAF01F4A386900A73FF5;
+			productRefGroup = F0E2CAFA1F4A386900A73FF5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F0CB963A1F18F3F700291BAE /* GameBoy */,
-				F0CB964D1F18F3F700291BAE /* GameBoyTests */,
+				F0E2CAF81F4A386900A73FF5 /* GameBoy */,
+				F0E2CB0A1F4A386900A73FF5 /* GameBoyTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		F0CB96391F18F3F700291BAE /* Resources */ = {
+		F0E2CAF71F4A386900A73FF5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0CB96451F18F3F700291BAE /* Assets.xcassets in Resources */,
-				F0CB96481F18F3F700291BAE /* MainMenu.xib in Resources */,
+				F0E2CB011F4A386900A73FF5 /* Assets.xcassets in Resources */,
+				F0E2CB041F4A386900A73FF5 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F0CB964C1F18F3F700291BAE /* Resources */ = {
+		F0E2CB091F4A386900A73FF5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F06DC0A51F3EA3B70069955A /* 01-special.gb in Resources */,
-				F06DC0A61F3EA3B70069955A /* 02-interrupts.gb in Resources */,
-				F06DC0A71F3EA3B70069955A /* 03-op sp,hl.gb in Resources */,
-				F06DC0A81F3EA3B70069955A /* 04-op r,imm.gb in Resources */,
-				F06DC0A91F3EA3B70069955A /* 05-op rp.gb in Resources */,
-				F0DCB9BB1F3EC84000834ABE /* instr_timing.gb in Resources */,
-				F06DC0AA1F3EA3B70069955A /* 06-ld r,r.gb in Resources */,
-				F06DC0AB1F3EA3B70069955A /* 07-jr,jp,call,ret,rst.gb in Resources */,
-				F06DC0AC1F3EA3B70069955A /* 08-misc instrs.gb in Resources */,
-				F06DC0AD1F3EA3B70069955A /* 09-op r,r.gb in Resources */,
-				F06DC0AE1F3EA3B70069955A /* 10-bit ops.gb in Resources */,
-				F06DC0AF1F3EA3B70069955A /* 11-op a,(hl).gb in Resources */,
+				F0328F9F1F4A42B2007AEB5C /* 01-special.gb in Resources */,
+				F0328FA01F4A42B2007AEB5C /* 02-interrupts.gb in Resources */,
+				F0328FA11F4A42B2007AEB5C /* 03-op sp,hl.gb in Resources */,
+				F0328FA21F4A42B2007AEB5C /* 04-op r,imm.gb in Resources */,
+				F0328FA31F4A42B2007AEB5C /* 05-op rp.gb in Resources */,
+				F0328FA41F4A42B2007AEB5C /* 06-ld r,r.gb in Resources */,
+				F0328FA51F4A42B2007AEB5C /* 07-jr,jp,call,ret,rst.gb in Resources */,
+				F0328FA61F4A42B2007AEB5C /* 08-misc instrs.gb in Resources */,
+				F0328FA71F4A42B2007AEB5C /* 09-op r,r.gb in Resources */,
+				F0328FA81F4A42B2007AEB5C /* 10-bit ops.gb in Resources */,
+				F0328FA91F4A42B2007AEB5C /* 11-op a,(hl).gb in Resources */,
+				F0328FAA1F4A42B2007AEB5C /* instr_timing.gb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		F0CB96371F18F3F700291BAE /* Sources */ = {
+		F0E2CAF51F4A386900A73FF5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0CB96431F18F3F700291BAE /* Shaders.metal in Sources */,
-				F0B937651F467745003C34F6 /* MBC1.swift in Sources */,
-				F089FB231F3E850900DA2403 /* SerialDevice.swift in Sources */,
-				F071ACF31F42AF5C004D330E /* View.swift in Sources */,
-				F0CB96411F18F3F700291BAE /* GameViewController.swift in Sources */,
-				F0D5087C1F237BD100833E53 /* AlignedArray.swift in Sources */,
-				F0DCB9B81F3EC22300834ABE /* Timer.swift in Sources */,
-				F0CB96701F191D3A00291BAE /* Ops.swift in Sources */,
-				F0D42BF81F3D9A2400861A87 /* CPUDebugging.swift in Sources */,
-				F0CB966E1F1916CC00291BAE /* CPU.swift in Sources */,
-				F0CB966C1F18F68C00291BAE /* Memory.swift in Sources */,
-				F0CB963F1F18F3F700291BAE /* AppDelegate.swift in Sources */,
-				F0B9375F1F4676F3003C34F6 /* NoCartridgeMBC.swift in Sources */,
-				F071ACF11F429042004D330E /* Joypad.swift in Sources */,
-				F0B937681F467761003C34F6 /* MBC3.swift in Sources */,
-				F04DE8961F381162007A10D7 /* InterruptHandler.swift in Sources */,
-				F0125EF91F37D4B80086A64A /* GameBoyRunner.swift in Sources */,
-				F0B937621F467716003C34F6 /* NoMBC.swift in Sources */,
-				F0B9375B1F441C7A003C34F6 /* MemoryBankController.swift in Sources */,
-				F0B9EAE01F20F4B0008426CF /* GPU.swift in Sources */,
+				F03290061F4A54A7007AEB5C /* NoMBC.swift in Sources */,
+				F032900B1F4A54A7007AEB5C /* WindowController.swift in Sources */,
+				F0328FF91F4A54A7007AEB5C /* AlignedArray.swift in Sources */,
+				F03290021F4A54A7007AEB5C /* MBC1.swift in Sources */,
+				F03290031F4A54A7007AEB5C /* MBC3.swift in Sources */,
+				F0328FFB1F4A54A7007AEB5C /* CPUDebugging.swift in Sources */,
+				F0328FFE1F4A54A7007AEB5C /* GPU.swift in Sources */,
+				F03290091F4A54A7007AEB5C /* Shaders.metal in Sources */,
+				F03290071F4A54A7007AEB5C /* Ops.swift in Sources */,
+				F032900A1F4A54A7007AEB5C /* Timer.swift in Sources */,
+				F03290081F4A54A7007AEB5C /* SerialDevice.swift in Sources */,
+				F03290041F4A54A7007AEB5C /* MemoryBankController.swift in Sources */,
+				F03290001F4A54A7007AEB5C /* Joypad.swift in Sources */,
+				F0328FFC1F4A54A7007AEB5C /* GameBoyRunner.swift in Sources */,
+				F0328FFF1F4A54A7007AEB5C /* InterruptHandler.swift in Sources */,
+				F03290051F4A54A7007AEB5C /* NoCartridgeMBC.swift in Sources */,
+				F0328F7F1F4A392D007AEB5C /* AppDelegate.swift in Sources */,
+				F0328FFD1F4A54A7007AEB5C /* GameViewController.swift in Sources */,
+				F03290011F4A54A7007AEB5C /* Memory.swift in Sources */,
+				F0328FFA1F4A54A7007AEB5C /* CPU.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F0CB964A1F18F3F700291BAE /* Sources */ = {
+		F0E2CB071F4A386900A73FF5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F06DC0B51F3EAE5D0069955A /* GPU.swift in Sources */,
-				F0C01ECD1F42DEB300750D08 /* Joypad.swift in Sources */,
-				F06DC0B01F3EAE5D0069955A /* GameBoyRunner.swift in Sources */,
-				F06DC0B71F3EAE5D0069955A /* AlignedArray.swift in Sources */,
-				F0DCB9B91F3EC7DF00834ABE /* Timer.swift in Sources */,
-				F0B937631F467716003C34F6 /* NoMBC.swift in Sources */,
-				F0B937661F467745003C34F6 /* MBC1.swift in Sources */,
-				F06DC0B11F3EAE5D0069955A /* SerialDevice.swift in Sources */,
-				F0B937691F467761003C34F6 /* MBC3.swift in Sources */,
-				F0B9375C1F441C8B003C34F6 /* MemoryBankController.swift in Sources */,
-				F06DC0B31F3EAE5D0069955A /* CPU.swift in Sources */,
-				F0B937601F4676F3003C34F6 /* NoCartridgeMBC.swift in Sources */,
-				F089FB251F3E875C00DA2403 /* TestROMSerialDevice.swift in Sources */,
-				F06DC0B61F3EAE5D0069955A /* InterruptHandler.swift in Sources */,
-				F06DC0B81F3EAE5D0069955A /* Ops.swift in Sources */,
-				F06DC0B21F3EAE5D0069955A /* Memory.swift in Sources */,
-				F06DC0B41F3EAE5D0069955A /* CPUDebugging.swift in Sources */,
-				F0CB96531F18F3F700291BAE /* CPUInstructionTests.swift in Sources */,
+				F03290181F4A54BE007AEB5C /* NoMBC.swift in Sources */,
+				F032900F1F4A54BE007AEB5C /* GameBoyRunner.swift in Sources */,
+				F03290141F4A54BE007AEB5C /* MBC1.swift in Sources */,
+				F03290151F4A54BE007AEB5C /* MBC3.swift in Sources */,
+				F032901C1F4A54BE007AEB5C /* WindowController.swift in Sources */,
+				F032900E1F4A54BE007AEB5C /* CPUDebugging.swift in Sources */,
+				F03290101F4A54BE007AEB5C /* GPU.swift in Sources */,
+				F03290191F4A54BE007AEB5C /* Ops.swift in Sources */,
+				F032901A1F4A54BE007AEB5C /* SerialDevice.swift in Sources */,
+				F03290161F4A54BE007AEB5C /* MemoryBankController.swift in Sources */,
+				F03290121F4A54BE007AEB5C /* Joypad.swift in Sources */,
+				F032900D1F4A54BE007AEB5C /* CPU.swift in Sources */,
+				F03290111F4A54BE007AEB5C /* InterruptHandler.swift in Sources */,
+				F03290171F4A54BE007AEB5C /* NoCartridgeMBC.swift in Sources */,
+				F032900C1F4A54BE007AEB5C /* AlignedArray.swift in Sources */,
+				F0328F9E1F4A4266007AEB5C /* TestROMSerialDevice.swift in Sources */,
+				F032901B1F4A54BE007AEB5C /* Timer.swift in Sources */,
+				F03290131F4A54BE007AEB5C /* Memory.swift in Sources */,
+				F0328F9D1F4A4252007AEB5C /* CPUInstructionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		F0CB96501F18F3F700291BAE /* PBXTargetDependency */ = {
+		F0E2CB0D1F4A386900A73FF5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F0CB963A1F18F3F700291BAE /* GameBoy */;
-			targetProxy = F0CB964F1F18F3F700291BAE /* PBXContainerItemProxy */;
+			target = F0E2CAF81F4A386900A73FF5 /* GameBoy */;
+			targetProxy = F0E2CB0C1F4A386900A73FF5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		F0CB96461F18F3F700291BAE /* MainMenu.xib */ = {
+		F0E2CB021F4A386900A73FF5 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				F0CB96471F18F3F700291BAE /* Base */,
+				F0E2CB031F4A386900A73FF5 /* Base */,
 			);
-			name = MainMenu.xib;
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		F0CB96601F18F3F700291BAE /* Debug */ = {
+		F0E2CB121F4A386900A73FF5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -432,6 +429,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -439,10 +437,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -459,17 +457,16 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 			};
 			name = Debug;
 		};
-		F0CB96611F18F3F700291BAE /* Release */ = {
+		F0E2CB131F4A386900A73FF5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -489,6 +486,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -496,7 +494,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -506,73 +504,61 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 			};
 			name = Release;
 		};
-		F0CB96631F18F3F700291BAE /* Debug */ = {
+		F0E2CB151F4A386900A73FF5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_ENTITLEMENTS = GameBoy/GameBoy.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				INFOPLIST_FILE = GameBoy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LLVM_LTO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = GB.GameBoy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.colevankrieken.GameBoy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
-		F0CB96641F18F3F700291BAE /* Release */ = {
+		F0E2CB161F4A386900A73FF5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_ENTITLEMENTS = GameBoy/GameBoy.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = GameBoy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LLVM_LTO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = GB.GameBoy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.colevankrieken.GameBoy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
-		F0CB96661F18F3F700291BAE /* Debug */ = {
+		F0E2CB181F4A386900A73FF5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				INFOPLIST_FILE = GameBoyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = GB.GameBoyTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.colevankrieken.GameBoyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
-		F0CB96671F18F3F700291BAE /* Release */ = {
+		F0E2CB191F4A386900A73FF5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				INFOPLIST_FILE = GameBoyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = GB.GameBoyTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.colevankrieken.GameBoyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
@@ -580,34 +566,34 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F0CB96361F18F3F700291BAE /* Build configuration list for PBXProject "GameBoy" */ = {
+		F0E2CAF41F4A386900A73FF5 /* Build configuration list for PBXProject "GameBoy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F0CB96601F18F3F700291BAE /* Debug */,
-				F0CB96611F18F3F700291BAE /* Release */,
+				F0E2CB121F4A386900A73FF5 /* Debug */,
+				F0E2CB131F4A386900A73FF5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F0CB96621F18F3F700291BAE /* Build configuration list for PBXNativeTarget "GameBoy" */ = {
+		F0E2CB141F4A386900A73FF5 /* Build configuration list for PBXNativeTarget "GameBoy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F0CB96631F18F3F700291BAE /* Debug */,
-				F0CB96641F18F3F700291BAE /* Release */,
+				F0E2CB151F4A386900A73FF5 /* Debug */,
+				F0E2CB161F4A386900A73FF5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F0CB96651F18F3F700291BAE /* Build configuration list for PBXNativeTarget "GameBoyTests" */ = {
+		F0E2CB171F4A386900A73FF5 /* Build configuration list for PBXNativeTarget "GameBoyTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F0CB96661F18F3F700291BAE /* Debug */,
-				F0CB96671F18F3F700291BAE /* Release */,
+				F0E2CB181F4A386900A73FF5 /* Debug */,
+				F0E2CB191F4A386900A73FF5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = F0CB96331F18F3F700291BAE /* Project object */;
+	rootObject = F0E2CAF11F4A386900A73FF5 /* Project object */;
 }

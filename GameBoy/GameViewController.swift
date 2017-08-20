@@ -29,16 +29,6 @@ class GameViewController: NSViewController, MTKViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
-            self.keyDown(with: $0)
-            return $0
-        }
-
-        NSEvent.addLocalMonitorForEvents(matching: .keyUp) {
-            self.keyUp(with: $0)
-            return $0
-        }
-
         device = MTLCreateSystemDefaultDevice()
         guard device != nil else { // Fallback to a blank NSView, an application could also fallback to OpenGL here.
             print("Metal is not supported on this device")
@@ -113,7 +103,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
         commandBuffer?.label = "Frame command buffer"
 
         if let renderPassDescriptor = view.currentRenderPassDescriptor,
-           let currentDrawable = view.currentDrawable
+            let currentDrawable = view.currentDrawable
         {
             let renderEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
             renderEncoder?.label = "render encoder"
@@ -165,7 +155,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
         return false
     }
 
-    @IBAction func open(_ sender: AnyObject) {
+    @IBAction func openDocument(_ sender: Any?) {
         let wasRunning = running
         running = false
 
@@ -174,7 +164,7 @@ class GameViewController: NSViewController, MTKViewDelegate {
         panel.allowsMultipleSelection = false
 
         if panel.runModal() == NSApplication.ModalResponse.OK,
-           let url = panel.url
+            let url = panel.url
         {
             print("Loading file \"\(url.lastPathComponent)\"")
             if openFile(url.path) {
@@ -188,51 +178,8 @@ class GameViewController: NSViewController, MTKViewDelegate {
         }
     }
 
-    /** Indicates whether the controller or the view should handle key press events. Currently hard-coded.
-
-        A <- A
-        B <- S
-        START <- Space
-        SELECT <- Return
-        Joypad <- Arrow keys
-     */
-    public func canHandleKeyEvent(with event: NSEvent) -> Bool {
-        let keyCodes: [UInt16] = [0, 1, 49, 36, 123, 124, 125, 126]
-        return (event.type == .keyDown || event.type == .keyUp) && keyCodes.contains(event.keyCode)
-    }
-
-    override func keyDown(with event: NSEvent) {
-        switch event.keyCode {
-        case 0: gameBoy.joypad.keyA = true
-        case 1: gameBoy.joypad.keyB = true
-        case 49: gameBoy.joypad.keyStart = true
-        case 36: gameBoy.joypad.keySelect = true
-        case 123: gameBoy.joypad.keyLeft = true
-        case 124: gameBoy.joypad.keyRight = true
-        case 125: gameBoy.joypad.keyDown = true
-        case 126: gameBoy.joypad.keyUp = true
-        default: return
-        }
-
-        gameBoy.stop = false
-        gameBoy.interrupts.triggerInterrupt(.button)
-    }
-
-    override func keyUp(with event: NSEvent) {
-        switch event.keyCode {
-        case 0: gameBoy.joypad.keyA = false
-        case 1: gameBoy.joypad.keyB = false
-        case 49: gameBoy.joypad.keyStart = false
-        case 36: gameBoy.joypad.keySelect = false
-        case 123: gameBoy.joypad.keyLeft = false
-        case 124: gameBoy.joypad.keyRight = false
-        case 125: gameBoy.joypad.keyDown = false
-        case 126: gameBoy.joypad.keyUp = false
-        default: return
-        }
-    }
-
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
 
     }
 }
+

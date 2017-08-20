@@ -11,6 +11,22 @@ import Foundation
 /** Controls the P1 register based on the current button states.
  */
 public class Joypad {
+    public enum Button {
+        case right
+        case left
+        case up
+        case down
+        case a
+        case b
+        case select
+        case start
+    }
+
+    public enum ButtonState {
+        case up
+        case down
+    }
+
     public var keyRight: Bool = false
     public var keyLeft: Bool = false
     public var keyUp: Bool = false
@@ -44,3 +60,4 @@ public class Joypad {
         }
     }
 }
+

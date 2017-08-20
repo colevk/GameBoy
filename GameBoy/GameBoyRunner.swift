@@ -12,7 +12,6 @@ import Cocoa
 /** Holds all the component parts of the Game Boy and lets them access each other.
  */
 public class GameBoyRunner {
-    private let saveGameDirectory: URL
 
     public private(set) var cpu: CPU!
     public private(set) var gpu: GPU!
@@ -23,17 +22,13 @@ public class GameBoyRunner {
     public private(set) var joypad: Joypad
     public var serialDevice: SerialDevice
 
-    private var filePath: String?
+    private var saveGameDirectory: URL? = nil
 
     public var skipBIOS: Bool
 
     public var stop: Bool = false
 
     public init() {
-        let applicationSupport = try! FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        saveGameDirectory = applicationSupport.appendingPathComponent("GameBoy", isDirectory: true)
-        try! FileManager.default.createDirectory(at: saveGameDirectory, withIntermediateDirectories: true, attributes: [:])
-
         skipBIOS = true
 
         joypad = Joypad()
@@ -45,6 +40,21 @@ public class GameBoyRunner {
         gpu = GPU(withParent: self)
         timer = Timer(withParent: self)
         interrupts = InterruptHandler(withParent: self)
+
+        saveGameDirectory = getSaveGameDirectory()
+    }
+
+    public func getSaveGameDirectory() -> URL? {
+        if let applicationSupport = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true),
+            let bundleID = Bundle.main.bundleIdentifier
+        {
+            let directory = applicationSupport
+                .appendingPathComponent(bundleID, isDirectory: true)
+                .appendingPathComponent("Saves", isDirectory: true)
+            try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [:])
+            return directory
+        }
+        return nil
     }
 
     /** Run one CPU instruction and then check for interrupts and let the GPU and timer catch up.
@@ -74,6 +84,26 @@ public class GameBoyRunner {
             step()
         }
         mbc.save()
+    }
+
+    public func keyChanged(_ button: Joypad.Button, _ state: Joypad.ButtonState) {
+        let pressed = state == .down
+
+        if pressed {
+            stop = false
+            interrupts.triggerInterrupt(.button)
+        }
+
+        switch button {
+        case .right: joypad.keyRight = pressed
+        case .left: joypad.keyLeft = pressed
+        case .up: joypad.keyUp = pressed
+        case .down: joypad.keyDown = pressed
+        case .a: joypad.keyA = pressed
+        case .b: joypad.keyB = pressed
+        case .select: joypad.keySelect = pressed
+        case .start: joypad.keyStart = pressed
+        }
     }
 
     /** Reset everything to a default state.
@@ -159,14 +189,13 @@ public class GameBoyRunner {
 
     private func getMBC(cartridge: [UInt8]) -> MemoryBankController? {
         let name = String(data: Data(bytes: cartridge[0x134...0x142].prefix { $0 != 0 }), encoding: .utf8)!
-        let saveFileURL = saveGameDirectory
+        let saveFileURL = saveGameDirectory?
             .appendingPathComponent(name)
             .appendingPathExtension("sav")
 
         let ram: Data
-        let manager = FileManager.default
-        if manager.isReadableFile(atPath: saveFileURL.path) && manager.isWritableFile(atPath: saveFileURL.path) {
-            ram = NSData(contentsOfFile: saveFileURL.path) as Data!
+        if let filePath = saveFileURL?.path {
+            ram = NSData(contentsOfFile: filePath) as Data!
         } else {
             ram = Data(bytes: [UInt8](repeating: 0, count: ramSize(cartridge[0x149])))
         }
@@ -247,3 +276,4 @@ public class GameBoyRunner {
         }
     }
 }
+

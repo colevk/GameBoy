@@ -11,7 +11,7 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    @IBOutlet weak var window: NSWindow!
+    weak var windowController: WindowController?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
@@ -26,6 +26,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func application(_ sender: NSApplication, openFile filename: String) -> Bool {
+        if let gameViewController = windowController?.contentViewController as? GameViewController {
+            return gameViewController.openFile(filename)
+        }
         return false
     }
 }
+
