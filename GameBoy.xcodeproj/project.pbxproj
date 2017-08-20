@@ -57,9 +57,8 @@
 		F03290191F4A54BE007AEB5C /* Ops.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF41F4A5477007AEB5C /* Ops.swift */; };
 		F032901A1F4A54BE007AEB5C /* SerialDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF81F4A5477007AEB5C /* SerialDevice.swift */; };
 		F032901B1F4A54BE007AEB5C /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FF51F4A5477007AEB5C /* Timer.swift */; };
-		F032901C1F4A54BE007AEB5C /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0328FEE1F4A5477007AEB5C /* WindowController.swift */; };
+		F03290201F4A56A8007AEB5C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F032901F1F4A5656007AEB5C /* Main.storyboard */; };
 		F0E2CB011F4A386900A73FF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0E2CB001F4A386900A73FF5 /* Assets.xcassets */; };
-		F0E2CB041F4A386900A73FF5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0E2CB021F4A386900A73FF5 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,10 +105,10 @@
 		F0328FF61F4A5477007AEB5C /* GPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPU.swift; sourceTree = "<group>"; };
 		F0328FF71F4A5477007AEB5C /* AlignedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedArray.swift; sourceTree = "<group>"; };
 		F0328FF81F4A5477007AEB5C /* SerialDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialDevice.swift; sourceTree = "<group>"; };
+		F032901F1F4A5656007AEB5C /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		F0E2CAF91F4A386900A73FF5 /* GameBoy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBoy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0E2CAFC1F4A386900A73FF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F0E2CB001F4A386900A73FF5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F0E2CB031F4A386900A73FF5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F0E2CB051F4A386900A73FF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0E2CB061F4A386900A73FF5 /* GameBoy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GameBoy.entitlements; sourceTree = "<group>"; };
 		F0E2CB0B1F4A386900A73FF5 /* GameBoyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameBoyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,6 +164,37 @@
 			path = MemoryBankControllers;
 			sourceTree = "<group>";
 		};
+		F032901D1F4A55BE007AEB5C /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				F032901F1F4A5656007AEB5C /* Main.storyboard */,
+				F0E2CAFC1F4A386900A73FF5 /* AppDelegate.swift */,
+				F0328FEC1F4A5477007AEB5C /* GameViewController.swift */,
+				F0328FEE1F4A5477007AEB5C /* WindowController.swift */,
+				F0328FED1F4A5477007AEB5C /* Shaders.metal */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
+		F032901E1F4A55E1007AEB5C /* Emulator */ = {
+			isa = PBXGroup;
+			children = (
+				F0328FF71F4A5477007AEB5C /* AlignedArray.swift */,
+				F0328FEB1F4A5477007AEB5C /* CPU.swift */,
+				F0328FEF1F4A5477007AEB5C /* CPUDebugging.swift */,
+				F0328FF31F4A5477007AEB5C /* GameBoyRunner.swift */,
+				F0328FF61F4A5477007AEB5C /* GPU.swift */,
+				F0328FF21F4A5477007AEB5C /* InterruptHandler.swift */,
+				F0328FF11F4A5477007AEB5C /* Joypad.swift */,
+				F0328FF01F4A5477007AEB5C /* Memory.swift */,
+				F0328FE51F4A5477007AEB5C /* MemoryBankControllers */,
+				F0328FF41F4A5477007AEB5C /* Ops.swift */,
+				F0328FF81F4A5477007AEB5C /* SerialDevice.swift */,
+				F0328FF51F4A5477007AEB5C /* Timer.swift */,
+			);
+			path = Emulator;
+			sourceTree = "<group>";
+		};
 		F0E2CAF01F4A386900A73FF5 = {
 			isa = PBXGroup;
 			children = (
@@ -186,24 +216,9 @@
 		F0E2CAFB1F4A386900A73FF5 /* GameBoy */ = {
 			isa = PBXGroup;
 			children = (
-				F0E2CAFC1F4A386900A73FF5 /* AppDelegate.swift */,
-				F0328FF71F4A5477007AEB5C /* AlignedArray.swift */,
-				F0328FEB1F4A5477007AEB5C /* CPU.swift */,
-				F0328FEF1F4A5477007AEB5C /* CPUDebugging.swift */,
-				F0328FF31F4A5477007AEB5C /* GameBoyRunner.swift */,
-				F0328FEC1F4A5477007AEB5C /* GameViewController.swift */,
-				F0328FF61F4A5477007AEB5C /* GPU.swift */,
-				F0328FF21F4A5477007AEB5C /* InterruptHandler.swift */,
-				F0328FF11F4A5477007AEB5C /* Joypad.swift */,
-				F0328FF01F4A5477007AEB5C /* Memory.swift */,
-				F0328FE51F4A5477007AEB5C /* MemoryBankControllers */,
-				F0328FF41F4A5477007AEB5C /* Ops.swift */,
-				F0328FF81F4A5477007AEB5C /* SerialDevice.swift */,
-				F0328FED1F4A5477007AEB5C /* Shaders.metal */,
-				F0328FF51F4A5477007AEB5C /* Timer.swift */,
-				F0328FEE1F4A5477007AEB5C /* WindowController.swift */,
+				F032901D1F4A55BE007AEB5C /* Interface */,
+				F032901E1F4A55E1007AEB5C /* Emulator */,
 				F0E2CB001F4A386900A73FF5 /* Assets.xcassets */,
-				F0E2CB021F4A386900A73FF5 /* Main.storyboard */,
 				F0E2CB051F4A386900A73FF5 /* Info.plist */,
 				F0E2CB061F4A386900A73FF5 /* GameBoy.entitlements */,
 			);
@@ -302,7 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0E2CB011F4A386900A73FF5 /* Assets.xcassets in Resources */,
-				F0E2CB041F4A386900A73FF5 /* Main.storyboard in Resources */,
+				F03290201F4A56A8007AEB5C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,7 +378,6 @@
 				F032900F1F4A54BE007AEB5C /* GameBoyRunner.swift in Sources */,
 				F03290141F4A54BE007AEB5C /* MBC1.swift in Sources */,
 				F03290151F4A54BE007AEB5C /* MBC3.swift in Sources */,
-				F032901C1F4A54BE007AEB5C /* WindowController.swift in Sources */,
 				F032900E1F4A54BE007AEB5C /* CPUDebugging.swift in Sources */,
 				F03290101F4A54BE007AEB5C /* GPU.swift in Sources */,
 				F03290191F4A54BE007AEB5C /* Ops.swift in Sources */,
@@ -390,17 +404,6 @@
 			targetProxy = F0E2CB0C1F4A386900A73FF5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		F0E2CB021F4A386900A73FF5 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F0E2CB031F4A386900A73FF5 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F0E2CB121F4A386900A73FF5 /* Debug */ = {
