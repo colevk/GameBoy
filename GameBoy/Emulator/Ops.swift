@@ -22,13 +22,13 @@ extension UInt8 {
     static func addWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
         let halfCarry = (((lhs & 0xF) + (rhs & 0xF)) & 0x10) != 0
         let (result, carry) = lhs.addingReportingOverflow(rhs)
-        return (result, halfCarry, carry == .overflow)
+        return (result, halfCarry, carry)
     }
 
     static func subtractWithFlags(_ lhs: UInt8, _ rhs: UInt8) -> (UInt8, Bool, Bool) {
         let halfCarry = (lhs & 0xF) < (rhs & 0xF)
         let (result, carry) = lhs.subtractingReportingOverflow(rhs)
-        return (result, halfCarry, carry == .overflow)
+        return (result, halfCarry, carry)
     }
 
     static func &+= (_ left: inout UInt8, _ right: UInt8) {
@@ -50,13 +50,13 @@ extension UInt16 {
     public static func addWithFlags(_ lhs: UInt16, _ rhs: UInt16) -> (UInt16, Bool, Bool) {
         let halfCarry = ((lhs & 0xFFF) + (rhs & 0xFFF)) & 0x1000 == 0x1000
         let (result, carry) = lhs.addingReportingOverflow(rhs)
-        return (result, halfCarry, carry == .overflow)
+        return (result, halfCarry, carry)
     }
 
     public static func subtractWithFlags(_ lhs: UInt16, _ rhs: UInt16) -> (UInt16, Bool, Bool) {
         let halfCarry = (lhs & 0xFFF) < (rhs & 0xFFF)
         let (result, carry) = lhs.subtractingReportingOverflow(rhs)
-        return (result, halfCarry, carry == .overflow)
+        return (result, halfCarry, carry)
     }
 
     public static func addRelativeWithFlags(_ lhs: UInt16, _ rhs: UInt8) -> (UInt16, Bool, Bool) {

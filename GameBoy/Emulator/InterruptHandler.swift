@@ -28,11 +28,11 @@ public class InterruptHandler {
     public var IF: UInt8 {
         get {
             return
-                (vblankFlag ? 0x01 : 0) +
-                (statFlag ? 0x02: 0) +
-                (timerFlag ? 0x04 : 0) +
-                (serialFlag ? 0x08 : 0) +
-                (buttonFlag ? 0x10 : 0)
+                UInt8(vblankFlag ? 0x01 : 0) +
+                UInt8(statFlag ? 0x02: 0) +
+                UInt8(timerFlag ? 0x04 : 0) +
+                UInt8(serialFlag ? 0x08 : 0) +
+                UInt8(buttonFlag ? 0x10 : 0)
         }
         set {
             vblankFlag = newValue & 0x01 != 0
@@ -45,11 +45,11 @@ public class InterruptHandler {
     public var IE: UInt8 {
         get {
             return
-                (vblankEnable ? 0x01 : 0) +
-                (statEnable ? 0x02: 0) +
-                (timerEnable ? 0x04 : 0) +
-                (serialEnable ? 0x08 : 0) +
-                (buttonEnable ? 0x10 : 0)
+                UInt8(vblankEnable ? 0x01 : 0) +
+                UInt8(statEnable ? 0x02: 0) +
+                UInt8(timerEnable ? 0x04 : 0) +
+                UInt8(serialEnable ? 0x08 : 0) +
+                UInt8(buttonEnable ? 0x10 : 0)
         }
         set {
             vblankEnable = newValue & 0x01 != 0

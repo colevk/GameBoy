@@ -47,12 +47,12 @@ public class Joypad {
     public var P1: UInt8 {
         get {
             return
-                (port10 ? 0x00 : 0x01) +
-                (port11 ? 0x00 : 0x02) +
-                (port12 ? 0x00 : 0x04) +
-                (port13 ? 0x00 : 0x08) +
-                (port14 ? 0x00 : 0x10) +
-                (port15 ? 0x00 : 0x20)
+                (port10 ? 0 : 1) +
+                (port11 ? 0 : 2) +
+                (port12 ? 0 : 4) +
+                (port13 ? 0 : 8) +
+                (port14 ? 0 : 16) +
+                (port15 ? 0 : 32)
         }
         set {
             port14 = newValue & 0x10 == 0

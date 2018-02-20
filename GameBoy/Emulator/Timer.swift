@@ -59,10 +59,10 @@ public class Timer {
     public func advanceBy(cycles: Int) {
         divider &+= UInt16(4 * cycles)
 
-        let overflow: ArithmeticOverflow
+        let overflow: Bool
         (timer, overflow) = timer.addingReportingOverflow(timerUpdate * UInt16(cycles))
 
-        if overflow == .overflow {
+        if overflow {
             timer += timerModulo
             gb.interrupts.triggerInterrupt(.timer)
         }
