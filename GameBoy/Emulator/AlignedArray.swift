@@ -23,7 +23,7 @@ public class AlignedArray<T> {
         count = capacity
         memSize = MemoryLayout<T>.size
         bytes = count * memSize - (count * memSize % alignment) + alignment
-        var tempPtr: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(bytes: bytes, alignedTo: alignment)
+        var tempPtr: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(byteCount: bytes, alignment: alignment)
         posix_memalign(&tempPtr, alignment, bytes)
         pointer = tempPtr!
     }

@@ -188,16 +188,16 @@ public class GameBoyRunner {
     }
 
     private func getMBC(cartridge: [UInt8]) -> MemoryBankController? {
-        let name = String(data: Data(bytes: cartridge[0x134...0x142].prefix { $0 != 0 }), encoding: .utf8)!
+        let name = String(data: Data(cartridge[0x134...0x142].prefix { $0 != 0 }), encoding: .utf8)!
         let saveFileURL = saveGameDirectory?
             .appendingPathComponent(name)
             .appendingPathExtension("sav")
 
         let ram: Data
-        if let filePath = saveFileURL?.path {
-            ram = NSData(contentsOfFile: filePath) as Data!
+        if let filePath = saveFileURL?.path, let data = NSData(contentsOfFile: filePath) as Data? {
+            ram = data
         } else {
-            ram = Data(bytes: [UInt8](repeating: 0, count: ramSize(cartridge[0x149])))
+            ram = Data([UInt8](repeating: 0, count: ramSize(cartridge[0x149])))
         }
 
         switch cartridge[0x147] {
